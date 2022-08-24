@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.*;
 class laboratorio{
     public static void main(String[] args){
         // Create an empty hash map by declaring object
@@ -30,5 +31,12 @@ class laboratorio{
             System.out.println("value for key"
                                + " \"vishal\" is: " + a);
         }
+        
+        Map<String, ArrayList<String>> multiplevalueMap = new HashMap<>();
+        multiplevalueMap.put("ford", new ArrayList<String>());
+        multiplevalueMap.get("ford").add("GT");
+        multiplevalueMap.get("ford").add("Mustang Mach-E");
+        
+        System.out.println(multiplevalueMap.get("ford"));
     }
 }
