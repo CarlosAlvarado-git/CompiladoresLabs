@@ -2,6 +2,7 @@ from cgitb import text
 from pickle import FALSE, TRUE
 import re
 from string import octdigits
+import string
 from typing import final
 
 dict = {
@@ -72,6 +73,35 @@ dict = {
 }
 
 finales = {}
+class Node:
+   def __init__(self, tipo=string, palabra=string):
+      self.tipo = tipo
+      self.palabra = palabra
+      self.nextnodo = None
+
+class SLinkedList:
+   def __init__(self):
+      self.headval = None
+# Function to add newnode
+   def AtEnd(self, tip, pal):
+      NewNode = Node(tip, pal)
+      if self.headval is None:
+         self.headval = NewNode
+         return
+      laste = self.headval
+      while(laste.nextnodo):
+         laste = laste.nextnodo
+
+      laste.nextnodo=NewNode
+# Print the linked list
+   def listprint(self):
+      printval = self.headval
+      while printval is not None:
+         print("-----NODO-----")
+         print (f"Tipo: {printval.tipo} - Palabra: {printval.palabra}")
+         printval = printval.nextnodo
+
+lista = SLinkedList()
 
 #Funcion que recorre el diccionario a partir de un key
 def recorrer(texto, key, puntero):
@@ -110,43 +140,48 @@ def recorrer(texto, key, puntero):
     
 
 def nodo_informacion(texto,inicio):
-    global finales
+    global finales, lista
     tamaño = len(finales.keys())
     if  tamaño > 1:
-        print("------ nodo -----")
-        print("Palabra: " + texto[inicio:list(finales)[-1]])
-        print("Type: " + finales[list(finales)[-1]][0])  #key,class
+        #print("------ nodo -----")
+        #print("Palabra: " + texto[inicio:list(finales)[-1]])
+        #print("Type: " + finales[list(finales)[-1]][0])  #key,class
+        lista.AtEnd(finales[list(finales)[-1]][0], texto[inicio:list(finales)[-1]])
         return (list(finales)[-1])
     elif tamaño == 1:
-        print("------ nodo -----")
-        print("Palabra: " + texto[inicio:list(finales)[-1]])
-        print("Type: " + finales[list(finales)[0]][0])  #key,class
+        #print("------ nodo -----")
+        #print("Palabra: " + texto[inicio:list(finales)[-1]])
+        #print("Type: " + finales[list(finales)[0]][0])  #key,class
+        lista.AtEnd(finales[list(finales)[0]][0], texto[inicio:list(finales)[-1]])
         return (list(finales)[0])
     else:
-        print("------ nodo -----")
-        print("Palabra: " + texto[inicio:inicio+1])
-        print("Type: " + "Error")  #key,class
+        #print("------ nodo -----")
+        #print("Palabra: " + texto[inicio:inicio+1])
+        #print("Type: " + "Error")  #key,class
+        lista.AtEnd("Error", texto[inicio:inicio+1])
         return (inicio+1)
 
         
 
 #Funcion principal que agrupa todas las funciones
 def main():
-    global finales
+    global finales, lista
     inicio = 0
     key = 'A'
+    
     #El texto que se va a evaluar
-    texto = "double"
+    texto = "double$$"
     texto_tamaño = len(texto)
     while (inicio < texto_tamaño):
         #funcion para recorrer el diccionario
         recorrer(texto,key,inicio)
-        print("\n---- Finales ---\n" + str(finales))
+        #print("\n---- Finales ---\n" + str(finales))
         #funcion para obtner el tipo de dato y columna
         inicio = nodo_informacion(texto, inicio)
         #limpiar estrcturas
         finales = {}
 
+    lista.listprint()
 
 
 
