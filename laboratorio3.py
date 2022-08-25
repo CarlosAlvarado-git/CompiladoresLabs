@@ -146,7 +146,7 @@ def recorrer(texto, key, puntero):
         return recorrer(texto,key,puntero+1)
     
 
-def nodo_informacion(texto,inicio):
+def nodo_informacion(texto,inicio,linea):
     global finales, lista
     tamaño = len(finales.keys())
     if  tamaño > 1:
@@ -154,21 +154,21 @@ def nodo_informacion(texto,inicio):
         #print("Palabra: " + texto[inicio:list(finales)[-1]])
         #print("Type: " + finales[list(finales)[-1]][0]) 
         #print(f"Columna: {list(finales)[-1] - 1}") #key,class
-        lista.AtEnd(finales[list(finales)[-1]][0], texto[inicio:list(finales)[-1]], 1, (list(finales)[-1] - 1))
+        lista.AtEnd(finales[list(finales)[-1]][0], texto[inicio:list(finales)[-1]], linea, (list(finales)[-1] - 1))
         return (list(finales)[-1])
     elif tamaño == 1:
         #print("------ nodo -----")
         #print("Palabra: " + texto[inicio:list(finales)[-1]])
         #print("Type: " + finales[list(finales)[0]][0])  
         #print(f"Columna: {list(finales)[-1] - 1}")  #key,class
-        lista.AtEnd(finales[list(finales)[0]][0], texto[inicio:list(finales)[-1]], 1, (list(finales)[-1] - 1))
+        lista.AtEnd(finales[list(finales)[0]][0], texto[inicio:list(finales)[-1]], linea, (list(finales)[-1] - 1))
         return (list(finales)[0])
     else:
         #print("------ nodo -----")
         #print("Palabra: " + texto[inicio:inicio+1])
         #print("Type: " + "Error")  #key,class
         #print(f"Columna: {inicio - 1}")  
-        lista.AtEnd("Error", texto[inicio:inicio+1], 1, inicio)
+        lista.AtEnd("Error", texto[inicio:inicio+1], linea, inicio)
         return (inicio+1)
 
         
@@ -176,21 +176,23 @@ def nodo_informacion(texto,inicio):
 #Funcion principal que agrupa todas las funciones
 def main():
     global finales, lista
-    inicio = 0
+    linea = 0
     key = 'A'
-    
-    #El texto que se va a evaluar
-    texto = "double$$2d23dd"
-    texto_tamaño = len(texto)
-    while (inicio < texto_tamaño):
-        #funcion para recorrer el diccionario
-        recorrer(texto,key,inicio)
-        #print("\n---- Finales ---\n" + str(finales))
-        #funcion para obtner el tipo de dato y columna
-        inicio = nodo_informacion(texto, inicio)
-        #limpiar estrcturas
-        finales = {}
-
+    #Leer el texto que se va a evaluar
+    with open('entrada.txt') as f:
+        for line in f:
+            linea+=1
+            texto = line.strip()
+            texto_tamaño = len(texto)
+            inicio = 0
+            while (inicio < texto_tamaño):
+                #funcion para recorrer el diccionario
+                recorrer(texto,key,inicio)
+                print("\n---- Finales ---\n" + str(finales))
+                #funcion para obtner el tipo de dato y columna
+                inicio = nodo_informacion(texto, inicio,linea)
+                #limpiar estrcturas
+                finales = {}
     lista.listprint()
 
 
