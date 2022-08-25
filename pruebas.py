@@ -1,8 +1,10 @@
 from cgitb import text
+from fileinput import filename
 from pickle import FALSE, TRUE
 import re
 from string import octdigits
 import string
+from tkinter.tix import INTEGER
 from typing import final
 
 dict = {
@@ -74,31 +76,36 @@ dict = {
 
 finales = {}
 class Node:
-   def __init__(self, tipo=string, palabra=string):
+   def __init__(self, tipo, palabra, fila, columna):
       self.tipo = tipo
       self.palabra = palabra
+      self.fila = fila 
+      self.columna = columna
       self.nextnodo = None
 
 class SLinkedList:
    def __init__(self):
       self.headval = None
 # Function to add newnode
-   def AtEnd(self, tip, pal):
-      NewNode = Node(tip, pal)
+   def AtEnd(self, tip, pal, fil, col):
+      NewNode = Node(tip, pal, fil, col)
       if self.headval is None:
          self.headval = NewNode
          return
       laste = self.headval
       while(laste.nextnodo):
          laste = laste.nextnodo
-
-      laste.nextnodo=NewNode
+      if laste.tipo == "Error":
+        laste.palabra = laste.palabra + pal
+        laste.columna = laste.columna + 1
+      else:
+        laste.nextnodo=NewNode
 # Print the linked list
    def listprint(self):
       printval = self.headval
       while printval is not None:
          print("-----NODO-----")
-         print (f"Tipo: {printval.tipo} - Palabra: {printval.palabra}")
+         print (f"Tipo: {printval.tipo} - Palabra: {printval.palabra} - Fila: {printval.fila} - Columna: {printval.columna}" )
          printval = printval.nextnodo
 
 lista = SLinkedList()
@@ -146,19 +153,19 @@ def nodo_informacion(texto,inicio):
         #print("------ nodo -----")
         #print("Palabra: " + texto[inicio:list(finales)[-1]])
         #print("Type: " + finales[list(finales)[-1]][0])  #key,class
-        lista.AtEnd(finales[list(finales)[-1]][0], texto[inicio:list(finales)[-1]])
+        lista.AtEnd(finales[list(finales)[-1]][0], texto[inicio:list(finales)[-1]], 1, (list(finales)[-1] - 1))
         return (list(finales)[-1])
     elif tamaño == 1:
         #print("------ nodo -----")
         #print("Palabra: " + texto[inicio:list(finales)[-1]])
         #print("Type: " + finales[list(finales)[0]][0])  #key,class
-        lista.AtEnd(finales[list(finales)[0]][0], texto[inicio:list(finales)[-1]])
+        lista.AtEnd(finales[list(finales)[0]][0], texto[inicio:list(finales)[-1]], 1, (list(finales)[-1] - 1))
         return (list(finales)[0])
     else:
         #print("------ nodo -----")
         #print("Palabra: " + texto[inicio:inicio+1])
         #print("Type: " + "Error")  #key,class
-        lista.AtEnd("Error", texto[inicio:inicio+1])
+        lista.AtEnd("Error", texto[inicio:inicio+1], 1, inicio)
         return (inicio+1)
 
         
