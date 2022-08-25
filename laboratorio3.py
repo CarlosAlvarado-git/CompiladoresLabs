@@ -95,7 +95,7 @@ class SLinkedList:
       laste = self.headval
       while(laste.nextnodo):
          laste = laste.nextnodo
-      if laste.tipo == "Error":
+      if laste.tipo == "Error" and NewNode.tipo == "Error":
         laste.palabra = laste.palabra + pal
         laste.columna = laste.columna + 1
       else:
@@ -152,19 +152,22 @@ def nodo_informacion(texto,inicio):
     if  tamaño > 1:
         #print("------ nodo -----")
         #print("Palabra: " + texto[inicio:list(finales)[-1]])
-        #print("Type: " + finales[list(finales)[-1]][0])  #key,class
+        #print("Type: " + finales[list(finales)[-1]][0]) 
+        #print(f"Columna: {list(finales)[-1] - 1}") #key,class
         lista.AtEnd(finales[list(finales)[-1]][0], texto[inicio:list(finales)[-1]], 1, (list(finales)[-1] - 1))
         return (list(finales)[-1])
     elif tamaño == 1:
         #print("------ nodo -----")
         #print("Palabra: " + texto[inicio:list(finales)[-1]])
-        #print("Type: " + finales[list(finales)[0]][0])  #key,class
+        #print("Type: " + finales[list(finales)[0]][0])  
+        #print(f"Columna: {list(finales)[-1] - 1}")  #key,class
         lista.AtEnd(finales[list(finales)[0]][0], texto[inicio:list(finales)[-1]], 1, (list(finales)[-1] - 1))
         return (list(finales)[0])
     else:
         #print("------ nodo -----")
         #print("Palabra: " + texto[inicio:inicio+1])
         #print("Type: " + "Error")  #key,class
+        #print(f"Columna: {inicio - 1}")  
         lista.AtEnd("Error", texto[inicio:inicio+1], 1, inicio)
         return (inicio+1)
 
@@ -177,7 +180,7 @@ def main():
     key = 'A'
     
     #El texto que se va a evaluar
-    texto = "double$$"
+    texto = "double$$2d23dd"
     texto_tamaño = len(texto)
     while (inicio < texto_tamaño):
         #funcion para recorrer el diccionario
