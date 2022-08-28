@@ -133,8 +133,12 @@ class SLinkedList:
       if laste.tipo == "Error" and NewNode.tipo == "Error":
         laste.palabra = laste.palabra + pal
         laste.columna = laste.columna + 1
+        return
+      elif NewNode.palabra == " ":
+        return
       else:
         laste.nextnodo=NewNode
+        return
 # Print the linked list
    def listprint(self):
       printval = self.headval
@@ -223,7 +227,7 @@ def main():
             while (inicio < texto_tamaño):
                 #funcion para recorrer el diccionario
                 recorrer(texto,key,inicio)
-                print("\n---- Finales ---\n" + str(finales))
+                #print("\n---- Finales ---\n" + str(finales))
                 #funcion para obtner el tipo de dato y columna
                 inicio = nodo_informacion(texto, inicio,linea)
                 #limpiar estrcturas
