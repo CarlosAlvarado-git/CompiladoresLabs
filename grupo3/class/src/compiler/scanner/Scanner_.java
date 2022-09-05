@@ -5,17 +5,20 @@
 package compiler.scanner;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+
 /**
  *
- * @author p1jav
+ * @author carlosalvarado
  */
-public class Scanner {
-    public static void main(String[] args, String ruta){
+public class Scanner_ {
+public static void main(String[] args, String ruta){
+        //String ruta = "/Users/carlosalvarado/NetBeansProjects/AnalizadorLexico/src/codigo/Lexer.flex";
+        //generarLexer(ruta);
+        
         try{
             try{
                 //Path to file
