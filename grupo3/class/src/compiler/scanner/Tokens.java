@@ -19,8 +19,6 @@ public enum Tokens {
     hex_literal,
     rel_op,
     assign_op,
-    left_par,
-    right_par,
     LESS_EQUAL,
     GREATER_EQUAL,
     EQUAL,

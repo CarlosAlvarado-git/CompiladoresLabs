@@ -5,6 +5,7 @@
 package compiler.scanner;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,8 +17,9 @@ import java.io.Reader;
  */
 public class Scanner_ {
 public static void main(String[] args, String ruta){
-        //String ruta = "/Users/carlosalvarado/NetBeansProjects/AnalizadorLexico/src/codigo/Lexer.flex";
-        //generarLexer(ruta);
+        //String jflex = System.getProperty("user.dir");
+        //jflex = jflex + "/src/compiler/scanner/Lexer.flex";
+        //generarLexer(jflex);
         
         try{
             try{
@@ -45,8 +47,6 @@ public static void main(String[] args, String ruta){
                         case rel_op:
                         case assign_op:
                         case digit:
-                        case left_par:
-                        case right_par:
                         case LESS_EQUAL:
                         case GREATER_EQUAL:
                         case EQUAL:
@@ -69,6 +69,10 @@ public static void main(String[] args, String ruta){
             System.out.println(ex);
         }
             
+    }
+public static void generarLexer(String ruta){
+        File archivo = new File(ruta);
+        JFlex.Main.generate(archivo);
     }
     
 }

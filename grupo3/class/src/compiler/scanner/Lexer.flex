@@ -3,6 +3,8 @@ import static compiler.scanner.Tokens.*;
 %%
 %class Lexer
 %type Tokens
+%line
+%column
 
 id = ([A-Za-z][_0-9A-Za-z]+)
 alpha = [a-zA-Z_]
@@ -50,8 +52,6 @@ while {lexeme=yytext(); linea=yyline; columna=yycolumn; return Reservadas;}
 {hex_literal} {lexeme=yytext(); linea=yyline; columna=yycolumn;  return hex_literal;}
 {rel_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return rel_op;}
 {assign_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return assign_op;}
-left_par {lexeme=yytext(); linea=yyline; columna=yycolumn; return left_par;}
-right_par {lexeme=yytext(); linea=yyline; columna=yycolumn; return right_par;}
 
 "<="                {lexeme=yytext(); linea=yyline; columna=yycolumn; return LESS_EQUAL;    }
 ">="                { lexeme=yytext();linea=yyline; columna=yycolumn;  return GREATER_EQUAL; }
