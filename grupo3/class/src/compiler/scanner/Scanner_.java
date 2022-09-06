@@ -71,8 +71,8 @@ public static void main(String[] args, String ruta){
             
     }
 public static void generarLexer(String ruta){
-        File archivo = new File(ruta);
-        JFlex.Main.generate(archivo);
+        //File archivo = new File(ruta);
+        //JFlex.Main.generate(archivo);
     }
     
 }

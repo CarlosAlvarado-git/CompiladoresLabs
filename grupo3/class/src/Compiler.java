@@ -70,7 +70,7 @@ public class Compiler {
                                             case "scan":
                                                 //Ruta al archivo
                                                 String ruta = System.getProperty("user.dir");
-                                                ruta = ruta + "/src/" + archivo;
+                                                ruta = ruta + "/" + archivo;
                                                 //Scanner
                                                 Scanner_ scan = new Scanner_();
                                                 scan.main(null,ruta);
