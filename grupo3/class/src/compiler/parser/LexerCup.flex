@@ -39,33 +39,35 @@ else {return new Symbol(sym.Else, yychar, yyline, yytext());}
 return {return new Symbol(sym.Return, yychar, yyline, yytext());}
 break {return new Symbol(sym.Break, yychar, yyline, yytext());}
 continue {return new Symbol(sym.Continue, yychar, yyline, yytext());}
-true {lexeme=yytext(); linea=yyline; columna=yycolumn; return True;}
-false {lexeme=yytext(); linea=yyline; columna=yycolumn; return False;}
-void {lexeme=yytext(); linea=yyline; columna=yycolumn; return Void;}
-class {lexeme=yytext(); linea=yyline; columna=yycolumn; return Class;}
-Program {lexeme=yytext(); linea=yyline; columna=yycolumn; return Program;}
-while {lexeme=yytext(); linea=yyline; columna=yycolumn; return While;}
+true {return new Symbol(sym.True, yychar, yyline, yytext());}
+false {return new Symbol(sym.False, yychar, yyline, yytext());}
+void {return new Symbol(sym.Void, yychar, yyline, yytext());}
+class {return new Symbol(sym.Class, yychar, yyline, yytext());}
+Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
+while {return new Symbol(sym.While, yychar, yyline, yytext());}
 
 {espacio} {/*Ignore*/}
 "//".* {/*Ignore*/}
-{id} {lexeme=yytext(); linea=yyline; columna=yycolumn; return id;}
-{arith_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return operador_arith;}
-{digit} {lexeme=yytext(); linea=yyline; columna=yycolumn; return digit;}
-{alpha} {lexeme=yytext(); linea=yyline; columna=yycolumn; return alpha;}
-{hex_digit} {lexeme=yytext(); linea=yyline; columna=yycolumn; return hex_digit;}
-{decimal_literal} {lexeme=yytext(); linea=yyline; columna=yycolumn; return decimal_literal;}
-{hex_literal} {lexeme=yytext(); linea=yyline; columna=yycolumn;  return hex_literal;}
-{rel_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return rel_op;}
-{assign_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return assign_op;}
+{id} {return new Symbol(sym.Id, yychar, yyline, yytext());}
+{arith_op} {return new Symbol(sym.Arith_op, yychar, yyline, yytext());}
+{digit} {return new Symbol(sym.Digit, yychar, yyline, yytext());}
+{alpha} {return new Symbol(sym.Alpha, yychar, yyline, yytext());}
+{hex_digit} {return new Symbol(sym.Hex_digit, yychar, yyline, yytext());}
+{decimal_literal} {return new Symbol(sym.Decimal_literal, yychar, yyline, yytext());}
+{hex_literal} {return new Symbol(sym.Hex_literal, yychar, yyline, yytext());}
+{rel_op} {return new Symbol(sym.Rel_op, yychar, yyline, yytext());}
+{assign_op} {return new Symbol(sym.Assign_op, yychar, yyline, yytext());}
 
-"<="                {lexeme=yytext(); linea=yyline; columna=yycolumn; return LESS_EQUAL;    }
-">="                { lexeme=yytext();linea=yyline; columna=yycolumn;  return GREATER_EQUAL; }
-"=="                { lexeme=yytext();linea=yyline; columna=yycolumn; return EQUAL;         }
-"!="                { lexeme=yytext();linea=yyline; columna=yycolumn; return NOT_EQUAL;     }
-"&&"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return AND;           }
-"||"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return OR;            }
-"("                {lexeme=yytext(); linea=yyline; columna=yycolumn; return LEFT_PAR;           }
-")"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return RIGHT_PAR;            }
-";"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Punto_coma;            }
+"<="                {return new Symbol(sym.LESS_EQUAL, yychar, yyline, yytext());}
+">="                {return new Symbol(sym.GREATER_EQUAL, yychar, yyline, yytext());}
+"+="                {return new Symbol(sym.PLUS_EQUAL, yychar, yyline, yytext());}
+"-="                {return new Symbol(sym.MINUS_EQUAL, yychar, yyline, yytext());}
+"=="                {return new Symbol(sym.EQUAL, yychar, yyline, yytext());}
+"!="                {return new Symbol(sym.NOT_EQUAL, yychar, yyline, yytext());}
+"&&"                {return new Symbol(sym.AND, yychar, yyline, yytext());}
+"||"                {return new Symbol(sym.OR, yychar, yyline, yytext());}
+"("                {return new Symbol(sym.LEFT_PAR, yychar, yyline, yytext());}
+")"                {return new Symbol(sym.RIGHT_PAR, yychar, yyline, yytext());}
+";"                {return new Symbol(sym.Punto_coma, yychar, yyline, yytext());}
 
- . {return ERROR;}
+ . {return new Symbol(sym.ERROR, yychar, yyline, yytext());}

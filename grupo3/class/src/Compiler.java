@@ -66,18 +66,19 @@ public class Compiler {
                                 switch (tages[i]){
                                     case "target":
                                         tag = tag.substring(6, tag.length());
+                                        String ruta = "";
                                         //System.out.println(tag);
                                         switch (tag){
                                             case "scan":
                                                 //Ruta al archivo
-                                                String ruta = System.getProperty("user.dir");
+                                                ruta = System.getProperty("user.dir");
                                                 ruta = ruta + "/" + archivo;
                                                 //Scanner
                                                 Scanner_ scan = new Scanner_();
                                                 scan.main(null,ruta);
                                                 break;
                                             case "parse":
-                                                String ruta = System.getProperty("user.dir");
+                                                ruta = System.getProperty("user.dir");
                                                 ruta = ruta + "/" + archivo;
                                                 //Scanner
                                                 Parser parse = new Parser();
