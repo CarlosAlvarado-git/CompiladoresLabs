@@ -1,0 +1,100 @@
+package parser;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal Int, Boolena, Callout, If, For, Else, Return, Break, Continue, True, 
+        False, Void, Class, Program, While, Id, Digit, Alpha, Hex_digit,
+        Decimal_literal,Hex_literal,GREATER, LESS,LESS_EQUAL,GREATER_EQUAL,
+        PLUS_EQUAL, ASSIGN, MINUS_EQUAL,EQUAL,NOT_EQUAL,AND,OR, LEFT_PAR,
+        RIGHT_PAR,Punto_coma,Mas, Menos,Multiplicacion, Division, Mod, Llave_A,
+        Llave_C,Corche_A, Corche_C, Coma, ERROR;
+
+
+non terminal program, field_decl, agru_field_decls, agru_field_decl, method_decl,agru_type_void , corche_type_id, argu_method_decl, 
+                block, var_decl, lis_ids, type, statement,corche_else_block,
+                assign_op, method_call, method_name, location, expr, callout_arg, bin_op,
+                arith_op, rel_op, eq_op, cond_op, literal, alpha_num, int_literal,bool_literal;
+
+start with program;
+
+program ::= Class Program Llave_A field_decl method_decl Llave_C
+;
+
+field_decl ::=  
+        type agru_field_decls agru_field_decl Punto_coma field_decl|
+        /* empty */
+;
+
+agru_field_decls ::= 
+    Id |
+    Id Corche_A int_literal Corche_C
+;
+
+agru_field_decl ::= 
+    Id agru_field_decl |
+    Id Corche_A int_literal Corche_C agru_field_decl|
+    /* empty */
+;
+
+method_decl ::= 
+    agru_type_void Id corche_type_id block
+;
+
+agru_type_void ::= 
+            type | 
+            Void
+;
+
+corche_type_id::=
+        type Id argu_method_decl |
+        /* empty */
+;
+
+argu_method_decl ::=
+        type Id argu_method_decl |
+        /* empty */
+;
+
+
+block ::= Llave_A  var_decl statement Llave_C
+
+var_decl ::= 
+    type Id lis_ids Punto_coma var_decl |
+    /* empty */
+;
+
+lis_ids ::= 
+        Id lis_ids|
+        /* empty */
+;
+
+statement ::=
+        location assign_op expr Punto_coma statement|
+        method_call Punto_coma statement|
+        If LEFT_PAR expr RIGHT_PAR block  corche_else_block  statement|
+        For Id ASSIGN expr Coma expr block statement|
+        Return Punto_coma statement|
+        Return expr Punto_coma statement|
+        Break Punto_coma statement|
+        Continue Punto_coma statement|
+        block statement|
+        /* empty */
+;
+
+corche_else_block ::=
+        Else block |
+        /* empty */
+;
