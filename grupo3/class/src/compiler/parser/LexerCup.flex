@@ -1,10 +1,12 @@
 package compiler.scanner;
-import static compiler.scanner.Tokens.*;
+import static java_cup.runtime.Symbol;
 %%
-%class Lexer
-%type Tokens
+%class LexerCup
+%type java_cup.runtime.Symbol
+%cup 
+%full
 %line
-%column
+%char
 
 id = ([A-Za-z][_0-9A-Za-z]+)
 alpha = [a-zA-Z_]
@@ -19,21 +21,24 @@ assign_op = [=]
 
 espacio=[ ,\t,\r,\n]+
 %{
-    public String lexeme;
-    public int linea;
-    public int columna;
+    private Symbol symbol(int type, Object value){
+        return new Symbol(type, yyline, yycolumn, value)
+    }
+    private Symbol symbol(int type){
+        return new Symbol(type, yyline, yycolumn)
+    }
 %}
 %%
 
-int {lexeme=yytext(); linea=yyline; columna=yycolumn; return Int;}
-boolean {lexeme=yytext(); linea=yyline; columna=yycolumn; return Boolean;}
-callout {lexeme=yytext(); linea=yyline; columna=yycolumn; return Callout;}
-if {lexeme=yytext(); linea=yyline; columna=yycolumn; return If;}
-for {lexeme=yytext(); linea=yyline; columna=yycolumn; return For;}
-else {lexeme=yytext(); linea=yyline; columna=yycolumn; return Else;}
-return {lexeme=yytext(); linea=yyline; columna=yycolumn; return Return;}
-break {lexeme=yytext(); linea=yyline; columna=yycolumn; return Break;}
-continue {lexeme=yytext(); linea=yyline; columna=yycolumn; return Continue;}
+int {return new Symbol(sym.Int, yychar, yyline, yytext());}
+boolean {return new Symbol(sym.Boolena, yychar, yyline, yytext());}
+callout {return new Symbol(sym.Callout, yychar, yyline, yytext());}
+if {return new Symbol(sym.If, yychar, yyline, yytext());}
+for {return new Symbol(sym.For, yychar, yyline, yytext());}
+else {return new Symbol(sym.Else, yychar, yyline, yytext());}
+return {return new Symbol(sym.Return, yychar, yyline, yytext());}
+break {return new Symbol(sym.Break, yychar, yyline, yytext());}
+continue {return new Symbol(sym.Continue, yychar, yyline, yytext());}
 true {lexeme=yytext(); linea=yyline; columna=yycolumn; return True;}
 false {lexeme=yytext(); linea=yyline; columna=yycolumn; return False;}
 void {lexeme=yytext(); linea=yyline; columna=yycolumn; return Void;}
@@ -53,7 +58,6 @@ while {lexeme=yytext(); linea=yyline; columna=yycolumn; return While;}
 {rel_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return rel_op;}
 {assign_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return assign_op;}
 
-"\n"                {return Linea}
 "<="                {lexeme=yytext(); linea=yyline; columna=yycolumn; return LESS_EQUAL;    }
 ">="                { lexeme=yytext();linea=yyline; columna=yycolumn;  return GREATER_EQUAL; }
 "=="                { lexeme=yytext();linea=yyline; columna=yycolumn; return EQUAL;         }

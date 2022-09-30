@@ -8,6 +8,7 @@
  * @author p1jav
  */
 import compiler.scanner.Scanner_;
+import compiler.parser.Parser;
 import java.util.Scanner;
 
 public class Compiler {
@@ -76,6 +77,11 @@ public class Compiler {
                                                 scan.main(null,ruta);
                                                 break;
                                             case "parse":
+                                                String ruta = System.getProperty("user.dir");
+                                                ruta = ruta + "/" + archivo;
+                                                //Scanner
+                                                Parser parse = new Parser();
+                                                parse.main(null,ruta);
                                                 break;
                                             case "ast":
                                                 break;
