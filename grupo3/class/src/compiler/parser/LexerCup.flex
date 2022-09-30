@@ -14,9 +14,9 @@ digit = [0-9]
 hex_digit = ([0-9a-fA-F])
 decimal_literal = ([0-9][0-9]*)
 hex_literal = (0[Xx]{hex_digit}+)
-rel_op = ([<|>])
-arith_op = [+|-|*|/|%]
-assign_op = [=]
+//rel_op = ([<|>])
+//arith_op = [+|-|*|/|%]
+//assign_op = [=]
 
 
 espacio=[ ,\t,\r,\n]+
@@ -49,18 +49,21 @@ while {return new Symbol(sym.While, yychar, yyline, yytext());}
 {espacio} {/*Ignore*/}
 "//".* {/*Ignore*/}
 {id} {return new Symbol(sym.Id, yychar, yyline, yytext());}
-{arith_op} {return new Symbol(sym.Arith_op, yychar, yyline, yytext());}
+//{arith_op} {return new Symbol(sym.Arith_op, yychar, yyline, yytext());}
 {digit} {return new Symbol(sym.Digit, yychar, yyline, yytext());}
 {alpha} {return new Symbol(sym.Alpha, yychar, yyline, yytext());}
 {hex_digit} {return new Symbol(sym.Hex_digit, yychar, yyline, yytext());}
 {decimal_literal} {return new Symbol(sym.Decimal_literal, yychar, yyline, yytext());}
 {hex_literal} {return new Symbol(sym.Hex_literal, yychar, yyline, yytext());}
-{rel_op} {return new Symbol(sym.Rel_op, yychar, yyline, yytext());}
-{assign_op} {return new Symbol(sym.Assign_op, yychar, yyline, yytext());}
+//{rel_op} {return new Symbol(sym.Rel_op, yychar, yyline, yytext());}
+//{assign_op} {return new Symbol(sym.Assign_op, yychar, yyline, yytext());}
 
+"<"                {return new Symbol(sym.GREATER, yychar, yyline, yytext());}
+">"                {return new Symbol(sym.LESS, yychar, yyline, yytext());}
 "<="                {return new Symbol(sym.LESS_EQUAL, yychar, yyline, yytext());}
 ">="                {return new Symbol(sym.GREATER_EQUAL, yychar, yyline, yytext());}
 "+="                {return new Symbol(sym.PLUS_EQUAL, yychar, yyline, yytext());}
+"="                {return new Symbol(sym.ASSIGN, yychar, yyline, yytext());}
 "-="                {return new Symbol(sym.MINUS_EQUAL, yychar, yyline, yytext());}
 "=="                {return new Symbol(sym.EQUAL, yychar, yyline, yytext());}
 "!="                {return new Symbol(sym.NOT_EQUAL, yychar, yyline, yytext());}
@@ -69,5 +72,17 @@ while {return new Symbol(sym.While, yychar, yyline, yytext());}
 "("                {return new Symbol(sym.LEFT_PAR, yychar, yyline, yytext());}
 ")"                {return new Symbol(sym.RIGHT_PAR, yychar, yyline, yytext());}
 ";"                {return new Symbol(sym.Punto_coma, yychar, yyline, yytext());}
+"+"                {return new Symbol(sym.Mas, yychar, yyline, yytext());}
+"-"                {return new Symbol(sym.Menos, yychar, yyline, yytext());}
+"*"                {return new Symbol(sym.Multiplicacion, yychar, yyline, yytext());}
+"/"                {return new Symbol(sym.Division, yychar, yyline, yytext());}
+"%"                {return new Symbol(sym.Mod, yychar, yyline, yytext());}
+"{"                {return new Symbol(sym.Llave_A, yychar, yyline, yytext());}
+"}"                {return new Symbol(sym.Llave_C, yychar, yyline, yytext());}
+"["                {return new Symbol(sym.Corche_A, yychar, yyline, yytext());}
+"]"                {return new Symbol(sym.Corche_C, yychar, yyline, yytext());}
+","                {return new Symbol(sym.Coma, yychar, yyline, yytext());}
+
+
 
  . {return new Symbol(sym.ERROR, yychar, yyline, yytext());}
