@@ -20,13 +20,14 @@ terminal Int, Boolena, Callout, If, For, Else, Return, Break, Continue, True,
         Decimal_literal,Hex_literal,GREATER, LESS,LESS_EQUAL,GREATER_EQUAL,
         PLUS_EQUAL, ASSIGN, MINUS_EQUAL,EQUAL,NOT_EQUAL,AND,OR, LEFT_PAR,
         RIGHT_PAR,Punto_coma,Mas, Menos,Multiplicacion, Division, Mod, Llave_A,
-        Llave_C,Corche_A, Corche_C, Coma, ERROR;
+        Llave_C,Corche_A, Corche_C, Coma, Exclamacion, ERROR;
 
 
 non terminal program, field_decl, agru_field_decls, agru_field_decl, method_decl,agru_type_void , corche_type_id, argu_method_decl, 
                 block, var_decl, lis_ids, type, statement,corche_else_block,
                 assign_op, method_call, method_name, location, expr, callout_arg, bin_op,
-                arith_op, rel_op, eq_op, cond_op, literal, alpha_num, int_literal,bool_literal;
+                arith_op, rel_op, eq_op, cond_op, literal, alpha_num, int_literal,bool_literal,corche_expresion,exprs,alpha_num_asterisco,
+                char_literal, char, string_literal, char_asterisco,corche_call_out,callout_args;
 
 start with program;
 
@@ -98,3 +99,153 @@ corche_else_block ::=
         Else block |
         /* empty */
 ;
+
+assign_op ::=
+        ASSIGN |
+        MINUS_EQUAL |
+        PLUS_EQUAL
+;
+
+method_call ::=
+        id LEFT_PAR corche_expresion RIGHT_PAR |
+        Callout LEFT_PAR string_literal corche_call_out RIGHT_PAR
+;
+
+corche_call_out ::=
+        callout_arg callout_args
+;
+
+callout_args ::=
+        callout_arg callout_args |
+        /* empty */
+;
+
+corche_expresion ::=
+        expr exprs |
+        /* empty */
+;
+
+expr ::=
+        location |
+        method_call |
+        literal |
+        expr bin_op expr |
+        Menos expr |
+        Exclamacion expr |
+        LEFT_PAR expr RIGHT_PAR
+;
+
+exprs ::=
+        location exprs |
+        method_call exprs |
+        literal exprs |
+        expr bin_op expr exprs |
+        Menos expr exprs |
+        Exclamacion expr exprs |
+        LEFT_PAR expr RIGHT_PAR exprs |
+        /* empty */
+;
+
+location ::=
+        id |
+        id Corche_A expr Corche_C
+;
+
+callout_arg ::=
+        expr |
+        string_literal
+;
+
+bin_op ::=
+        arith_op |
+        rel_op |
+        eq_op |
+        cond_op
+;
+
+arith_op ::=
+        Mas |
+        Menos |
+        Multiplicacion |
+        Division |
+        Mod
+;
+
+rel_op ::=
+        GREATER |
+        LESS |
+        LESS_EQUAL |
+        GREATER_EQUAL
+;
+
+eq_op ::=
+        EQUAL |
+        NOT_EQUAL
+;
+
+cond_op ::=
+        AND |
+        OR
+;
+
+literal ::=
+        int_literal |
+        char_literal |
+        bool_literal
+;
+
+int_literal ::=
+        Decimal_literal |
+        Hex_literal
+;
+
+bool_literal ::=
+        True |
+        False
+;
+
+id ::=
+        Alpha alpha_num_asterisco
+;
+
+alpha_num_asterisco ::=
+        Alpha |
+        Digit |
+        /* empty */
+;
+
+char_literal ::=
+        ' char '
+;
+
+char ::=
+        Alpha |
+        Digit |
+        arith_op |
+        LESS |
+        GREATER
+;
+
+string_literal ::=
+        " char_asterisco "
+;
+
+char_asterisco ::=
+        Alpha char_asterisco |
+        Digit char_asterisco |
+        arith_op char_asterisco |
+        LESS char_asterisco |
+        GREATER char_asterisco |
+        /* empty */
+;
+
+
+
+
+
+
+
+
+
+
+
