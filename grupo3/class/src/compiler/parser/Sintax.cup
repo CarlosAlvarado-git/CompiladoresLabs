@@ -1,4 +1,4 @@
-package parser;
+package compiler.parser;
 
 import java_cup.runtime.Symbol;
 
@@ -15,15 +15,15 @@ parser code
 }
 :};
 
-terminal Int, Boolena, Callout, If, For, Else, Return, Break, Continue, True, 
-        False, Void, Class, Program, While, Id, Digit, Alpha, Hex_digit,
+terminal Int, Boolean, Callout, If, For, Else, Return, Break, Continue, True, 
+        False, Void, Class, Program, Id, Digit, Alpha, Hex_digit,
         Decimal_literal,Hex_literal,GREATER, LESS,LESS_EQUAL,GREATER_EQUAL,
         PLUS_EQUAL, ASSIGN, MINUS_EQUAL,EQUAL,NOT_EQUAL,AND,OR, LEFT_PAR,
         RIGHT_PAR,Punto_coma,Mas, Menos,Multiplicacion, Division, Mod, Llave_A,
-        Llave_C,Corche_A, Corche_C, Coma, Exclamacion, ERROR;
+        Llave_C,Corche_A, Corche_C, Coma, Exclamacion,Comillas, ComillasDoble, ERROR;
 
 
-non terminal program, field_decl, agru_field_decls, agru_field_decl, method_decl,agru_type_void , corche_type_id, argu_method_decl, 
+non terminal program, field_method_decl, siguiente, siguiente2, siguiente3, if, option, option2,
                 block, var_decl, lis_ids, type, statement,corche_else_block,
                 assign_op, method_call, method_name, location, expr, callout_arg, bin_op,
                 arith_op, rel_op, eq_op, cond_op, literal, alpha_num, int_literal,bool_literal,corche_expresion,exprs,alpha_num_asterisco,
@@ -31,221 +31,50 @@ non terminal program, field_decl, agru_field_decls, agru_field_decl, method_decl
 
 start with program;
 
-program ::= Class Program Llave_A field_decl method_decl Llave_C
+program ::= Class Program Llave_A  field_method_decl field_method_decl Llave_C
 ;
 
-field_decl ::=  
-        type agru_field_decls agru_field_decl Punto_coma field_decl|
-        /* empty */
+field_method_decl  ::= 
+        type siguiente Punto_coma |
+        Void LEFT_PAR siguiente RIGHT_PAR block Punto_coma
 ;
 
-agru_field_decls ::= 
-    Id |
-    Id Corche_A int_literal Corche_C
+siguiente ::= 
+        Id siguiente2 ;
+
+siguiente2 ::= 
+        Corche_A int_literal Corche_C |
+        siguiente3 ; 
+
+siguiente3 ::=
+        type Id siguiente3 ;
+
+block ::= Llave_A var_decl statement Llave_C 
 ;
-
-agru_field_decl ::= 
-    Id agru_field_decl |
-    Id Corche_A int_literal Corche_C agru_field_decl|
-    /* empty */
-;
-
-method_decl ::= 
-    agru_type_void Id corche_type_id block
-;
-
-agru_type_void ::= 
-            type | 
-            Void
-;
-
-corche_type_id::=
-        type Id argu_method_decl |
-        /* empty */
-;
-
-argu_method_decl ::=
-        type Id argu_method_decl |
-        /* empty */
-;
-
-
-block ::= Llave_A  var_decl statement Llave_C
 
 var_decl ::= 
-    type Id lis_ids Punto_coma var_decl |
-    /* empty */
-;
-
-lis_ids ::= 
-        Id lis_ids|
-        /* empty */
-;
+        siguiente3 |;
 
 statement ::=
-        location assign_op expr Punto_coma statement|
-        method_call Punto_coma statement|
-        If LEFT_PAR expr RIGHT_PAR block  corche_else_block  statement|
-        For Id ASSIGN expr Coma expr block statement|
-        Return Punto_coma statement|
-        Return expr Punto_coma statement|
-        Break Punto_coma statement|
-        Continue Punto_coma statement|
-        block statement|
-        /* empty */
-;
-
-corche_else_block ::=
-        Else block |
-        /* empty */
-;
-
-assign_op ::=
-        ASSIGN |
-        MINUS_EQUAL |
-        PLUS_EQUAL
-;
-
-method_call ::=
-        id LEFT_PAR corche_expresion RIGHT_PAR |
-        Callout LEFT_PAR string_literal corche_call_out RIGHT_PAR
-;
-
-corche_call_out ::=
-        callout_arg callout_args
-;
-
-callout_args ::=
-        callout_arg callout_args |
-        /* empty */
-;
-
-corche_expresion ::=
-        expr exprs |
-        /* empty */
-;
-
-expr ::=
-        location |
-        method_call |
-        literal |
-        expr bin_op expr |
-        Menos expr |
-        Exclamacion expr |
-        LEFT_PAR expr RIGHT_PAR
-;
-
-exprs ::=
-        location exprs |
-        method_call exprs |
-        literal exprs |
-        expr bin_op expr exprs |
-        Menos expr exprs |
-        Exclamacion expr exprs |
-        LEFT_PAR expr RIGHT_PAR exprs |
-        /* empty */
-;
-
-location ::=
-        id |
-        id Corche_A expr Corche_C
-;
-
-callout_arg ::=
-        expr |
-        string_literal
-;
-
-bin_op ::=
-        arith_op |
-        rel_op |
-        eq_op |
-        cond_op
-;
-
-arith_op ::=
-        Mas |
-        Menos |
-        Multiplicacion |
-        Division |
-        Mod
-;
-
-rel_op ::=
-        GREATER |
-        LESS |
-        LESS_EQUAL |
-        GREATER_EQUAL
-;
-
-eq_op ::=
-        EQUAL |
-        NOT_EQUAL
-;
-
-cond_op ::=
-        AND |
-        OR
-;
-
-literal ::=
-        int_literal |
-        char_literal |
-        bool_literal
-;
-
-int_literal ::=
-        Decimal_literal |
-        Hex_literal
-;
-
-bool_literal ::=
-        True |
-        False
-;
-
-id ::=
-        Alpha alpha_num_asterisco
-;
-
-alpha_num_asterisco ::=
-        Alpha |
-        Digit |
-        /* empty */
-;
-
-char_literal ::=
-        ' char '
-;
-
-char ::=
-        Alpha |
-        Digit |
-        arith_op |
-        LESS |
-        GREATER
-;
-
-string_literal ::=
-        " char_asterisco "
-;
-
-char_asterisco ::=
-        Alpha char_asterisco |
-        Digit char_asterisco |
-        arith_op char_asterisco |
-        LESS char_asterisco |
-        GREATER char_asterisco |
-        /* empty */
+        location assign_op expr Punto_coma |
+        method_call Punto_coma |
+        if |
+        For Id ASSIGN expr Coma expr block |
+        Return option2 Punto_coma|
+        Break |
+        Continue |
+        block |
 ;
 
 
+if ::=
+    If LEFT_PAR expr RIGHT_PAR block option 
+;
 
+option ::=
+        Else block | 
+;
 
-
-
-
-
-
-
-
+option2 ::=
+        expr | 
+;

@@ -1,5 +1,5 @@
-package compiler.scanner;
-import static java_cup.runtime.Symbol;
+package compiler.parser;
+import java_cup.runtime.Symbol;
 %%
 %class LexerCup
 %type java_cup.runtime.Symbol
@@ -31,7 +31,7 @@ espacio=[ ,\t,\r,\n]+
 %%
 
 int {return new Symbol(sym.Int, yychar, yyline, yytext());}
-boolean {return new Symbol(sym.Boolena, yychar, yyline, yytext());}
+boolean {return new Symbol(sym.Boolean, yychar, yyline, yytext());}
 callout {return new Symbol(sym.Callout, yychar, yyline, yytext());}
 if {return new Symbol(sym.If, yychar, yyline, yytext());}
 for {return new Symbol(sym.For, yychar, yyline, yytext());}
@@ -44,7 +44,6 @@ false {return new Symbol(sym.False, yychar, yyline, yytext());}
 void {return new Symbol(sym.Void, yychar, yyline, yytext());}
 class {return new Symbol(sym.Class, yychar, yyline, yytext());}
 Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
-while {return new Symbol(sym.While, yychar, yyline, yytext());}
 
 {espacio} {/*Ignore*/}
 "//".* {/*Ignore*/}
@@ -82,6 +81,10 @@ while {return new Symbol(sym.While, yychar, yyline, yytext());}
 "["                {return new Symbol(sym.Corche_A, yychar, yyline, yytext());}
 "]"                {return new Symbol(sym.Corche_C, yychar, yyline, yytext());}
 ","                {return new Symbol(sym.Coma, yychar, yyline, yytext());}
+"'"                {return new Symbol(sym.Comillas, yychar, yyline, yytext());}
+"''"                {return new Symbol(sym.ComillasDoble, yychar, yyline, yytext());}
+"!"                {return new Symbol(sym.Exclamacion, yychar, yyline, yytext());}
+
 
 
 

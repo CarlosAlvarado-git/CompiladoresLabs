@@ -10,17 +10,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.file.Files;
 
 /**
  *
  * @author carlosalvarado
  */
 public class Parser {
-public static void main(String[] args, String ruta){
-        //String jflex = System.getProperty("user.dir");
-        //jflex = jflex + "/src/compiler/scanner/Lexer.flex";
-        //generarLexer(jflex);
-        try{
+public static void main(String[] args) throws Exception{
+        String jflex = System.getProperty("user.dir");
+        jflex = jflex + "/src/compiler/parser/LexerCup.flex";
+        String cupruta = System.getProperty("user.dir");
+        cupruta = cupruta + "/src/compiler/parser/Sintax.cup";
+        String[] rutaS = {"-parser", "Sintax", cupruta};
+        generar(jflex, rutaS);
+        /*try{
             try{
                 //Path to file
                 String archivo = ruta;
@@ -33,12 +37,13 @@ public static void main(String[] args, String ruta){
             }
         } catch (IOException ex) {
             System.out.println(ex);
-        }
+        }*/
             
     }
-public static void generarLexer(String ruta){
-        //File archivo = new File(ruta);
-        //JFlex.Main.generate(archivo);
+public static void generar(String rutalexer, String[] rutaSintax) throws IOException, Exception{
+        File archivo = new File(rutalexer);
+        JFlex.Main.generate(archivo);
+        java_cup.Main.main(rutaSintax); 
     }
     
 }
