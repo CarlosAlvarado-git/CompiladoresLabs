@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class Compiler {
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         String[] tages = {"o", "target", "opt", "debug"};
         
         //inicio del codigo
@@ -75,6 +75,7 @@ public class Compiler {
                                                 ruta = ruta + "/" + archivo;
                                                 //Scanner
                                                 Scanner_ scan = new Scanner_();
+                                                System.out.println("Entre a scan");
                                                 scan.main(null,ruta);
                                                 break;
                                             case "parse":

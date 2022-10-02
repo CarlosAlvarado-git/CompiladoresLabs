@@ -17,24 +17,25 @@ import java.nio.file.Files;
  * @author carlosalvarado
  */
 public class Parser {
-public static void main(String[] args) throws Exception{
-        String jflex = System.getProperty("user.dir");
-        jflex = jflex + "/src/compiler/parser/LexerCup.flex";
-        String cupruta = System.getProperty("user.dir");
-        cupruta = cupruta + "/src/compiler/parser/Sintax.cup";
-        String[] rutaS = {"-parser", "Sintax", cupruta};
-        generar(jflex, rutaS);
-        /*try{
+public static void main(String[] args, String ruta) throws Exception{
+        //String jflex = System.getProperty("user.dir");
+        //jflex = jflex + "/src/compiler/parser/LexerCup.flex";
+        //String cupruta = System.getProperty("user.dir");
+        //cupruta = cupruta + "/src/compiler/parser/Sintax.cup";
+        //String[] rutaS = {"-parser", "Sintax", cupruta};
+        //generar(jflex, rutaS);
+        try{
             //Path to file
             String archivo = ruta;
             Reader lector = new BufferedReader(new FileReader(archivo));
             // Este lexer debe ser el nuevo, que se conecte con cup.
-            LexerCup lexer = new LexerCup(lector);
+            Sintax analisis = new Sintax(new LexerCup(lector));
+            analisis.parse();
             
             
         }catch (FileNotFoundException ex) {
             System.out.println(ex);
-        }*/
+        }
             
     }
 public static void generar(String rutalexer, String[] rutaSintax) throws IOException, Exception{
