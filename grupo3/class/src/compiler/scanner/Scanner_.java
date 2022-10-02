@@ -25,6 +25,7 @@ public static void main(String[] args, String ruta){
             try{
                 //Path to file
                 String archivo = ruta;
+                System.out.println(archivo);
                 Reader lector = new BufferedReader(new FileReader(archivo));
                 Lexer lexer = new Lexer(lector);
                 String resultado = "";

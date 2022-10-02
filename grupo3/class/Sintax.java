@@ -1407,7 +1407,7 @@ class CUP$Sintax$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()).right;
 		Object s = (Object)((java_cup.runtime.Symbol) CUP$Sintax$stack.peek()).value;
 		
-            System.out.println("Correcto");
+            System.out.println("Correcto")
         
               CUP$Sintax$result = parser.getSymbolFactory().newSymbol("INICIO",0, ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), RESULT);
             }

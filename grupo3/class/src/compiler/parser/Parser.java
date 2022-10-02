@@ -18,12 +18,12 @@ import java.nio.file.Files;
  */
 public class Parser {
 public static void main(String[] args, String ruta) throws Exception{
-        //String jflex = System.getProperty("user.dir");
-        //jflex = jflex + "/src/compiler/parser/LexerCup.flex";
-        //String cupruta = System.getProperty("user.dir");
-        //cupruta = cupruta + "/src/compiler/parser/Sintax.cup";
-        //String[] rutaS = {"-parser", "Sintax", cupruta};
-        //generar(jflex, rutaS);
+        /*String jflex = System.getProperty("user.dir");
+        jflex = jflex + "/src/compiler/parser/LexerCup.flex";
+        String cupruta = System.getProperty("user.dir");
+        cupruta = cupruta + "/src/compiler/parser/Sintax.cup";
+        String[] rutaS = {"-parser", "Sintax", cupruta};
+        generar(jflex, rutaS);*/
         try{
             //Path to file
             String archivo = ruta;

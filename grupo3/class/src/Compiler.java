@@ -72,7 +72,7 @@ public class Compiler {
                                             case "scan":
                                                 //Ruta al archivo
                                                 ruta = System.getProperty("user.dir");
-                                                ruta = ruta + "/" + archivo;
+                                                ruta = ruta + "/src/" + archivo;
                                                 //Scanner
                                                 Scanner_ scan = new Scanner_();
                                                 System.out.println("Entre a scan");
@@ -80,7 +80,7 @@ public class Compiler {
                                                 break;
                                             case "parse":
                                                 ruta = System.getProperty("user.dir");
-                                                ruta = ruta + "/" + archivo;
+                                                ruta = ruta + "/src/" + archivo;
                                                 //Scanner
                                                 Parser parse = new Parser();
                                                 parse.main(null,ruta);
