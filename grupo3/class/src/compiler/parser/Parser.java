@@ -25,17 +25,14 @@ public static void main(String[] args) throws Exception{
         String[] rutaS = {"-parser", "Sintax", cupruta};
         generar(jflex, rutaS);
         /*try{
-            try{
-                //Path to file
-                String archivo = ruta;
-                Reader lector = new BufferedReader(new FileReader(archivo));
-                // Este lexer debe ser el nuevo, que se conecte con cup. 
-                LexerCup lexer = new LexerCup(lector);
-                
-            } catch (FileNotFoundException ex) {
-                System.out.println(ex);
-            }
-        } catch (IOException ex) {
+            //Path to file
+            String archivo = ruta;
+            Reader lector = new BufferedReader(new FileReader(archivo));
+            // Este lexer debe ser el nuevo, que se conecte con cup.
+            LexerCup lexer = new LexerCup(lector);
+            
+            
+        }catch (FileNotFoundException ex) {
             System.out.println(ex);
         }*/
             

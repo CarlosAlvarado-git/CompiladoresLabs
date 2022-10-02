@@ -23,58 +23,168 @@ terminal Int, Boolean, Callout, If, For, Else, Return, Break, Continue, True,
         Llave_C,Corche_A, Corche_C, Coma, Exclamacion,Comillas, ComillasDoble, ERROR;
 
 
-non terminal program, field_method_decl, siguiente, siguiente2, siguiente3, if, option, option2,
-                block, var_decl, lis_ids, type, statement,corche_else_block,
+non terminal program, field_decl, method_decl,agru_type_void, 
+                block, var_decl, type, statement,
                 assign_op, method_call, method_name, location, expr, callout_arg, bin_op,
-                arith_op, rel_op, eq_op, cond_op, literal, alpha_num, int_literal,bool_literal,corche_expresion,exprs,alpha_num_asterisco,
-                char_literal, char, string_literal, char_asterisco,corche_call_out,callout_args;
+                arith_op, rel_op, eq_op, cond_op, literal, int_literal,bool_literal,alpha_num_asterisco,
+                char_literal, char, string_literal, char_asterisco,field_name,method_decl_corche,method_decl_corche_coma_type,
+                var_decl_coma_id,statement_else_block,statement_expr,field_decl_coma_field,
+                method_call_corche,method_call_corche_expr,method_call_corche_dos,method_call_coma_callout;
 
+precedence left Mas, Menos,Multiplicacion, Division, Mod,GREATER, LESS, LESS_EQUAL, GREATER_EQUAL,EQUAL, NOT_EQUAL,AND, OR ;
 start with program;
 
-program ::= Class Program Llave_A  field_method_decl field_method_decl Llave_C
+program ::= Class Program Llave_A field_decl method_decl Llave_C ;
+
+field_name ::= Id | Id Corche_A int_literal Corche_C;
+
+field_decl ::= field_decl type field_name field_decl_coma_field Punto_coma | ;
+
+field_decl_coma_field ::=
+            Coma field_name field_decl_coma_field |
 ;
 
-field_method_decl  ::= 
-        type siguiente Punto_coma |
-        Void LEFT_PAR siguiente RIGHT_PAR block Punto_coma
+method_decl ::= type Id LEFT_PAR method_decl_corche RIGHT_PAR block method_decl |
+                Void Id LEFT_PAR method_decl_corche RIGHT_PAR block method_decl | ;
+
+method_decl_corche ::=
+        type Id method_decl_corche_coma_type |
 ;
 
-siguiente ::= 
-        Id siguiente2 ;
-
-siguiente2 ::= 
-        Corche_A int_literal Corche_C |
-        siguiente3 ; 
-
-siguiente3 ::=
-        type Id siguiente3 ;
-
-block ::= Llave_A var_decl statement Llave_C 
+method_decl_corche_coma_type ::=
+    Coma type Id method_decl_corche_coma_type |
 ;
 
-var_decl ::= 
-        siguiente3 |;
-
-statement ::=
-        location assign_op expr Punto_coma |
-        method_call Punto_coma |
-        if |
-        For Id ASSIGN expr Coma expr block |
-        Return option2 Punto_coma|
-        Break |
-        Continue |
-        block |
+agru_type_void ::= 
+            type | 
+            Void
 ;
 
+block ::= Llave_A var_decl statement Llave_C;
 
-if ::=
-    If LEFT_PAR expr RIGHT_PAR block option 
+var_decl ::= type Id var_decl_coma_id Punto_coma var_decl | ;
+
+var_decl_coma_id ::=
+            Coma Id var_decl_coma_id |
 ;
 
-option ::=
-        Else block | 
+type ::= Int | Boolean;
+
+statement ::= location assign_op expr Punto_coma statement 
+        | method_call Punto_coma statement 
+        | If LEFT_PAR expr RIGHT_PAR block statement_else_block statement 
+        | For Id ASSIGN expr Coma expr block statement 
+        | Return statement_expr Punto_coma statement 
+        | Break Punto_coma statement 
+        | Continue Punto_coma statement 
+        | block statement 
+        |;
+
+statement_else_block ::=
+    Else block |
 ;
 
-option2 ::=
-        expr | 
+statement_expr ::=
+    expr |
+;
+
+assign_op ::= ASSIGN
+          | PLUS_EQUAL
+          | MINUS_EQUAL;
+
+method_call ::= method_name LEFT_PAR method_call_corche RIGHT_PAR
+            | Callout LEFT_PAR string_literal method_call_corche_dos RIGHT_PAR;
+
+method_call_corche ::=
+        expr method_call_corche_expr |
+;
+
+method_call_corche_expr ::=
+        Coma expr method_call_corche_expr |
+;
+
+method_call_corche_dos ::=
+        Coma callout_arg method_call_coma_callout |
+;
+
+method_call_coma_callout ::=
+        Coma callout_arg method_call_coma_callout |
+;
+
+method_name ::= Id;
+
+location ::= Id | Id Corche_A expr Corche_C;
+
+expr ::= location
+     | method_call
+     | literal
+     | expr bin_op expr
+     | Menos expr
+     | Exclamacion expr
+     | LEFT_PAR expr RIGHT_PAR;
+
+
+
+callout_arg ::= expr
+        | string_literal ;
+
+bin_op ::= arith_op
+      | rel_op
+      | eq_op
+      | cond_op;
+
+arith_op ::= Mas | Menos | Multiplicacion | Division | Mod ;
+
+rel_op ::= GREATER | LESS | LESS_EQUAL | GREATER_EQUAL ;
+
+eq_op ::= EQUAL | NOT_EQUAL ;
+
+cond_op ::= AND | OR ;
+
+literal ::= int_literal | char_literal | bool_literal ;
+
+
+int_literal ::=
+        Decimal_literal |
+        Hex_literal
+;
+
+bool_literal ::=
+        True |
+        False
+;
+
+id ::=
+        Alpha alpha_num_asterisco
+;
+
+alpha_num_asterisco ::=
+        Alpha |
+        Digit |
+        /* empty */
+;
+
+char_literal ::=
+        Comillas char Comillas
+;
+
+char ::=
+        Alpha |
+        Digit |
+        arith_op |
+        LESS |
+        GREATER
+;
+
+string_literal ::=
+        ComillasDoble char_asterisco ComillasDoble
+;
+
+char_asterisco ::=
+        Alpha char_asterisco |
+        Digit char_asterisco |
+        arith_op char_asterisco |
+        LESS char_asterisco |
+        GREATER char_asterisco |
+        /* empty */
 ;

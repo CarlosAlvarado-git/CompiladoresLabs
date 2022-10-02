@@ -22,10 +22,10 @@ hex_literal = (0[Xx]{hex_digit}+)
 espacio=[ ,\t,\r,\n]+
 %{
     private Symbol symbol(int type, Object value){
-        return new Symbol(type, yyline, yycolumn, value)
+        return new Symbol(type, yyline, yycolumn, value);
     }
     private Symbol symbol(int type){
-        return new Symbol(type, yyline, yycolumn)
+        return new Symbol(type, yyline, yycolumn);
     }
 %}
 %%
