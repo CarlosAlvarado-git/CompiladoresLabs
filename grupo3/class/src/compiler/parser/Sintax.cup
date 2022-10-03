@@ -614,7 +614,7 @@ method_call_corche_dos ::=
 
                 tmp.addHijo((Nodo) ca);
 
-                tmp.addHijo((Nodo) mccc_);
+                tmp.addHijo((Nodo) mccc);
 
                 tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
@@ -629,8 +629,8 @@ method_call_coma_callout ::=
                 cm.setValor("Coma");
                 cm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cm);
-                
-                tmp.addHijo((Nodo) mccc_);
+                tmp.addHijo((Nodo) ca);
+                tmp.addHijo((Nodo) mccc);
                 RESULT = tmp;
         :} |
 ;
@@ -706,14 +706,14 @@ expr ::= location:l{:
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
-        | expr:ex bin_op:bo expr:ex{:
+        | expr:ex bin_op:bo expr:ex2{:
         Nodo tmp = new Nodo("expr");
 
         tmp.addHijo((Nodo) ex);
 
         tmp.addHijo((Nodo) bo);
 
-        tmp.addHijo((Nodo) ex);
+        tmp.addHijo((Nodo) ex2);
 
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
@@ -875,8 +875,8 @@ arith_op ::= Mas {:
 
 rel_op ::= GREATER {:
         Nodo tmp = new Nodo("rel_op");
-        Nodo greater_ = new Nodo("greater");
-        greater_.setValor("greater");
+        Nodo greater_ = new Nodo("GREATER");
+        greater_.setValor("GREATER");
         greater_.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) greater_);
 
@@ -886,8 +886,8 @@ rel_op ::= GREATER {:
     :} 
 | LESS {:
     Nodo tmp = new Nodo("rel_op");
-    Nodo less_ = new Nodo("less");
-    less_.setValor("less");
+    Nodo less_ = new Nodo("LESS");
+    less_.setValor("LESS");
     less_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) less_);
 
@@ -897,8 +897,8 @@ rel_op ::= GREATER {:
 :} 
 | LESS_EQUAL {:
     Nodo tmp = new Nodo("rel_op");
-    Nodo less_equal_ = new Nodo("less_equal");
-    less_equal_.setValor("less_equal");
+    Nodo less_equal_ = new Nodo("LESS_EQUAL");
+    less_equal_.setValor("LESS_EQUAL");
     less_equal_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) less_equal_);
 
@@ -908,8 +908,8 @@ rel_op ::= GREATER {:
 :} 
 | GREATER_EQUAL {:
     Nodo tmp = new Nodo("rel_op");
-    Nodo greater_equal_ = new Nodo("greater_equal");
-    greater_equal_.setValor("greater_equal");
+    Nodo greater_equal_ = new Nodo("GREATER_EQUAL");
+    greater_equal_.setValor("GREATER_EQUAL");
     greater_equal_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) greater_equal_);
 
@@ -920,8 +920,8 @@ rel_op ::= GREATER {:
 
 eq_op ::= EQUAL {:
     Nodo tmp = new Nodo("eq_op");
-    Nodo equal_ = new Nodo("equal");
-    equal_.setValor("equal");
+    Nodo equal_ = new Nodo("EQUAL");
+    equal_.setValor("EQUAL");
     equal_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) equal_);
 
@@ -931,8 +931,8 @@ eq_op ::= EQUAL {:
 :} 
 | NOT_EQUAL {:
     Nodo tmp = new Nodo("eq_op");
-    Nodo not_equal_ = new Nodo("not_equal");
-    not_equal_.setValor("not_equal");
+    Nodo not_equal_ = new Nodo("NOT_EQUAL");
+    not_equal_.setValor("NOT_EQUAL");
     not_equal_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) not_equal_);
 
@@ -943,8 +943,8 @@ eq_op ::= EQUAL {:
 
 cond_op ::= AND {:
     Nodo tmp = new Nodo("cond_op");
-    Nodo and_ = new Nodo("and");
-    and_.setValor("and");
+    Nodo and_ = new Nodo("AND");
+    and_.setValor("AND");
     and_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) and_);
 
@@ -954,8 +954,8 @@ cond_op ::= AND {:
 :} 
 | OR {:
     Nodo tmp = new Nodo("cond_op");
-    Nodo or_ = new Nodo("or");
-    or_.setValor("or");
+    Nodo or_ = new Nodo("OR");
+    or_.setValor("OR");
     or_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) or_);
 
@@ -992,8 +992,8 @@ literal ::= int_literal:il {:
 
 int_literal ::= Decimal_literal {:
     Nodo tmp = new Nodo("int_literal");
-    Nodo decimal_literal_ = new Nodo("decimal_literal");
-    decimal_literal_.setValor("decimal_literal");
+    Nodo decimal_literal_ = new Nodo("Decimal_literal");
+    decimal_literal_.setValor("Decimal_literal");
     decimal_literal_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) decimal_literal_);
 
@@ -1003,8 +1003,8 @@ int_literal ::= Decimal_literal {:
 :} 
 | Hex_literal {:
     Nodo tmp = new Nodo("int_literal");
-    Nodo hex_literal_ = new Nodo("hex_literal");
-    hex_literal_.setValor("hex_literal");
+    Nodo hex_literal_ = new Nodo("Hex_literal");
+    hex_literal_.setValor("Hex_literal");
     hex_literal_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) hex_literal_);
 
@@ -1016,8 +1016,8 @@ int_literal ::= Decimal_literal {:
 
 bool_literal ::= True {:
     Nodo tmp = new Nodo("bool_literal");
-    Nodo true_ = new Nodo("true");
-    true_.setValor("hex_literal");
+    Nodo true_ = new Nodo("True");
+    true_.setValor("True");
     true_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) true_);
 
@@ -1027,8 +1027,8 @@ bool_literal ::= True {:
 :}  
 | False {:
     Nodo tmp = new Nodo("bool_literal");
-    Nodo false_ = new Nodo("false");
-    false_.setValor("false");
+    Nodo false_ = new Nodo("False");
+    false_.setValor("False");
     false_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) false_);
 
@@ -1040,17 +1040,17 @@ bool_literal ::= True {:
 
 char_literal ::= Comillas char:c Comillas {:
     Nodo tmp = new Nodo("char_literal");
-    Nodo comillas_ = new Nodo("comillas");
-    comillas_.setValor("comillas");
+    Nodo comillas_ = new Nodo("Comillas");
+    comillas_.setValor("Comillas");
     comillas_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) comillas_);
 
     tmp.addHijo((Nodo) c);
 
-    Nodo comillas_ = new Nodo("comillas");
-    comillas_.setValor("comillas");
-    comillas_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) comillas_);
+    Nodo comillas_2 = new Nodo("Comillas");
+    comillas_2.setValor("Comillas");
+    comillas_2.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) comillas_2);
 
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
@@ -1059,8 +1059,8 @@ char_literal ::= Comillas char:c Comillas {:
 
 char ::= Alpha {:
     Nodo tmp = new Nodo("char");
-    Nodo alpha_ = new Nodo("alpha");
-    alpha_.setValor("alpha");
+    Nodo alpha_ = new Nodo("Alpha");
+    alpha_.setValor("Alpha");
     alpha_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) alpha_);
 
@@ -1070,8 +1070,8 @@ char ::= Alpha {:
 :} 
 | Digit {:
     Nodo tmp = new Nodo("char");
-    Nodo digit_ = new Nodo("digit");
-    digit_.setValor("digit");
+    Nodo digit_ = new Nodo("Digit");
+    digit_.setValor("Digit");
     digit_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) digit_);
 
@@ -1089,8 +1089,8 @@ char ::= Alpha {:
 :} 
 | LESS {:
     Nodo tmp = new Nodo("char");
-    Nodo less_ = new Nodo("less");
-    less_.setValor("less");
+    Nodo less_ = new Nodo("LESS");
+    less_.setValor("LESS");
     less_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) less_);
 
@@ -1100,8 +1100,8 @@ char ::= Alpha {:
 :}  
 | GREATER {:
     Nodo tmp = new Nodo("char");
-    Nodo greater_ = new Nodo("greater");
-    greater_.setValor("greater");
+    Nodo greater_ = new Nodo("GREATER");
+    greater_.setValor("GREATER");
     greater_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) greater_);
 
@@ -1113,17 +1113,17 @@ char ::= Alpha {:
 
 string_literal ::= ComillasDoble char_asterisco:ca ComillasDoble {:
     Nodo tmp = new Nodo("string_literal");
-    Nodo comillas_doble_ = new Nodo("comillas_doble");
-    comillas_doble_.setValor("comillas_doble");
+    Nodo comillas_doble_ = new Nodo("ComillasDoble");
+    comillas_doble_.setValor("ComillasDoble");
     comillas_doble_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) comillas_doble_);
 
     tmp.addHijo((Nodo) ca);
 
-    Nodo comillas_doble_ = new Nodo("comillas_doble");
-    comillas_doble_.setValor("comillas_doble");
-    comillas_doble_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) comillas_doble_);
+    Nodo comillas_doble_2 = new Nodo("ComillasDoble");
+    comillas_doble_2.setValor("ComillasDoble");
+    comillas_doble_2.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) comillas_doble_2);
 
 
     tmp.setNumNodo(parser.contador++);
@@ -1134,8 +1134,8 @@ string_literal ::= ComillasDoble char_asterisco:ca ComillasDoble {:
 
 char_asterisco ::= Alpha char_asterisco:cha {:
     Nodo tmp = new Nodo("char_asterisco");
-    Nodo alpha_ = new Nodo("alpha");
-    alpha_.setValor("alpha");
+    Nodo alpha_ = new Nodo("Alpha");
+    alpha_.setValor("Alpha");
     alpha_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) alpha_);
 
@@ -1170,8 +1170,8 @@ char_asterisco ::= Alpha char_asterisco:cha {:
 :} 
 | LESS char_asterisco:cha {:
     Nodo tmp = new Nodo("char_asterisco");
-    Nodo less_ = new Nodo("less");
-    less_.setValor("less");
+    Nodo less_ = new Nodo("LESS");
+    less_.setValor("LESS");
     less_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) less_);
 
@@ -1183,8 +1183,8 @@ char_asterisco ::= Alpha char_asterisco:cha {:
 :} 
 | GREATER char_asterisco:cha {:
     Nodo tmp = new Nodo("char_asterisco");
-    Nodo greater_ = new Nodo("greater");
-    greater_.setValor("greater");
+    Nodo greater_ = new Nodo("GREATER");
+    greater_.setValor("GREATER");
     greater_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) greater_);
 
