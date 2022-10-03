@@ -574,44 +574,327 @@ method_call ::= method_name:mn LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
                 :};
 //----- Carlos
 method_call_corche ::=
-        expr method_call_corche_expr |
+        expr:ex method_call_corche_expr:mcce {:
+                Nodo tmp = new Nodo("method_call_corche");
+                Nodo ex_ = new Nodo("ex");
+                ex_.setValor("ex");
+                ex_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) ex_); 
+                Nodo mcce_ = new Nodo("mcce");
+                mcce_.setValor("mcce");
+                mcce_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) mcce_);
+                RESULT = tmp;
+            :}|
 ;
 
 method_call_corche_expr ::=
-        Coma expr method_call_corche_expr |
+        Coma expr:ex method_call_corche_expr:mcce{:
+                Nodo tmp = new Nodo("method_call_corche_expr");
+                Nodo cm = new Nodo(",");
+                cm.setValor(",");
+                cm.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) cm);
+
+                Nodo ex_ = new Nodo("ex");
+                ex_.setValor("ex");
+                ex_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) ex_);
+
+                Nodo mcce_ = new Nodo("mcce");
+                mcce_.setValor("mcce");
+                mcce_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) mcce_);
+                RESULT = tmp;
+        :}|
 ;
 
 method_call_corche_dos ::=
-        Coma callout_arg method_call_coma_callout |
+        Coma callout_arg:ca method_call_coma_callout:mccc {:
+                Nodo tmp = new Nodo("method_call_corche_dos");
+                Nodo cm = new Nodo(",");
+                cm.setValor(",");
+                cm.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) cm);
+                Nodo ca_ = new Nodo("ca");
+                ca_.setValor("ca");
+                ca_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) ca_);
+                Nodo mccc_ = new Nodo("mccc");
+                mccc_.setValor("mccc");
+                mccc_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) mccc_);
+                RESULT = tmp;
+        :} |
 ;
 
 method_call_coma_callout ::=
-        Coma callout_arg method_call_coma_callout |
+        Coma callout_arg:ca method_call_coma_callout:mccc {:
+                Nodo tmp = new Nodo("method_call_coma_callout");
+                Nodo cm = new Nodo(",");
+                cm.setValor(",");
+                cm.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) cm);
+                Nodo mccc_ = new Nodo("mccc");
+                mccc_.setValor("mccc");
+                mccc_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) mccc_);
+                RESULT = tmp;
+        :} |
 ;
 
-method_name ::= Id;
+method_name ::= Id {:
+        Nodo tmp = new Nodo("method_name");
+        Nodo id_ = new Nodo("id");
+        id_.setValor("id");
+        id_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) id_);
+        RESULT = tmp;
+:};
 
-location ::= Id | Id Corche_A expr Corche_C;
+location ::= Id {:
+        Nodo tmp = new Nodo("method_name");
+        Nodo id_ = new Nodo("id");
+        id_.setValor("id");
+        id_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) id_);
+        RESULT = tmp;
 
-expr ::= location
-     | method_call
-     | literal
-     | expr bin_op expr
-     | Menos expr
-     | Exclamacion expr
-     | LEFT_PAR expr RIGHT_PAR;
+                :}
+        | Id Corche_A expr:ex Corche_C {:
+        Nodo tmp = new Nodo("method_name");
+        Nodo Corche_a = new Nodo("[");
+        Corche_a.setValor("[");
+        Corche_a.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) Corche_a);
+
+        Nodo ex_ = new Nodo("ex");
+        ex_.setValor("ex");
+        ex_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ex_);
+
+        Nodo Corche_c = new Nodo("]");
+        Corche_c.setValor("]");
+        Corche_c.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) Corche_c);
+
+        RESULT = tmp;
+
+        :};
+
+expr ::= location:l{:
+        Nodo tmp = new Nodo("expr");
+
+        Nodo l_ = new Nodo("l");
+        l_.setValor("l");
+        l_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) l_);
+
+        RESULT = tmp;
+        :}
+        | method_call:mc{:
+        Nodo tmp = new Nodo("expr");
+
+        Nodo mc_ = new Nodo("mc");
+        mc_.setValor("mc");
+        mc_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) mc_);
+
+        RESULT = tmp;
+        :}
+        | literal:lit{:
+        Nodo tmp = new Nodo("expr");
+
+        Nodo lit_ = new Nodo("lit");
+        lit_.setValor("lit");
+        lit_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) lit_);
+
+        RESULT = tmp;
+        :}
+        | expr:ex bin_op:bo expr:ex{:
+        Nodo tmp = new Nodo("expr");
+
+        Nodo ex_ = new Nodo("ex");
+        ex_.setValor("ex");
+        ex_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ex_);
+
+        Nodo bo_ = new Nodo("bo");
+        bo_.setValor("bo");
+        bo_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) bo_);
+
+        Nodo ex_ = new Nodo("ex");
+        ex_.setValor("ex");
+        ex_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ex_);
+
+        RESULT = tmp;
+        :}
+        | Menos expr:ex{:
+        Nodo tmp = new Nodo("expr");
+
+        Nodo menos = new Nodo("-");
+        menos.setValor("-");
+        menos.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) menos);
+
+        Nodo ex_ = new Nodo("ex");
+        ex_.setValor("ex");
+        ex_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ex_);
+        
+        RESULT = tmp;
+        :}
+        | Exclamacion expr:ex{:
+        Nodo tmp = new Nodo("expr");
+
+        Nodo exclamacion = new Nodo("!");
+        exclamacion.setValor("!");
+        exclamacion.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) meexclamacionnos);
+
+        Nodo ex_ = new Nodo("ex");
+        ex_.setValor("ex");
+        ex_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ex_);
+
+        RESULT = tmp;
+        :}
+        | LEFT_PAR expr:ex RIGHT_PAR{:
+        Nodo tmp = new Nodo("expr");
+
+        Nodo lefp = new Nodo("(");
+        lefp.setValor("(");
+        lefp.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) lefp);
+
+        Nodo ex_ = new Nodo("ex");
+        ex_.setValor("ex");
+        ex_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ex_);
+
+        Nodo rightp = new Nodo(")");
+        rightp.setValor(")");
+        rightp.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) rightp);
+
+        RESULT = tmp;
+        :};
 
 
 
-callout_arg ::= expr
-        | string_literal ;
+callout_arg ::= expr:ex {:
+        Nodo tmp = new Nodo("callout_arg");
 
-bin_op ::= arith_op
-      | rel_op
-      | eq_op
-      | cond_op;
+        Nodo ex_ = new Nodo("ex");
+        ex_.setValor("ex");
+        ex_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ex_);
 
-arith_op ::= Mas | Menos | Multiplicacion | Division | Mod ;
+        RESULT = tmp;
+        :}
+        | string_literal:sl {:
+        Nodo tmp = new Nodo("callout_arg");
+
+        tmp.addHijo((Nodo) sl); 
+
+        RESULT = tmp;
+        :};
+
+bin_op ::= arith_op:ao {:
+        Nodo tmp = new Nodo("bin_op");
+        
+        Nodo ao_ = new Nodo("ao");
+        ao_.setValor("ao");
+        ao_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ao_);
+
+        RESULT = tmp;
+        :}
+        | rel_op:ro{:
+        Nodo tmp = new Nodo("bin_op");
+        
+        Nodo ro_ = new Nodo("ro");
+        ro_.setValor("ro");
+        ro_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) ro_);
+
+        RESULT = tmp;
+        :}
+        | eq_op:eo{:
+        Nodo tmp = new Nodo("bin_op");
+        
+        Nodo eo_ = new Nodo("eo");
+        eo_.setValor("eo");
+        eo_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) eo_);
+
+        RESULT = tmp;
+        :}
+        | cond_op:co{:
+        Nodo tmp = new Nodo("bin_op");
+        
+        Nodo co_ = new Nodo("ao");
+        co_.setValor("co");
+        co_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) co_);
+
+        RESULT = tmp;
+        :};
+
+arith_op ::= Mas {:
+        Nodo tmp = new Nodo("arith_op");
+        
+        Nodo mas = new Nodo("+");
+        mas.setValor("+");
+        mas.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) mas);
+
+        RESULT = tmp;
+        :}
+        | Menos{:
+        Nodo tmp = new Nodo("arith_op");
+        
+        Nodo menos = new Nodo("-");
+        menos.setValor("-");
+        menos.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) menos);
+
+        RESULT = tmp;
+        :} 
+        | Multiplicacion {:
+        Nodo tmp = new Nodo("arith_op");
+        
+        Nodo multiplicacion = new Nodo("*");
+        multiplicacion.setValor("*");
+        multiplicacion.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) multiplicacion);
+
+        RESULT = tmp;
+        :}
+        | Division{:
+        Nodo tmp = new Nodo("arith_op");
+        
+        Nodo division = new Nodo("/");
+        division.setValor("/");
+        division.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) division);
+
+        RESULT = tmp;
+        :} 
+        | Mod{:
+        Nodo tmp = new Nodo("arith_op");
+        
+        Nodo mod = new Nodo("%");
+        mod.setValor("%");
+        mod.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) mod);
+
+        RESULT = tmp;
+        :} ;
+
 //----- Mario 
 rel_op ::= GREATER | LESS | LESS_EQUAL | GREATER_EQUAL ;
 
