@@ -30,7 +30,13 @@ public static void main(String[] args, String ruta) throws Exception{
             Reader lector = new BufferedReader(new FileReader(archivo));
             // Este lexer debe ser el nuevo, que se conecte con cup.
             Sintax analisis = new Sintax(new LexerCup(lector));
-            analisis.parse();
+            try {
+                analisis.parse();   
+                System.out.println(graficarNodo(analisis.padre));
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
             
             
         }catch (FileNotFoundException ex) {
@@ -42,6 +48,25 @@ public static void generar(String rutalexer, String[] rutaSintax) throws IOExcep
         File archivo = new File(rutalexer);
         JFlex.Main.generate(archivo);
         java_cup.Main.main(rutaSintax); 
+    }
+public static String graficarNodo(Nodo nodo){
+        String cadena = "";
+        if (nodo != null){
+            //System.out.println("Este es el padre: " + nodo.getNombre());
+            //System.out.println("Estos son los hijos: " + nodo.getHijos());
+            for(Nodo hijos : nodo.getHijos())
+            {
+                if (hijos != null){
+                    cadena += "\"" + nodo.getNumNodo() + "_" + nodo.getNombre() + " -> " + nodo.getValor() + "\"->\"" + hijos.getNumNodo() + "_" + hijos.getNombre() + " -> " + hijos.getValor() + "\"\n";
+                    cadena += graficarNodo(hijos);
+                }
+                else{
+                    cadena += graficarNodo(hijos);
+                }
+
+            }
+        }
+        return cadena;
     }
     
 }

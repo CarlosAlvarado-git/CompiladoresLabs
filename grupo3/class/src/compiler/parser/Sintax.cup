@@ -5,14 +5,20 @@ import java_cup.runtime.Symbol;
 parser code
 {:
     private Symbol s;
-    
+    public String resultado="";
+    public Nodo padre;
+    public int contador = 1;
     public void syntax_error(Symbol s){
-        this.s = s;
+        //this.s = s;
+        System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna: " +(s.left)+ ". Identificador " +s.value + " no reconocido." );
+    }
+    public void unrecovered_syntax_error(Symbol s){
+        System.out.println(s);
     }
 
     public Symbol getS(){
         return this.s;
-}
+    }
 :};
 
 terminal Int, Boolean, Callout, If, For, Else, Return, Break, Continue, True, 
@@ -35,28 +41,209 @@ precedence left Mas, Menos,Multiplicacion, Division, Mod,GREATER, LESS, LESS_EQU
 start with INICIO;
 
 INICIO::= program:s {:
+            Nodo tmp = new Nodo("INICIO");
+            tmp.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) s);
+            parser.padre = (Nodo) tmp;
             System.out.println("Correcto");
+            RESULT=tmp;
         :};
 
-program ::= Class Program Llave_A field_decl method_decl Llave_C ;
+program ::= Class Program Llave_A field_decl:fd method_decl:md Llave_C {:
 
-field_name ::= Id | Id Corche_A int_literal Corche_C;
+            Nodo tmp = new Nodo("program");
+            Nodo class_ = new Nodo("class");
+            class_.setValor("class");
+            class_.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) class_);
+            
+            Nodo pr = new Nodo("Program");
+            pr.setValor("Program");
+            pr.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) pr);
 
-field_decl ::= field_decl type field_name field_decl_coma_field Punto_coma | ;
+            Nodo llavea = new Nodo("{");
+            llavea.setValor("{");
+            llavea.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) llavea);
+
+            tmp.addHijo((Nodo) fd);
+            tmp.addHijo((Nodo) md);
+
+            Nodo llavec = new Nodo("}");
+            llavec.setValor("}");
+            llavec.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) llavec);
+
+            tmp.setNumNodo(parser.contador++);
+            RESULT = tmp;
+        
+        :};
+
+field_name ::= Id {: 
+            Nodo tmp = new Nodo("field_name");
+            Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) id_);
+            tmp.setNumNodo(parser.contador++);
+            RESULT = tmp;
+            
+            :}
+            | Id Corche_A int_literal:il Corche_C {:
+            Nodo tmp = new Nodo("field_name");
+            Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) id_);
+
+            Nodo Corche_a = new Nodo("[");
+            Corche_a.setValor("[");
+            Corche_a.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) Corche_a);
+
+            tmp.addHijo((Nodo) il);
+
+            Nodo Corche_c = new Nodo("]");
+            Corche_c.setValor("]");
+            Corche_c.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) Corche_c);
+
+            tmp.setNumNodo(parser.contador++);
+            RESULT = tmp;
+            :};
+
+field_decl ::= field_decl:fd type:t field_name:fn field_decl_coma_field:fdcf Punto_coma {:
+                Nodo tmp = new Nodo("field decl");
+                tmp.addHijo((Nodo) fd);
+                tmp.addHijo((Nodo) t);
+                tmp.addHijo((Nodo) fn);
+                tmp.addHijo((Nodo) fdcf);
+
+                Nodo ptm = new Nodo(";");
+                ptm.setValor(";");
+                ptm.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) ptm);
+
+                tmp.setNumNodo(parser.contador++);
+                RESULT = tmp;
+
+                :}
+             | ;
 
 field_decl_coma_field ::=
-            Coma field_name field_decl_coma_field |
+            Coma field_name:fn field_decl_coma_field:fdcf {:
+                Nodo tmp = new Nodo("field_decl_coma_field");
+
+                Nodo cm = new Nodo(",");
+                cm.setValor(",");
+                cm.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) cm);
+
+                tmp.addHijo((Nodo) fn);
+                tmp.addHijo((Nodo) fdcf);
+
+                tmp.setNumNodo(parser.contador++);
+                RESULT = tmp;
+            :}
+            |
 ;
 
-method_decl ::= type Id LEFT_PAR method_decl_corche RIGHT_PAR block method_decl |
-                Void Id LEFT_PAR method_decl_corche RIGHT_PAR block method_decl | ;
+method_decl ::= type:t Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md {:
+                Nodo tmp = new Nodo("method_decl");
+
+                tmp.addHijo((Nodo) t);
+                Nodo id_ = new Nodo("id");
+                id_.setValor("id");
+                id_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) id_);
+
+                Nodo lefp = new Nodo("(");
+                lefp.setValor("(");
+                lefp.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) lefp);
+
+                tmp.addHijo((Nodo) mdc);
+
+                Nodo rightp = new Nodo(")");
+                rightp.setValor(")");
+                rightp.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) rightp);
+
+                tmp.addHijo((Nodo) b);
+                tmp.addHijo((Nodo) md);
+                
+                tmp.setNumNodo(parser.contador++);
+                RESULT = tmp;
+                :} |
+                Void Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md {:
+                Nodo tmp = new Nodo("method_decl");
+
+                Nodo vd = new Nodo("void");
+                vd.setValor("void");
+                vd.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) vd);
+                
+                Nodo id_ = new Nodo("id");
+                id_.setValor("id");
+                id_.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) id_);
+
+                Nodo lefp = new Nodo("(");
+                lefp.setValor("(");
+                lefp.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) lefp);
+
+                tmp.addHijo((Nodo) mdc);
+
+                Nodo rightp = new Nodo(")");
+                rightp.setValor(")");
+                rightp.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) rightp);
+
+                tmp.addHijo((Nodo) b);
+                tmp.addHijo((Nodo) md);
+                
+                tmp.setNumNodo(parser.contador++);
+                RESULT = tmp;
+                :}| 
+
+;
 
 method_decl_corche ::=
-        type Id method_decl_corche_coma_type |
+        type:t Id method_decl_corche_coma_type:mdcct {:
+        Nodo tmp = new Nodo("method_decl_corche");
+
+        tmp.addHijo((Nodo) t);
+
+        Nodo id_ = new Nodo("id");
+        id_.setValor("id");
+        id_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) id_);
+
+        tmp.addHijo((Nodo) mdcct);
+        tmp.setNumNodo(parser.contador++);
+        RESULT = tmp;
+        :}|
 ;
 
 method_decl_corche_coma_type ::=
-    Coma type Id method_decl_corche_coma_type |
+    Coma type:t Id method_decl_corche_coma_type:mdcct {:
+        Nodo tmp = new Nodo("method_decl_corche_coma_type");
+        Nodo cm = new Nodo(",");
+        cm.setValor(",");
+        cm.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) cm);
+
+        tmp.addHijo((Nodo) t);
+        Nodo id_ = new Nodo("id");
+        id_.setValor("id");
+        id_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) id_);
+        tmp.addHijo((Nodo) mdcct);
+        tmp.setNumNodo(parser.contador++);
+        RESULT = tmp;
+    :}|
 ;
 
 agru_type_void ::= 
@@ -98,7 +285,7 @@ assign_op ::= ASSIGN
 
 method_call ::= method_name LEFT_PAR method_call_corche RIGHT_PAR
             | Callout LEFT_PAR string_literal method_call_corche_dos RIGHT_PAR;
-
+//----- Carlos
 method_call_corche ::=
         expr method_call_corche_expr |
 ;
@@ -138,7 +325,7 @@ bin_op ::= arith_op
       | cond_op;
 
 arith_op ::= Mas | Menos | Multiplicacion | Division | Mod ;
-
+//----- Mario 
 rel_op ::= GREATER | LESS | LESS_EQUAL | GREATER_EQUAL ;
 
 eq_op ::= EQUAL | NOT_EQUAL ;
@@ -158,15 +345,15 @@ bool_literal ::=
         False
 ;
 
-id ::=
-        Alpha alpha_num_asterisco
-;
+//id ::=
+//        Alpha alpha_num_asterisco
+//;
 
-alpha_num_asterisco ::=
-        Alpha |
-        Digit |
-        /* empty */
-;
+//alpha_num_asterisco ::=
+//        Alpha |
+//        Digit |
+//        /* empty */
+/;
 
 char_literal ::=
         Comillas char Comillas
