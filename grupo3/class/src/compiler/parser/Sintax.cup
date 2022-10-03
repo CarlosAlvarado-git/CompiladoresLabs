@@ -896,46 +896,326 @@ arith_op ::= Mas {:
         :} ;
 
 //----- Mario 
-rel_op ::= GREATER | LESS | LESS_EQUAL | GREATER_EQUAL ;
 
-eq_op ::= EQUAL | NOT_EQUAL ;
+rel_op ::= GREATER {:
+        Nodo tmp = new Nodo("rel_op");
+        Nodo greater_ = new Nodo("greater");
+        greater_.setValor("greater");
+        greater_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) greater_);
 
-cond_op ::= AND | OR ;
+        tmp.setNumNodo(parser.contador++);
+        RESULT = tmp;
 
-literal ::= int_literal | char_literal | bool_literal ;
+    :} 
+| LESS {:
+    Nodo tmp = new Nodo("rel_op");
+    Nodo less_ = new Nodo("less");
+    less_.setValor("less");
+    less_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) less_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| LESS_EQUAL {:
+    Nodo tmp = new Nodo("rel_op");
+    Nodo less_equal_ = new Nodo("less_equal");
+    less_equal_.setValor("less_equal");
+    less_equal_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) less_equal_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| GREATER_EQUAL {:
+    Nodo tmp = new Nodo("rel_op");
+    Nodo greater_equal_ = new Nodo("greater_equal");
+    greater_equal_.setValor("greater_equal");
+    greater_equal_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) greater_equal_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} ;
+
+eq_op ::= EQUAL {:
+    Nodo tmp = new Nodo("eq_op");
+    Nodo equal_ = new Nodo("equal");
+    equal_.setValor("equal");
+    equal_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) equal_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| NOT_EQUAL {:
+    Nodo tmp = new Nodo("eq_op");
+    Nodo not_equal_ = new Nodo("not_equal");
+    not_equal_.setValor("not_equal");
+    not_equal_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) not_equal_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} ;
+
+cond_op ::= AND {:
+    Nodo tmp = new Nodo("cond_op");
+    Nodo and_ = new Nodo("and");
+    and_.setValor("and");
+    and_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) and_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| OR {:
+    Nodo tmp = new Nodo("cond_op");
+    Nodo or_ = new Nodo("or");
+    or_.setValor("or");
+    or_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) or_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} ;
+
+literal ::= int_literal:il {:
+    Nodo tmp = new Nodo("literal");
+    tmp.addHijo((Nodo) il);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| char_literal:cl {:
+    Nodo tmp = new Nodo("literal");
+    tmp.addHijo((Nodo) cl);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| bool_literal:bl {:
+    Nodo tmp = new Nodo("literal");
+    tmp.addHijo((Nodo) bl);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} ;
 
 
-int_literal ::=
-        Decimal_literal |
-        Hex_literal
+int_literal ::= Decimal_literal {:
+    Nodo tmp = new Nodo("int_literal");
+    Nodo decimal_literal_ = new Nodo("decimal_literal");
+    decimal_literal_.setValor("decimal_literal");
+    decimal_literal_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) decimal_literal_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| Hex_literal {:
+    Nodo tmp = new Nodo("int_literal");
+    Nodo hex_literal_ = new Nodo("hex_literal");
+    hex_literal_.setValor("hex_literal");
+    hex_literal_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) hex_literal_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} ;
+
+
+bool_literal ::= True {:
+    Nodo tmp = new Nodo("bool_literal");
+    Nodo true_ = new Nodo("true");
+    true_.setValor("hex_literal");
+    true_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) true_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:}  
+| False {:
+    Nodo tmp = new Nodo("bool_literal");
+    Nodo false_ = new Nodo("false");
+    false_.setValor("false");
+    false_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) false_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} ;
+
+
+char_literal ::= Comillas char:c Comillas {:
+    Nodo tmp = new Nodo("char_literal");
+    Nodo comillas_ = new Nodo("comillas");
+    comillas_.setValor("comillas");
+    comillas_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) comillas_);
+
+    tmp.addHijo((Nodo) c);
+
+    Nodo comillas_ = new Nodo("comillas");
+    comillas_.setValor("comillas");
+    comillas_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) comillas_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} ;
+
+char ::= Alpha {:
+    Nodo tmp = new Nodo("char");
+    Nodo alpha_ = new Nodo("alpha");
+    alpha_.setValor("alpha");
+    alpha_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) alpha_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| Digit {:
+    Nodo tmp = new Nodo("char");
+    Nodo digit_ = new Nodo("digit");
+    digit_.setValor("digit");
+    digit_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) digit_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| arith_op:ao {:
+    Nodo tmp = new Nodo("char");
+    tmp.addHijo((Nodo) ao);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| LESS {:
+    Nodo tmp = new Nodo("char");
+    Nodo less_ = new Nodo("less");
+    less_.setValor("less");
+    less_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) less_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:}  
+| GREATER {:
+    Nodo tmp = new Nodo("char");
+    Nodo greater_ = new Nodo("greater");
+    greater_.setValor("greater");
+    greater_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) greater_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
 ;
 
-bool_literal ::=
-        True |
-        False
+string_literal ::= ComillasDoble char_asterisco:ca ComillasDoble {:
+    Nodo tmp = new Nodo("string_literal");
+    Nodo comillas_doble_ = new Nodo("comillas_doble");
+    comillas_doble_.setValor("comillas_doble");
+    comillas_doble_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) comillas_doble_);
+
+    tmp.addHijo((Nodo) ca);
+
+    Nodo comillas_doble_ = new Nodo("comillas_doble");
+    comillas_doble_.setValor("comillas_doble");
+    comillas_doble_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) comillas_doble_);
+
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
 ;
 
+char_asterisco ::= Alpha char_asterisco:cha {:
+    Nodo tmp = new Nodo("char_asterisco");
+    Nodo alpha_ = new Nodo("alpha");
+    alpha_.setValor("alpha");
+    alpha_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) alpha_);
 
-char_literal ::=
-        Comillas char Comillas;
+    tmp.addHijo((Nodo) cha);
 
-char ::=
-        Alpha |
-        Digit |
-        arith_op |
-        LESS |
-        GREATER
-;
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
 
-string_literal ::=
-        ComillasDoble char_asterisco ComillasDoble
-;
+:}  
+| Digit char_asterisco:cha {:
+    Nodo tmp = new Nodo("char_asterisco");
+    Nodo digit_ = new Nodo("digit");
+    digit_.setValor("digit");
+    digit_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) digit_);
 
-char_asterisco ::=
-        Alpha char_asterisco |
-        Digit char_asterisco |
-        arith_op char_asterisco |
-        LESS char_asterisco |
-        GREATER char_asterisco |
-        /* empty */
+    tmp.addHijo((Nodo) cha);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| arith_op:ao char_asterisco:cha {:
+    Nodo tmp = new Nodo("char_asterisco");
+    
+    tmp.addHijo((Nodo) ao);
+    tmp.addHijo((Nodo) cha);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| LESS char_asterisco:cha {:
+    Nodo tmp = new Nodo("char_asterisco");
+    Nodo less_ = new Nodo("less");
+    less_.setValor("less");
+    less_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) less_);
+
+    tmp.addHijo((Nodo) cha);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:} 
+| GREATER char_asterisco:cha {:
+    Nodo tmp = new Nodo("char_asterisco");
+    Nodo greater_ = new Nodo("greater");
+    greater_.setValor("greater");
+    greater_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) greater_);
+
+    tmp.addHijo((Nodo) cha);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:}  |  /* empty */
 ;
