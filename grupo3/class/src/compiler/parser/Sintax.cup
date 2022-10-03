@@ -62,16 +62,16 @@ program ::= Class Program Llave_A field_decl:fd method_decl:md Llave_C {:
             pr.setNumNodo(parser.contador++);
             tmp.addHijo((Nodo) pr);
 
-            Nodo llavea = new Nodo("{");
-            llavea.setValor("{");
+            Nodo llavea = new Nodo("Llave_A");
+            llavea.setValor("Llave_A");
             llavea.setNumNodo(parser.contador++);
             tmp.addHijo((Nodo) llavea);
 
             tmp.addHijo((Nodo) fd);
             tmp.addHijo((Nodo) md);
 
-            Nodo llavec = new Nodo("}");
-            llavec.setValor("}");
+            Nodo llavec = new Nodo("Llave_C");
+            llavec.setValor("Llave_C");
             llavec.setNumNodo(parser.contador++);
             tmp.addHijo((Nodo) llavec);
 
@@ -97,15 +97,15 @@ field_name ::= Id {:
             id_.setNumNodo(parser.contador++);
             tmp.addHijo((Nodo) id_);
 
-            Nodo Corche_a = new Nodo("[");
-            Corche_a.setValor("[");
+            Nodo Corche_a = new Nodo("Corche_A");
+            Corche_a.setValor("Corche_A");
             Corche_a.setNumNodo(parser.contador++);
             tmp.addHijo((Nodo) Corche_a);
 
             tmp.addHijo((Nodo) il);
 
-            Nodo Corche_c = new Nodo("]");
-            Corche_c.setValor("]");
+            Nodo Corche_c = new Nodo("Corche_C");
+            Corche_c.setValor("Corche_C");
             Corche_c.setNumNodo(parser.contador++);
             tmp.addHijo((Nodo) Corche_c);
 
@@ -120,8 +120,8 @@ field_decl ::= field_decl:fd type:t field_name:fn field_decl_coma_field:fdcf Pun
                 tmp.addHijo((Nodo) fn);
                 tmp.addHijo((Nodo) fdcf);
 
-                Nodo ptm = new Nodo(";");
-                ptm.setValor(";");
+                Nodo ptm = new Nodo("Punto_coma");
+                ptm.setValor("Punto_coma");
                 ptm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) ptm);
 
@@ -135,8 +135,8 @@ field_decl_coma_field ::=
             Coma field_name:fn field_decl_coma_field:fdcf {:
                 Nodo tmp = new Nodo("field_decl_coma_field");
 
-                Nodo cm = new Nodo(",");
-                cm.setValor(",");
+                Nodo cm = new Nodo("Coma");
+                cm.setValor("Coma");
                 cm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cm);
 
@@ -158,15 +158,15 @@ method_decl ::= type:t Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b meth
                 id_.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) id_);
 
-                Nodo lefp = new Nodo("(");
-                lefp.setValor("(");
+                Nodo lefp = new Nodo("LEFT_PAR");
+                lefp.setValor("LEFT_PAR");
                 lefp.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) lefp);
 
                 tmp.addHijo((Nodo) mdc);
 
-                Nodo rightp = new Nodo(")");
-                rightp.setValor(")");
+                Nodo rightp = new Nodo("RIGHT_PAR");
+                rightp.setValor("RIGHT_PAR");
                 rightp.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) rightp);
 
@@ -189,15 +189,15 @@ method_decl ::= type:t Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b meth
                 id_.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) id_);
 
-                Nodo lefp = new Nodo("(");
-                lefp.setValor("(");
+                Nodo lefp = new Nodo("LEFT_PAR");
+                lefp.setValor("LEFT_PAR");
                 lefp.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) lefp);
 
                 tmp.addHijo((Nodo) mdc);
 
-                Nodo rightp = new Nodo(")");
-                rightp.setValor(")");
+                Nodo rightp = new Nodo("RIGHT_PAR");
+                rightp.setValor("RIGHT_PAR");
                 rightp.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) rightp);
 
@@ -216,8 +216,8 @@ method_decl_corche ::=
 
         tmp.addHijo((Nodo) t);
 
-        Nodo id_ = new Nodo("id");
-        id_.setValor("id");
+        Nodo id_ = new Nodo("Id");
+        id_.setValor("Id");
         id_.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) id_);
 
@@ -230,14 +230,14 @@ method_decl_corche ::=
 method_decl_corche_coma_type ::=
     Coma type:t Id method_decl_corche_coma_type:mdcct {:
         Nodo tmp = new Nodo("method_decl_corche_coma_type");
-        Nodo cm = new Nodo(",");
-        cm.setValor(",");
+        Nodo cm = new Nodo("Coma");
+        cm.setValor("Coma");
         cm.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) cm);
 
         tmp.addHijo((Nodo) t);
-        Nodo id_ = new Nodo("id");
-        id_.setValor("id");
+        Nodo id_ = new Nodo("Id");
+        id_.setValor("Id");
         id_.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) id_);
         tmp.addHijo((Nodo) mdcct);
@@ -253,8 +253,8 @@ agru_type_void ::=
             | 
             Void {:
                 Nodo tmp = new Nodo("agru_type_void");
-                Nodo vd = new Nodo("void");
-                vd.setValor(",");
+                Nodo vd = new Nodo("Void");
+                vd.setValor("Void");
                 vd.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) vd);
                 tmp.setNumNodo(parser.contador++);
@@ -263,16 +263,16 @@ agru_type_void ::=
 
 block ::= Llave_A var_decl:vd statement:stm Llave_C {:
         Nodo tmp = new Nodo("block");
-        Nodo llavea = new Nodo("{");
-        llavea.setValor("{");
+        Nodo llavea = new Nodo("Llave_A");
+        llavea.setValor("Llave_A");
         llavea.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) llavea);
 
         tmp.addHijo((Nodo) vd);
         tmp.addHijo((Nodo) stm);
 
-        Nodo llavec = new Nodo("}");
-        llavec.setValor("{");
+        Nodo llavec = new Nodo("Llave_C");
+        llavec.setValor("Llave_C");
         llavec.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) llavec);
         tmp.setNumNodo(parser.contador++);
@@ -283,14 +283,14 @@ var_decl ::= type:t Id var_decl_coma_id:vdci Punto_coma var_decl:vd {:
         Nodo tmp = new Nodo("var_decl");
         tmp.addHijo((Nodo) t);
 
-        Nodo id_ = new Nodo("id");
-        id_.setValor("id");
+        Nodo id_ = new Nodo("Id");
+        id_.setValor("Id");
         id_.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) id_);
 
         tmp.addHijo((Nodo) vdci);
-        Nodo pm = new Nodo(";");
-        pm.setValor(";");
+        Nodo pm = new Nodo("Punto_coma");
+        pm.setValor("Punto_coma");
         pm.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) pm);
         tmp.addHijo((Nodo) vd);
@@ -301,12 +301,12 @@ var_decl ::= type:t Id var_decl_coma_id:vdci Punto_coma var_decl:vd {:
 var_decl_coma_id ::=
             Coma Id var_decl_coma_id:vdci {:
                 Nodo tmp = new Nodo("var_decl_coma_id");
-                Nodo cm = new Nodo(",");
-                cm.setValor(",");
+                Nodo cm = new Nodo("Coma");
+                cm.setValor("Coma");
                 cm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cm);  
-                Nodo id_ = new Nodo("id");
-                id_.setValor("id");
+                Nodo id_ = new Nodo("Id");
+                id_.setValor("Id");
                 id_.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) id_);
                 tmp.addHijo((Nodo) vdci);
@@ -317,8 +317,8 @@ var_decl_coma_id ::=
 
 type ::= Int {:
         Nodo tmp = new Nodo("type");
-        Nodo int_ = new Nodo("int");
-        int_.setValor("int");
+        Nodo int_ = new Nodo("Int");
+        int_.setValor("Int");
         int_.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) int_);
         tmp.setNumNodo(parser.contador++);
@@ -326,8 +326,8 @@ type ::= Int {:
 
         :} | Boolean {:
         Nodo tmp = new Nodo("type");
-        Nodo bol = new Nodo("boolean");
-        bol.setValor("int");
+        Nodo bol = new Nodo("Boolean");
+        bol.setValor("Boolean");
         bol.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) bol);
         tmp.setNumNodo(parser.contador++);
@@ -342,8 +342,8 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
                 tmp.addHijo((Nodo) asop);
                 tmp.addHijo((Nodo) ex);
 
-                Nodo pm = new Nodo(";");
-                pm.setValor(";");
+                Nodo pm = new Nodo("Punto_coma");
+                pm.setValor("Punto_coma");
                 pm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) pm);
                 tmp.addHijo((Nodo) stm);
@@ -355,8 +355,8 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
                 Nodo tmp = new Nodo("statement");
                 tmp.addHijo((Nodo) mc);
 
-                Nodo pm = new Nodo(";");
-                pm.setValor(";");
+                Nodo pm = new Nodo("Punto_coma");
+                pm.setValor("Punto_coma");
                 pm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) pm); 
 
@@ -366,21 +366,21 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
                 RESULT = tmp;
                 
                 :}
-        | If LEFT_PAR expr:ex RIGHT_PAR block:b statement_else_block:seb statement:statement {:
+        | If LEFT_PAR expr:ex RIGHT_PAR block:b statement_else_block:seb statement:stm {:
                 Nodo tmp = new Nodo("statement");
-                Nodo if_ = new Nodo("if");
-                if_.setValor("if");
+                Nodo if_ = new Nodo("If");
+                if_.setValor("If");
                 if_.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) if_); 
 
-                Nodo lpar = new Nodo("(");
-                lpar.setValor(")");
+                Nodo lpar = new Nodo("LEFT_PAR");
+                lpar.setValor("LEFT_PAR");
                 lpar.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) lpar); 
 
                 tmp.addHijo((Nodo) ex);
-                Nodo rpar = new Nodo(")");
-                rpar.setValor(")");
+                Nodo rpar = new Nodo("RIGHT_PAR");
+                rpar.setValor("RIGHT_PAR");
                 rpar.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) rpar); 
 
@@ -392,24 +392,24 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
                 :}
         | For Id ASSIGN expr:ex Coma expr:ex2 block:b statement:stm  {:
                 Nodo tmp = new Nodo("statement");
-                Nodo for_ = new Nodo("for");
-                for_.setValor("for");
+                Nodo for_ = new Nodo("For");
+                for_.setValor("For");
                 for_.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) for_); 
 
-                Nodo id_ = new Nodo("id");
-                id_.setValor("id");
+                Nodo id_ = new Nodo("Id");
+                id_.setValor("Id");
                 id_.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) id_); 
 
-                Nodo assing  = new Nodo("=");
-                assing.setValor("=");
+                Nodo assing  = new Nodo("ASSIGN");
+                assing.setValor("ASSIGN");
                 assing.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) assing); 
 
                 tmp.addHijo((Nodo) ex); 
-                Nodo cm  = new Nodo(",");
-                cm.setValor(",");
+                Nodo cm  = new Nodo("Coma");
+                cm.setValor("Coma");
                 cm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cm); 
 
@@ -423,14 +423,14 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
         | Return statement_expr:stmex Punto_coma statement:stm {:
                 Nodo tmp = new Nodo("statement");
 
-                Nodo rt = new Nodo("return");
-                rt.setValor("return");
+                Nodo rt = new Nodo("Return");
+                rt.setValor("Return");
                 rt.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) rt); 
 
                 tmp.addHijo((Nodo) stmex); 
-                Nodo pm = new Nodo(";");
-                pm.setValor(";");
+                Nodo pm = new Nodo("Punto_coma");
+                pm.setValor("Punto_coma");
                 pm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) pm); 
                 tmp.addHijo((Nodo) stm); 
@@ -439,12 +439,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
                 :}
         | Break Punto_coma statement:stm {:
                 Nodo tmp = new Nodo("statement");
-                Nodo br = new Nodo("break");
-                br.setValor("break");
+                Nodo br = new Nodo("Break");
+                br.setValor("Break");
                 br.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) br); 
-                Nodo pm = new Nodo(";");
-                pm.setValor(";");
+                Nodo pm = new Nodo("Punto_coma");
+                pm.setValor("Punto_coma");
                 pm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) pm); 
 
@@ -455,12 +455,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
                 :}
         | Continue Punto_coma statement:stm {:
                 Nodo tmp = new Nodo("statement");
-                Nodo cn = new Nodo("continue");
-                cn.setValor("continue");
+                Nodo cn = new Nodo("Continue");
+                cn.setValor("Continue");
                 cn.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cn); 
-                Nodo pm = new Nodo(";");
-                pm.setValor(";");
+                Nodo pm = new Nodo("Punto_coma");
+                pm.setValor("Punto_coma");
                 pm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) pm); 
 
@@ -482,8 +482,8 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
 statement_else_block ::=
     Else block:b {:
         Nodo tmp = new Nodo("statement_else_block");
-        Nodo el = new Nodo("else");
-        el.setValor("else");
+        Nodo el = new Nodo("Else");
+        el.setValor("Else");
         el.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) el); 
         tmp.addHijo((Nodo) b); 
@@ -505,8 +505,8 @@ statement_expr ::=
 
 assign_op ::= ASSIGN {:
                 Nodo tmp = new Nodo("assign_op");
-                Nodo assing  = new Nodo("=");
-                assing.setValor("=");
+                Nodo assing  = new Nodo("ASSIGN");
+                assing.setValor("ASSIGN");
                 assing.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) assing); 
                 tmp.setNumNodo(parser.contador++);
@@ -514,8 +514,8 @@ assign_op ::= ASSIGN {:
                 :}
           | PLUS_EQUAL {:
                 Nodo tmp = new Nodo("assign_op");
-                Nodo pl_e  = new Nodo("+=");
-                pl_e.setValor("=");
+                Nodo pl_e  = new Nodo("PLUS_EQUAL");
+                pl_e.setValor("PLUS_EQUAL");
                 pl_e.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) pl_e); 
 
@@ -524,8 +524,8 @@ assign_op ::= ASSIGN {:
                 :}
           | MINUS_EQUAL {:
                 Nodo tmp = new Nodo("assign_op");
-                Nodo mn_e  = new Nodo("-=");
-                mn_e.setValor("=");
+                Nodo mn_e  = new Nodo("MINUS_EQUAL");
+                mn_e.setValor("MINUS_EQUAL");
                 mn_e.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) mn_e); 
 
@@ -537,13 +537,13 @@ assign_op ::= ASSIGN {:
 method_call ::= method_name:mn LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
                 Nodo tmp = new Nodo("method_call");
                 tmp.addHijo((Nodo) mn);
-                Nodo lpar  = new Nodo("(");
-                lpar.setValor("(");
+                Nodo lpar  = new Nodo("LEFT_PAR");
+                lpar.setValor("LEFT_PAR");
                 lpar.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) lpar); 
                 tmp.addHijo((Nodo) mcc);
-                Nodo rpar  = new Nodo(")");
-                rpar.setValor(")");
+                Nodo rpar  = new Nodo("RIGHT_PAR");
+                rpar.setValor("RIGHT_PAR");
                 rpar.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) rpar); 
                 tmp.setNumNodo(parser.contador++);
@@ -552,20 +552,20 @@ method_call ::= method_name:mn LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
                 :}
         |Callout LEFT_PAR string_literal:sl method_call_corche_dos:mccd RIGHT_PAR {:
                 Nodo tmp = new Nodo("method_call");
-                Nodo call_out   = new Nodo("callout");
-                call_out.setValor("callout");
+                Nodo call_out   = new Nodo("Callout");
+                call_out.setValor("Callout");
                 call_out.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) call_out); 
 
-                Nodo lpar  = new Nodo("(");
-                lpar.setValor("(");
+                Nodo lpar  = new Nodo("LEFT_PAR");
+                lpar.setValor("LEFT_PAR");
                 lpar.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) lpar); 
                 tmp.addHijo((Nodo) sl); 
                 tmp.addHijo((Nodo) mccd); 
 
-                Nodo rpar  = new Nodo(")");
-                rpar.setValor(")");
+                Nodo rpar  = new Nodo("RIGHT_PAR");
+                rpar.setValor("RIGHT_PAR");
                 rpar.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) rpar); 
                 tmp.setNumNodo(parser.contador++);
@@ -589,8 +589,8 @@ method_call_corche ::=
 method_call_corche_expr ::=
         Coma expr:ex method_call_corche_expr:mcce{:
                 Nodo tmp = new Nodo("method_call_corche_expr");
-                Nodo cm = new Nodo(",");
-                cm.setValor(",");
+                Nodo cm = new Nodo("Coma");
+                cm.setValor("Coma");
                 cm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cm);
 
@@ -607,8 +607,8 @@ method_call_corche_dos ::=
         Coma callout_arg:ca method_call_coma_callout:mccc {:
                 Nodo tmp = new Nodo("method_call_corche_dos");
                 
-                Nodo cm = new Nodo(",");
-                cm.setValor(",");
+                Nodo cm = new Nodo("Coma");
+                cm.setValor("Coma");
                 cm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cm);
 
@@ -625,8 +625,8 @@ method_call_coma_callout ::=
         Coma callout_arg:ca method_call_coma_callout:mccc {:
                 Nodo tmp = new Nodo("method_call_coma_callout");
 
-                Nodo cm = new Nodo(",");
-                cm.setValor(",");
+                Nodo cm = new Nodo("Coma");
+                cm.setValor("Coma");
                 cm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cm);
                 
@@ -638,8 +638,8 @@ method_call_coma_callout ::=
 method_name ::= Id {:
         Nodo tmp = new Nodo("method_name");
         
-        Nodo id_ = new Nodo("id");
-        id_.setValor("id");
+        Nodo id_ = new Nodo("Id");
+        id_.setValor("Id");
         id_.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) id_);
 
@@ -650,8 +650,8 @@ method_name ::= Id {:
 location ::= Id {:
         Nodo tmp = new Nodo("location");
 
-        Nodo id_ = new Nodo("id");
-        id_.setValor("id");
+        Nodo id_ = new Nodo("Id");
+        id_.setValor("Id");
         id_.setNumNodo(parser.contador++);
         tmp.addHijo((Nodo) id_);
 
@@ -660,6 +660,10 @@ location ::= Id {:
         :}
         | Id Corche_A expr:ex Corche_C {:
         Nodo tmp = new Nodo("location");
+        Nodo id_ = new Nodo("Id");
+        id_.setValor("Id");
+        id_.setNumNodo(parser.contador++);
+        tmp.addHijo((Nodo) id_);
 
         Nodo Corche_a = new Nodo("Corche_A");
         Corche_a.setValor("Corche_A");
