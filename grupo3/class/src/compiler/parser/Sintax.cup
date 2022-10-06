@@ -10,7 +10,7 @@ parser code
     public int contador = 1;
     public void syntax_error(Symbol s){
         //this.s = s;
-        System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna: " +(s.left)+ ". Identificador " +s.value + " no reconocido." );
+        System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna: " +(s.left)+ ". Identificador " +s.value + " no reconocido." + "el type: " + s.type);
     }
     public void unrecovered_syntax_error(Symbol s){
         System.out.println(s);

@@ -8,7 +8,7 @@ import java_cup.runtime.Symbol;
 %line
 %char
 
-id = ([A-Za-z][_0-9A-Za-z]+)
+id = ([A-Za-z][_0-9A-Za-z]*)
 alpha = [a-zA-Z_]
 digit = [0-9]
 hex_digit = ([0-9a-fA-F])
