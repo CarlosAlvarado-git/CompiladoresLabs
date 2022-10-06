@@ -78,7 +78,7 @@ public class Compiler {
                                                 System.out.println("Entre a scan");
                                                 scan.main(null,ruta);
                                                 break;
-                                            case "parser":
+                                            case "parse":
                                                 ruta = System.getProperty("user.dir");
                                                 ruta = ruta + "/src/" + archivo;
                                                 //Scanner

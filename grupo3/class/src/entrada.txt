@@ -1,1 +1,4 @@
-class Program {}
+class Program {
+int a = 3;
+if(85)#
+}

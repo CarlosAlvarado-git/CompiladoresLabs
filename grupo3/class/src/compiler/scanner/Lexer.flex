@@ -6,7 +6,7 @@ import static compiler.scanner.Tokens.*;
 %line
 %column
 
-id = ([A-Za-z][_0-9A-Za-z]+)
+id = ([A-Za-z][_0-9A-Za-z]*)
 alpha = [a-zA-Z_]
 digit = [0-9]
 hex_digit = ([0-9a-fA-F])
@@ -63,4 +63,4 @@ while {lexeme=yytext(); linea=yyline; columna=yycolumn; return Reservadas;}
 ")"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return RIGHT_PAR;            }
 
 
- . {return ERROR;}
+ . {lexeme=yytext(); linea=yyline; columna=yycolumn; return ERROR;}

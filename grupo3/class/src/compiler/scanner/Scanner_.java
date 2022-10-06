@@ -17,10 +17,9 @@ import java.io.Reader;
  */
 public class Scanner_ {
 public static void main(String[] args, String ruta){
-        //String jflex = System.getProperty("user.dir");
-        //jflex = jflex + "/src/compiler/scanner/Lexer.flex";
-        //generarLexer(jflex);
-        
+        /*String jflex = System.getProperty("user.dir");
+        jflex = jflex + "/src/compiler/scanner/Lexer.flex";
+        generarLexer(jflex);*/
         try{
             try{
                 //Path to file
@@ -38,7 +37,7 @@ public static void main(String[] args, String ruta){
                     }
                     switch (tokens){
                         case ERROR:
-                            resultado += "El simbolo no definido\n";
+                            resultado += "El simbolo no definido" + " linea: " + lexer.linea +  " columna: " + lexer.columna + "\n";
                             break;
                         case Reservadas: case operador_arith: case alpha:
                         case id:
@@ -72,8 +71,8 @@ public static void main(String[] args, String ruta){
             
     }
 public static void generarLexer(String ruta){
-        //File archivo = new File(ruta);
-        //JFlex.Main.generate(archivo);
+        File archivo = new File(ruta);
+        JFlex.Main.generate(archivo);
     }
     
 }
