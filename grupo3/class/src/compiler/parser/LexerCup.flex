@@ -10,9 +10,9 @@ import java_cup.runtime.Symbol;
 
 id = ([A-Za-z][_0-9A-Za-z]*)
 alpha = [a-zA-Z_]
-digit = [0-9]
-hex_digit = ([0-9a-fA-F])
+//digit = [0-9]
 decimal_literal = ([0-9][0-9]*)
+hex_digit = ([0-9a-fA-F])
 hex_literal = (0[Xx]{hex_digit}+)
 //rel_op = ([<|>])
 //arith_op = [+|-|*|/|%]
@@ -49,10 +49,10 @@ Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
 "//".* {/*Ignore*/}
 {id} {return new Symbol(sym.Id, yychar, yyline, yytext());}
 //{arith_op} {return new Symbol(sym.Arith_op, yychar, yyline, yytext());}
-{digit} {return new Symbol(sym.Digit, yychar, yyline, yytext());}
+//{digit} {return new Symbol(sym.Digit, yychar, yyline, yytext());}
 {alpha} {return new Symbol(sym.Alpha, yychar, yyline, yytext());}
-{hex_digit} {return new Symbol(sym.Hex_digit, yychar, yyline, yytext());}
 {decimal_literal} {return new Symbol(sym.Decimal_literal, yychar, yyline, yytext());}
+{hex_digit} {return new Symbol(sym.Hex_digit, yychar, yyline, yytext());}
 {hex_literal} {return new Symbol(sym.Hex_literal, yychar, yyline, yytext());}
 //{rel_op} {return new Symbol(sym.Rel_op, yychar, yyline, yytext());}
 //{assign_op} {return new Symbol(sym.Assign_op, yychar, yyline, yytext());}
