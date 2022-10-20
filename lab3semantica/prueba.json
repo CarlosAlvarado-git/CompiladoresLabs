@@ -1,0 +1,57 @@
+{
+    "block": {
+        "varDeclaration": [
+            {"type": "int", "identifier": "a1", "location": "3"}, 
+            {"type": "int", "identifier": "a2", "location": "4"}
+                ],
+          "varUsage": [
+            {"identifier": "a1", "value": "3", "location":"6"},
+            {"identifier": "a2", "value": "5", "location": "7"}
+            ],
+          "block": [
+            {
+                "varDeclaration": [
+                    {"type": "int", "identifier": "a3", "location": "10"}, 
+                    {"type": "int", "identifier": "a4", "location": "11"}
+                        ],
+                  "varUsage": [
+                    {"identifier": "a3", "value": "6", "location": "14"},
+                    {"identifier": "a4", "value": "10", "location": "15"}
+                    ],
+                  "block": [
+                    {
+                      "varDeclaration": [
+                        {"type": "int", "identifier": "a5", "location": "16"}, 
+                        {"type": "int", "identifier": "a6", "location": "17"}
+                            ],
+                      "varUsage": [
+                        {"identifier": "a5", "value": "6", "location": "18"},
+                        {"identifier": "a6", "value": "10", "location": "19"}
+                        ],
+                      "block": [
+                        {
+                          
+                        }
+                      ]
+                    }
+                  ]
+            },{
+                  "varDeclaration": [
+                    {"type": "int", "identifier": "a1", "location": "20"}, 
+                    {"type": "int", "identifier": "a2", "location": "21"}
+                        ],
+                  "varUsage": [
+                    {"identifier": "a1", "value": "3", "location": "25"},
+                    {"identifier": "a2", "value": "5", "location": "26"}
+                    ],
+                  "block": [
+                    {
+                      
+                    }
+                  ]
+            }
+              
+          ]
+        }
+}
+
