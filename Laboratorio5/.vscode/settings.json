@@ -1,0 +1,9 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "json-simple-1.1.1.jar",
+        "c:\\Users\\p1jav\\Downloads\\jackson-core-2.14.0-rc1.jar",
+        "c:\\Users\\p1jav\\Downloads\\jackson-databind-2.14.0-rc1.jar",
+        "c:\\Users\\p1jav\\Downloads\\jackson-annotations-2.14.0-rc1.jar"
+    ]
+}
