@@ -8,8 +8,8 @@ import java_cup.runtime.Symbol;
 %line
 %char
 
+id = ([A-Za-z][_0-9A-Za-z]*)
 alpha = [a-zA-Z_]
-alpha_num = [_0-9A-Za-z]
 //digit = [0-9]
 decimal_literal = ([0-9][0-9]*)
 hex_digit = ([0-9a-fA-F])
@@ -19,7 +19,7 @@ hex_literal = (0[Xx]{hex_digit}+)
 //assign_op = [=]
 
 
-espacio=[\t\r\n]+
+espacio=[ ,\t,\r,\n]+
 %{
     private Symbol symbol(int type, Object value){
         return new Symbol(type, yyline, yycolumn, value);
@@ -47,10 +47,10 @@ Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
 
 {espacio} {/*Ignore*/}
 "//".* {/*Ignore*/}
-" " {/*Ignore*/} 
+{id} {return new Symbol(sym.Id, yychar, yyline, yytext());}
+//{arith_op} {return new Symbol(sym.Arith_op, yychar, yyline, yytext());}
+//{digit} {return new Symbol(sym.Digit, yychar, yyline, yytext());}
 {alpha} {return new Symbol(sym.Alpha, yychar, yyline, yytext());}
-{alpha_num} {return new Symbol(sym.Alpha_num, yychar, yyline, yytext());}
-
 {decimal_literal} {return new Symbol(sym.Decimal_literal, yychar, yyline, yytext());}
 {hex_digit} {return new Symbol(sym.Hex_digit, yychar, yyline, yytext());}
 {hex_literal} {return new Symbol(sym.Hex_literal, yychar, yyline, yytext());}
@@ -88,4 +88,4 @@ Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
 
 
 
-. {return new Symbol(sym.ERROR, yychar, yyline, yytext());}
+ . {return new Symbol(sym.ERROR, yychar, yyline, yytext());}
