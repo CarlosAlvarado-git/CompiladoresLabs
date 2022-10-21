@@ -26,7 +26,7 @@ terminal Int, Boolean, Callout, If, For, Else, Return, Break, Continue, True,
         Decimal_literal,Hex_literal,GREATER, LESS,LESS_EQUAL,GREATER_EQUAL,
         PLUS_EQUAL, ASSIGN, MINUS_EQUAL,EQUAL,NOT_EQUAL,AND,OR, LEFT_PAR,
         RIGHT_PAR,Punto_coma,Mas, Menos,Multiplicacion, Division, Mod, Llave_A,
-        Llave_C,Corche_A, Corche_C, Coma, Exclamacion,Comillas, ComillasDoble, ERROR;
+        Llave_C,Corche_A, Corche_C, Coma, Exclamacion,Comillas, ComillasDoble, ERROR, STRING_LITERAL;
 
 
 non terminal INICIO, program, field_decl, method_decl,agru_type_void, 
