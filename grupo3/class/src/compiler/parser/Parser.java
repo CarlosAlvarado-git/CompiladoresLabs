@@ -8,7 +8,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.file.Files;
 
@@ -33,6 +35,7 @@ public static void main(String[] args, String ruta) throws Exception{
             try {
                 analisis.parse();   
                 System.out.println(graficarNodo(analisis.padre));
+                //graficar(analisis.padre);
             }
             catch (Exception e){
                 System.out.println(e);
@@ -57,7 +60,7 @@ public static String graficarNodo(Nodo nodo){
             for(Nodo hijos : nodo.getHijos())
             {
                 if (hijos != null){
-                    cadena += "\"" + nodo.getNumNodo() + "_" + nodo.getNombre() + " -> " + nodo.getValor() + "\"->\"" + hijos.getNumNodo() + "_" + hijos.getNombre() + " -> " + hijos.getValor() + "\"\n";
+                    cadena += "\"Numero: " + nodo.getNumNodo() + " Nombre: " + nodo.getNombre() + " Valor: -> " + nodo.getValor() + "\" Hijo: ->\"" + hijos.getNumNodo() + " Nombre hijo: " + hijos.getNombre() + " Valor hijo: -> " + hijos.getValor() + "\"\n";
                     cadena += graficarNodo(hijos);
                 }
                 else{
@@ -68,5 +71,30 @@ public static String graficarNodo(Nodo nodo){
         }
         return cadena;
     }
+public static void graficar(Nodo raiz){
+        FileWriter archivo = null;
+        PrintWriter pw = null;
+        String cadena = graficarNodo(raiz);
+        
+        try{
+            archivo = new FileWriter("arbol.dot");
+            pw = new PrintWriter(archivo);
+            pw.println("digraph G {node[shape=box, style=filled, color=blanchedalmond]; edge[color=chocolate3];rankdir=UD \n");
+            pw.println(cadena);
+            pw.println("\n}");
+            archivo.close();
+        }catch (IOException e) {
+            System.out.println(e +" 1");
+        }
+        
+        try {
+            String cmd = "dot -Tpng arbol.dot -o arbol.png";
+            Runtime.getRuntime().exec(cmd);
+        } catch (IOException ioe) {
+            System.out.println(ioe +" 2");
+        }
+        
+    }
+
     
 }

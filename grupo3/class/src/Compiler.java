@@ -9,6 +9,7 @@
  */
 import compiler.scanner.Scanner_;
 import compiler.parser.Parser;
+//import compiler.semantic.Semantic;
 import java.util.Scanner;
 
 public class Compiler {
@@ -88,6 +89,11 @@ public class Compiler {
                                             case "ast":
                                                 break;
                                             case "semantic":
+                                                ruta = System.getProperty("user.dir");
+                                                ruta = ruta + "/src/" + archivo;
+                                                //Scanner
+                                                //Semantic semantic = new Semantic();
+                                                //semantic.main(null,ruta);
                                                 break;
                                             case "irt":
                                                 break;
