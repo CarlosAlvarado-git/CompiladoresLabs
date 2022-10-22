@@ -25,6 +25,7 @@ public class Semantic {
     public static String error_message = "";
     public static String tabla = "";
     public static HashMap<String, String> TYPE = new HashMap<String, String>();
+    public static Nodo type = new Nodo("type");
     public static void pushScope(int scope){
         if (Tabla.containsKey("Scope: " + scope)){
 
@@ -51,17 +52,17 @@ public class Semantic {
     }
 
     public static void insertSymbol(Nodo nuevoSymbol, int scope){
-        if (TYPE.get(0).equals("1")){
-            HashMap<String, String> nuevo_symbol = new HashMap<String, String>();
+        if ("0".equals(TYPE.get("Espero")) == true){
+            HashMap<String, String> nuevo_symbol = new HashMap<>();
             nuevo_symbol.put("Indentifier","");
-            nuevo_symbol.put("Type",nuevoSymbol.getHijos().get(0).getValor());
+            nuevo_symbol.put("Type",nuevoSymbol.getValor());
             nuevo_symbol.put("Scope",scope + "");
             nuevo_symbol.put("Location","");
             if (Tabla.get("Scope: " + scope) == null){
             //System.out.println("Entre porque no hay lista");
             ValoresTabla data = new ValoresTabla();
             data.Adddata(nuevo_symbol);
-            ArrayList<ValoresTabla> lista = new ArrayList<ValoresTabla>();
+            ArrayList<ValoresTabla> lista = new ArrayList<>();
             lista.add(data);
             Tabla.replace("Scope: " + scope, lista);
             }
@@ -73,8 +74,9 @@ public class Semantic {
             }
         }
         else{
-            Tabla.get("Scope: " + scope).get(-1).data.replace("Indentifier", nuevoSymbol.getHijos().get(0).getIdentifier());
-            Tabla.get("Scope: " + scope).get(-1).data.replace("Location", nuevoSymbol.getHijos().get(0).getLocation() + "");
+            int ultimo = Tabla.get("Scope: " + scope).size() - 1;
+            Tabla.get("Scope: " + scope).get(ultimo).data.replace("Indentifier", nuevoSymbol.getIdentifier());
+            Tabla.get("Scope: " + scope).get(ultimo).data.replace("Location", nuevoSymbol.getLocation() + "");
         }
         
         
@@ -135,35 +137,49 @@ public class Semantic {
     public static void recorrerTabla(Nodo nodo, int scope){
         if (scope == 1){
             pushScope(scope);
-        }
-        if (nodo != null){
-            
-            if (nodo.getNombre().equals("type")){
-                System.out.println(nodo.getHijos().get(0).getValor());
-                TYPE.set(0, "1");
-                TYPE.set(1, nodo.getHijos().get(0).getValor());
-                insertSymbol(nodo, scope);
-                TYPE.add("0");
-                TYPE.add("");
-            }
-            
-            if (nodo.getNombre().equals("field_name")){
-                 System.out.println(nodo.getHijos().get(0).getIdentifier());
-                 System.out.println(nodo.getHijos().get(0).getLocation());
-                 insertSymbol(nodo, scope);
+        } 
+        for(Nodo hijos : nodo.getHijos())
+        {
+            if (hijos != null){
+                switch (hijos.getNombre()) {
+                    case "type":
+                        insertSymbol(hijos.getHijos().get(0), scope);
+                        TYPE.put("Espero","1");
+                        TYPE.put("Type", hijos.getHijos().get(0).getValor());
+                        break; 
+                    case "field_name":
+                        System.out.println("-------- field_name");
+                        insertSymbol(hijos.getHijos().get(0), scope);
+                        TYPE.put("Espero","0");
+                        break;
+                    case "Punto_coma":
+                        TYPE.put("Espero","0");
+                        TYPE.put("Type", "");
+                        type.setValor("");
+                        break;
+                    default:
+                        if ("0".equals(TYPE.get("Espero")) && ("".equals(TYPE.get("Type")) == false) && (nodo.getNombre().equals("field decl") == true)){
+                            System.out.println("-------- Espero: 0 Type: no vacio:   " + nodo.getNombre());
+                            type.setValor(TYPE.get("Type"));
+                            insertSymbol(type,scope);
+                            TYPE.put("Espero","1");
+                        }
+                        else if ("1".equals(TYPE.get("Espero")) && ("".equals(TYPE.get("Type")) == false) && (nodo.getNombre().equals("method_decl") == true)){
+                            System.out.println("-------- Espero: 1 Type: no vacio:   " + nodo.getNombre());
+                            insertSymbol(hijos,scope);
+                            TYPE.put("Espero","1");
+                            TYPE.put("Type", "");
+                            type.setValor("");
+                            }
+                        else
+                        {System.out.println("-------- ningun caso:   " + nodo.getNombre());
+                                }
+                        break;
+                }
+                recorrerTabla(hijos, scope);
                  
             }
-            
-            for(Nodo hijos : nodo.getHijos())
-            {
-                if (hijos != null){
-                    recorrerTabla(hijos, scope);
-                }
-                else{
-                    recorrerTabla(hijos, scope);
-                }
 
-            }
         }
     }
     
@@ -182,11 +198,24 @@ public class Semantic {
             Sintax analisis = new Sintax(new LexerCup(lector));
             try {
                 analisis.parse(); 
+                TYPE.put("Espero","0");
                 TYPE.put("Type","");
                 System.out.println(graficarNodo(analisis.padre));
                 
-                //recorrerTabla(analisis.padre, 1);
-                //graficar(analisis.padre);
+                recorrerTabla(analisis.padre, 1);
+                System.out.println("-------- Aquí viene la tabla de símbolo");
+                //System.out.println(tabla);
+                for (String i : Tabla.keySet()) {
+                    System.out.println(i);
+                    System.out.println("Var declarations: \n");
+                    for (int x = 0; x < Tabla.get(i).size(); x++) {
+                        System.out.println("-------");
+                        for (String y : Tabla.get(i).get(x).data.keySet()) {
+                            System.out.println( "   "+y + ": " + Tabla.get(i).get(x).data.get(y));
+                        }
+                    }
+                }
+                Tabla.clear();
             }
             catch (Exception e){
                 System.out.println(e);
@@ -205,36 +234,14 @@ public class Semantic {
     }
     public static String graficarNodo(Nodo nodo){
         String cadena = "";
-        if (nodo != null){
-            if (nodo.getNombre().equals("type")){
-                 System.out.println(nodo.getHijos().get(0).getValor());
-                 TYPE.replace("Type", nodo.getHijos().get(0).getValor());
-                
-            }
-            if (nodo.getNombre().equals("field_name")){
-                 System.out.println(nodo.getHijos().get(0).getIdentifier());
-                 System.out.println(nodo.getHijos().get(0).getLocation());
-                TYPE.replace("Type", "");
-            }
-            if (nodo.getNombre().equals("method_decl") && !(TYPE.get("Type").isEmpty())){
-                System.out.println("ENTRE");
-                System.out.println(nodo.getHijos().get(0).getIdentifier());
-                System.out.println(nodo.getHijos().get(0).getLocation());
-            }
-            //System.out.println("Este es el padre: " + nodo.getNombre());
-            //System.out.println("Estos son los hijos: " + nodo.getHijos());
-            for(Nodo hijos : nodo.getHijos())
-            {
-                if (hijos != null){
-                    cadena += "\"Numero: " + nodo.getNumNodo() + " Nombre: " + nodo.getNombre() + " Valor: -> " + nodo.getValor() + "\" Hijo: ->\"" + hijos.getNumNodo() + " Nombre hijo: " + hijos.getNombre() + " Valor hijo: -> " + hijos.getValor() + "\"\n";
-                    
-                    cadena += graficarNodo(hijos);
-                }
-                else{
-                    cadena += graficarNodo(hijos);
-                }
+        for(Nodo hijos : nodo.getHijos())
+        {
+            if (hijos != null){
+                cadena += "\"Numero: " + nodo.getNumNodo() + " Nombre: " + nodo.getNombre() + " Valor: -> " + nodo.getValor() + "\" Hijo: ->\"" + hijos.getNumNodo() + " Nombre hijo: " + hijos.getNombre() + " Valor hijo: -> " + hijos.getValor() + "\"\n";
 
+                cadena += graficarNodo(hijos);
             }
+
         }
         return cadena;
     }

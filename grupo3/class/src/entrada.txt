@@ -1,6 +1,5 @@
 class Program {
-   int a, b;
-   int buenas;
+   int a[1];
    int main(){
     
     }
