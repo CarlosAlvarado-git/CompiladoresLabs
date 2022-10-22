@@ -21,9 +21,9 @@ public class Nodo {
     // Para todos los Id's 
     // para guardar algo en la tabla, tenemos que ser hijos de un field_decl | var_decl
     // si soy hijo y me llamo type, entonces, llamo a insertarSymbol | sino, significa que soy 
-    private String ID;//yytext
+    private String Identifier;//yytext
     private String Type; //ver al "hermano" anterior. 
-    private String Location; // yyline? 
+    private int Location; // yyline? 
     // dos bandes: 
         // type: decir que estoy esperando un type. Se activa cuando soy un type OR todos acquellos que se generan con coma. Y nomás meta el id, se desactiva.  
         // location: se activa cuando sea un location. Se desactiva cuando sea el id. 
@@ -55,26 +55,25 @@ public class Nodo {
         //setValor("");
         setNumNodo(0);
     }
-    /*
-    public String getID() {
-        return this.ID;
+    
+    public String getIdentifier() {
+        return this.Identifier;
     }
-    public String setID(String id) {
-        this.ID = id;
+    public void setIdentifier(String id) {
+        this.Identifier = id;
     }
     public String getType() {
         return this.Type;
     }
-    public String setType(String type) {
+    public void setType(String type) {
         this.Type = type;
     }
-    public String getLocation() {
+    public int getLocation() {
         return this.Location;
     }
-    public String setLocation(String location) {
+    public void setLocation(int location) {
         this.Location = location;
     }
-    */
     
     public void addHijo(Nodo hijo)
     {

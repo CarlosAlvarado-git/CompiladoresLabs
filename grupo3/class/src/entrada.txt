@@ -1,14 +1,7 @@
 class Program {
+   int a, b;
+   int buenas;
+   int main(){
     
-
-    void hola(int z, int x){
-    }
-    
-    void main(){
-        boolean a;
-        TRUE = false;
-        if ( a == 10 ){
-            
-        }
     }
 }

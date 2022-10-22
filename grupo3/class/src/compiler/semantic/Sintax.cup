@@ -19,6 +19,8 @@ parser code
     public Symbol getS(){
         return this.s;
     }
+
+   
 :};
 
 terminal Int, Boolean, Callout, If, For, Else, Return, Break, Continue, True, 
@@ -80,23 +82,29 @@ program ::= Class Program Llave_A field_decl:fd method_decl:md Llave_C {:
         
         :};
 
-field_name ::= Id {: 
+field_name ::= Id:id {: 
+            
             Nodo tmp = new Nodo("field_name");
             Nodo id_ = new Nodo("id");
             id_.setValor("id");
             id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
             tmp.addHijo((Nodo) id_);
             tmp.setNumNodo(parser.contador++);
             RESULT = tmp;
             
             :}
-            | Id Corche_A int_literal:il Corche_C {:
+            | Id:id Corche_A int_literal:il Corche_C {:
             Nodo tmp = new Nodo("field_name");
             Nodo id_ = new Nodo("id");
             id_.setValor("id");
             id_.setNumNodo(parser.contador++);
-            tmp.addHijo((Nodo) id_);
 
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
             Nodo Corche_a = new Nodo("Corche_A");
             Corche_a.setValor("Corche_A");
             Corche_a.setNumNodo(parser.contador++);
@@ -149,14 +157,17 @@ field_decl_coma_field ::=
             |
 ;
 
-method_decl ::= type:t Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md {:
+method_decl ::= type:t Id:id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md {:
                 Nodo tmp = new Nodo("method_decl");
 
                 tmp.addHijo((Nodo) t);
                 Nodo id_ = new Nodo("id");
-                id_.setValor("id");
-                id_.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) id_);
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
 
                 Nodo lefp = new Nodo("LEFT_PAR");
                 lefp.setValor("LEFT_PAR");
@@ -176,7 +187,7 @@ method_decl ::= type:t Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b meth
                 tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
                 :} |
-                Void Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md {:
+                Void Id:id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md {:
                 Nodo tmp = new Nodo("method_decl");
 
                 Nodo vd = new Nodo("void");
@@ -185,9 +196,12 @@ method_decl ::= type:t Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b meth
                 tmp.addHijo((Nodo) vd);
                 
                 Nodo id_ = new Nodo("id");
-                id_.setValor("id");
-                id_.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) id_);
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
 
                 Nodo lefp = new Nodo("LEFT_PAR");
                 lefp.setValor("LEFT_PAR");
@@ -211,15 +225,18 @@ method_decl ::= type:t Id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b meth
 ;
 
 method_decl_corche ::=
-        type:t Id method_decl_corche_coma_type:mdcct {:
+        type:t Id:id method_decl_corche_coma_type:mdcct {:
         Nodo tmp = new Nodo("method_decl_corche");
 
         tmp.addHijo((Nodo) t);
 
-        Nodo id_ = new Nodo("Id");
-        id_.setValor("Id");
-        id_.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) id_);
+        Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
 
         tmp.addHijo((Nodo) mdcct);
         tmp.setNumNodo(parser.contador++);
@@ -228,7 +245,7 @@ method_decl_corche ::=
 ;
 
 method_decl_corche_coma_type ::=
-    Coma type:t Id method_decl_corche_coma_type:mdcct {:
+    Coma type:t Id:id method_decl_corche_coma_type:mdcct {:
         Nodo tmp = new Nodo("method_decl_corche_coma_type");
         Nodo cm = new Nodo("Coma");
         cm.setValor("Coma");
@@ -236,10 +253,13 @@ method_decl_corche_coma_type ::=
         tmp.addHijo((Nodo) cm);
 
         tmp.addHijo((Nodo) t);
-        Nodo id_ = new Nodo("Id");
-        id_.setValor("Id");
-        id_.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) id_);
+        Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
         tmp.addHijo((Nodo) mdcct);
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
@@ -279,14 +299,17 @@ block ::= Llave_A var_decl:vd statement:stm Llave_C {:
         RESULT = tmp;
         :};
 
-var_decl ::= type:t Id var_decl_coma_id:vdci Punto_coma var_decl:vd {:
+var_decl ::= type:t Id:id var_decl_coma_id:vdci Punto_coma var_decl:vd {:
         Nodo tmp = new Nodo("var_decl");
         tmp.addHijo((Nodo) t);
 
-        Nodo id_ = new Nodo("Id");
-        id_.setValor("Id");
-        id_.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) id_);
+        Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
 
         tmp.addHijo((Nodo) vdci);
         Nodo pm = new Nodo("Punto_coma");
@@ -299,16 +322,19 @@ var_decl ::= type:t Id var_decl_coma_id:vdci Punto_coma var_decl:vd {:
                 :}| ;
 
 var_decl_coma_id ::=
-            Coma Id var_decl_coma_id:vdci {:
+            Coma Id:id var_decl_coma_id:vdci {:
                 Nodo tmp = new Nodo("var_decl_coma_id");
                 Nodo cm = new Nodo("Coma");
                 cm.setValor("Coma");
                 cm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) cm);  
-                Nodo id_ = new Nodo("Id");
-                id_.setValor("Id");
-                id_.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) id_);
+                Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
                 tmp.addHijo((Nodo) vdci);
                 tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
@@ -390,17 +416,20 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma statement:stm {:
                 tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
                 :}
-        | For Id ASSIGN expr:ex Coma expr:ex2 block:b statement:stm  {:
+        | For Id:id ASSIGN expr:ex Coma expr:ex2 block:b statement:stm  {:
                 Nodo tmp = new Nodo("statement");
                 Nodo for_ = new Nodo("For");
                 for_.setValor("For");
                 for_.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) for_); 
 
-                Nodo id_ = new Nodo("Id");
-                id_.setValor("Id");
-                id_.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) id_); 
+                Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
 
                 Nodo assing  = new Nodo("ASSIGN");
                 assing.setValor("ASSIGN");
@@ -635,35 +664,43 @@ method_call_coma_callout ::=
         :} |
 ;
 
-method_name ::= Id {:
+method_name ::= Id:id {:
         Nodo tmp = new Nodo("method_name");
         
-        Nodo id_ = new Nodo("Id");
-        id_.setValor("Id");
-        id_.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) id_);
+        Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
 
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
 :};
 
-location ::= Id {:
+location ::= Id:id {:
         Nodo tmp = new Nodo("location");
 
-        Nodo id_ = new Nodo("Id");
-        id_.setValor("Id");
-        id_.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) id_);
+        Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
 
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
-        | Id Corche_A expr:ex Corche_C {:
+        | Id:id Corche_A expr:ex Corche_C {:
         Nodo tmp = new Nodo("location");
-        Nodo id_ = new Nodo("Id");
-        id_.setValor("Id");
-        id_.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) id_);
+        Nodo id_ = new Nodo("id");
+            id_.setValor("id");
+            id_.setNumNodo(parser.contador++);
+
+            id_.setIdentifier(id + "");
+            id_.setLocation(idright + 1);
+            tmp.addHijo((Nodo) id_);
 
         Nodo Corche_a = new Nodo("Corche_A");
         Corche_a.setValor("Corche_A");
