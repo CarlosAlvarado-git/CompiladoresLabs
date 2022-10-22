@@ -1,18 +1,14 @@
-
 class Program {
-    int a;
-    //int b;
-    //void main() {
-    //   int y;
-    //   x = a;
-       //y = b;
-       //z = gcd(x, y);
-       // print_int is part of the standard input-output library
-       // callout("print_int", z);
-    //}
-    // function that computes the greatest common divisor
-    //int gcd(int a, int b) {
-    //   if (b == 10) { return(a); }
-    //   else { return( gcd(b, a % b) ); }
-    //}
+    
+
+    void hola(int z, int x){
+    }
+    
+    void main(){
+        boolean a;
+        TRUE = false;
+        if ( a == 10 ){
+            
+        }
+    }
 }

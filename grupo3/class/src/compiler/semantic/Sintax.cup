@@ -1011,7 +1011,17 @@ int_literal ::= Decimal_literal {:
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
-:} ;
+:}| Digit {:
+    Nodo tmp = new Nodo("int_literal");
+    Nodo Digit_ = new Nodo("Digit");
+    Digit_.setValor("Digit");
+    Digit_.setNumNodo(parser.contador++);
+    tmp.addHijo((Nodo) Digit_);
+
+    tmp.setNumNodo(parser.contador++);
+    RESULT = tmp;
+
+:};
 
 
 bool_literal ::= True {:

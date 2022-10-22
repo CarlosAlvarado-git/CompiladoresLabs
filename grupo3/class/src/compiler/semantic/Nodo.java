@@ -23,7 +23,30 @@ public class Nodo {
     // si soy hijo y me llamo type, entonces, llamo a insertarSymbol | sino, significa que soy 
     private String ID;//yytext
     private String Type; //ver al "hermano" anterior. 
-    private String Location; // yyline?
+    private String Location; // yyline? 
+    // dos bandes: 
+        // type: decir que estoy esperando un type. Se activa cuando soy un type OR todos acquellos que se generan con coma. Y nomás meta el id, se desactiva.  
+        // location: se activa cuando sea un location. Se desactiva cuando sea el id. 
+        
+    // nomas creamos el method declaration: creamos un nuevo scope para sus var declaration.
+    //bandera: 
+        // void: lo mismo que el type, solo que para funciones. para meterlo al scope. TABLA. luego se quita. 
+    // nomas ceramos el scope en la TABLA, debemos crear su "scope" para la TABLA PARAMETROS, guardo el key en una variable
+        // si encuentro ( activo bandera de: inician parámetros. 
+        // si encuentro ) desacativo bandera parametros. 
+    // SI ESTA ACTIVO bandera parametros, y la key que tengo guardad es un main. ERROR. 
+    
+    // con el IF:
+        // si soy un statement y MI HIJO ES IF, activo bandera de IF
+            // TENGO 3 POSIBLES RESULTADOS DESPUES DE UN IF:
+                // si soy: LOCATION O METHODCALL: es hacer un lookup, GUARDAR EL TYPE
+                // si soy un literal: GUARDAR que literal soy.
+        // si viene un !
+            // activo bandera de exlacion
+                // debe de ser un bool lo que me "devuela" la expresion. SINO ERROR
+        // ⟨arith op⟩s and ⟨rel op⟩s SI ENCUENTRO UNO en el if,
+            // bandera: ver si al menos uno de dos de expresion o al menos que alguno me devuelva int. int_literal
+                
     
     public Nodo(String nombre)
     {
