@@ -24,7 +24,7 @@ public class Semantic {
     public static boolean error = false;
     public static String error_message = "";
     public static String tabla = "";
-    public static ArrayList<String> TYPE = new ArrayList<String>();
+    public static HashMap<String, String> TYPE = new HashMap<String, String>();
     public static void pushScope(int scope){
         if (Tabla.containsKey("Scope: " + scope)){
 
@@ -132,7 +132,7 @@ public class Semantic {
     }*/
     
     
-    /*public static void recorrerTabla(Nodo nodo, int scope){
+    public static void recorrerTabla(Nodo nodo, int scope){
         if (scope == 1){
             pushScope(scope);
         }
@@ -165,7 +165,7 @@ public class Semantic {
 
             }
         }
-    }*/
+    }
     
     public static void main(String[] args, String ruta) throws Exception{
         /*String jflex = System.getProperty("user.dir");
@@ -182,8 +182,7 @@ public class Semantic {
             Sintax analisis = new Sintax(new LexerCup(lector));
             try {
                 analisis.parse(); 
-                TYPE.add("0");
-                TYPE.add("");
+                TYPE.put("Type","");
                 System.out.println(graficarNodo(analisis.padre));
                 
                 //recorrerTabla(analisis.padre, 1);
@@ -209,20 +208,18 @@ public class Semantic {
         if (nodo != null){
             if (nodo.getNombre().equals("type")){
                  System.out.println(nodo.getHijos().get(0).getValor());
-                 TYPE.set(0, "1");
-                 TYPE.set(1, nodo.getHijos().get(0).getValor());
+                 TYPE.replace("Type", nodo.getHijos().get(0).getValor());
                 
             }
             if (nodo.getNombre().equals("field_name")){
                  System.out.println(nodo.getHijos().get(0).getIdentifier());
                  System.out.println(nodo.getHijos().get(0).getLocation());
-                TYPE.set(0, "0");
-                 TYPE.set(1, "");
+                TYPE.replace("Type", "");
             }
-            if (nodo.getNombre().equals("method_decl") && TYPE.get(0).equals("1")){
+            if (nodo.getNombre().equals("method_decl") && !(TYPE.get("Type").isEmpty())){
                 System.out.println("ENTRE");
-                //System.out.println(nodo.getHijos().get(0).getIdentifier());
-                //System.out.println(nodo.getHijos().get(0).getLocation());
+                System.out.println(nodo.getHijos().get(0).getIdentifier());
+                System.out.println(nodo.getHijos().get(0).getLocation());
             }
             //System.out.println("Este es el padre: " + nodo.getNombre());
             //System.out.println("Estos son los hijos: " + nodo.getHijos());
