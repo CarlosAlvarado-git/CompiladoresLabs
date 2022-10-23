@@ -179,15 +179,16 @@ public class Semantic {
                             TYPE.replace("Espero","0");
                             
                         }
+                        else {
+                            System.out.println("-------- id/lookup   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre()+ ", el scope: " +scope_global);
+                            System.out.println("=============look_up==============");
+                            System.out.println(lookup(hijos, scope_global));
+                        }
                         
                         if(nodo.getNombre().equals("location") == true){
                             nombre_loock_up = hijos;
                         }
-                        /*
-                        else {
-                            // lookup
-                            System.out.println("-------- id/lookup   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre()+ ", el scope: " +scope_global);
-                        }*/
+                     
                         recorrerTabla(hijos);
                         System.out.println("Regreso de recorrerTabla, caso de id, scope es: " + scope_global);
                         break;
