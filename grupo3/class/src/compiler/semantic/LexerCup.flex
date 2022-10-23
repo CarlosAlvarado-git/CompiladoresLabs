@@ -16,9 +16,10 @@ import java_cup.runtime.Symbol;
 //hex_literal = (0[Xx]{hex_digit}+)
 
 
-
+string_literal = ([\"].+[\"])
+char_literal = ([\'].[\'])
 digit = [0-9]
-alpha = [a-zA-z]
+alpha = [a-zA-Z]
 hex_digit = [0-9a-fA-F]
 id = {alpha}({alpha}|{digit})*
 hex_literal = [0][xX]{hex_digit}({hex_digit})*
@@ -55,6 +56,8 @@ Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
 {espacio} {/*Ignore*/}
 "//".* {/*Ignore*/}
 " "  {/*Ignore*/}
+{string_literal} {return new Symbol(sym.STRING_LITERAL, yychar, yyline, yytext());}
+{char_literal} {return new Symbol(sym.CHAR_LITERAL, yychar, yyline, yytext());}
 {id} {return new Symbol(sym.Id, yychar, yyline, yytext());}
 {digit} {return new Symbol(sym.Digit, yychar, yyline, yytext());}
 {alpha} {return new Symbol(sym.Alpha, yychar, yyline, yytext());}
@@ -90,14 +93,6 @@ Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
 "''"                {return new Symbol(sym.ComillasDoble, yychar, yyline, yytext());}
 "!"                {return new Symbol(sym.Exclamacion, yychar, yyline, yytext());}
 
- <YYINITIAL> {
-\"                             { yybegin(STRING); }
-}
-
-<STRING> {
-      \"                             { yybegin(YYINITIAL); 
-                                       return new Symbol(sym.STRING_LITERAL,yychar, yyline, yytext()); }
-    }
 
 
  . {return new Symbol(sym.ERROR, yychar, yyline, yytext());}

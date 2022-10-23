@@ -1,9 +1,13 @@
 class Program {
     int a;
-
+    int w;
 
     int gcd(int a, int b) {
        int a;
+       w = 10;
+       {
+       int n;
+        }
     }
 
     void main() {

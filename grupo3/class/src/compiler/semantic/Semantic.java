@@ -26,6 +26,9 @@ public class Semantic {
     public static String tabla = "";
     public static HashMap<String, String> TYPE = new HashMap<String, String>();
     public static Nodo type = new Nodo("type");
+    public static int scope_global = 0;
+    public static Nodo nombre_loock_up ;
+    
     public static void pushScope(int scope){
         if (Tabla.containsKey("Scope: " + scope)){
 
@@ -59,6 +62,7 @@ public class Semantic {
             nuevo_symbol.put("Type",nuevoSymbol.getValor());
             nuevo_symbol.put("Scope",scope + "");
             nuevo_symbol.put("Location","");
+            nuevo_symbol.put("Memoria", "");
             if (Tabla.get("Scope: " + scope) == null){
             System.out.println("Entre porque no hay lista, scope: " + scope);
             ValoresTabla data = new ValoresTabla();
@@ -75,16 +79,22 @@ public class Semantic {
             }
         }
         else{
+            if("1".equals(TYPE.get("Espero_corchete"))){
+                int ultimo = Tabla.get("Scope: " + scope).size() - 1;
+                Tabla.get("Scope: " + scope).get(ultimo).data.replace("Memoria", nuevoSymbol.getValor());
+            }
+            else{
             int ultimo = Tabla.get("Scope: " + scope).size() - 1;
             Tabla.get("Scope: " + scope).get(ultimo).data.replace("Indentifier", nuevoSymbol.getIdentifier());
             Tabla.get("Scope: " + scope).get(ultimo).data.replace("Location", nuevoSymbol.getLocation() + "");
+            }
         }
         
         
         
     }
 
-    /*public static boolean lookup(VarUsage symbol,int scope){
+    public static boolean lookup(Nodo symbol,int scope){
         int resultado = 2;
         // 0 error de casteo, retorna false
         // 1 lo encontro, retorna true
@@ -97,14 +107,16 @@ public class Semantic {
                 // for (String y : Tabla.get("Scope: " + scope).get(x).data.keySet()) {
                 //     System.out.println( "   "+y + ": " + Tabla.get("Scope: " + scope).get(x).data.get(y));
                 // }
-                if (Tabla.get("Scope: " + scope).get(x).data.containsValue(symbol.getidentifier())){
+           
+                if (Tabla.get("Scope: " + scope).get(x).data.containsValue(symbol.getIdentifier())){
                     //System.out.println("Si existe, " + symbol.getidentifier());
                     try{
-                        if (Integer.valueOf(Tabla.get("Scope: " + scope).get(x).data.get("Location")) < Integer.valueOf(symbol.getlocation())){
-                            if (Tabla.get("Scope: " + scope).get(x).data.containsValue("int")){
+                        if (Integer.valueOf(Tabla.get("Scope: " + scope).get(x).data.get("Location")) < Integer.valueOf(symbol.getLocation())){
+                            //if (Tabla.get("Scope: " + scope).get(x).data.containsValue("int")){
                                 try{
                                     //System.out.println("si existe en el scope, " + scope + ", el simbolo: " + symbol.getidentifier());
-                                    Integer.valueOf(symbol.getvalue());
+                                    
+                                    String.valueOf(symbol.getIdentifier());
                                     resultado = 1;
                                     resultado_r = true;
                                     break;
@@ -114,7 +126,7 @@ public class Semantic {
                                     resultado_r = false;
                                     break;
                                 }
-                            }
+                            //}
                         }
                     }
                     catch(NumberFormatException ex){
@@ -132,12 +144,13 @@ public class Semantic {
             scope = scope - 1;
         }
         return resultado_r;
-    }*/
+    }
     
     
-    public static void recorrerTabla(Nodo nodo, int scope){
-        if (scope == 1){
-            pushScope(scope);
+    public static void recorrerTabla(Nodo nodo){
+        
+        if (scope_global == 1){
+            pushScope(scope_global);
         } 
         for(Nodo hijos : nodo.getHijos())
         {
@@ -145,68 +158,107 @@ public class Semantic {
                 switch (hijos.getNombre()) {
                     case "type":
                         System.out.println("-------- type   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre());
-                        insertSymbol(hijos.getHijos().get(0), scope);
+                        insertSymbol(hijos.getHijos().get(0), scope_global);
                         TYPE.replace("Espero","1");
                         TYPE.replace("Type", hijos.getHijos().get(0).getValor());
-                        recorrerTabla(hijos, scope);
-                        System.out.println("Regreso de recorrerTabla, caso de type, caso de id, scope es: " + scope);
+                        recorrerTabla(hijos);
+                        System.out.println("Regreso de recorrerTabla, caso de type, caso de id, scope es: " + scope_global);
                         break; 
                     case "void":
                     System.out.println("-------- void   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre());
-                    insertSymbol(hijos, scope);
+                    insertSymbol(hijos, scope_global);
                     TYPE.replace("Espero","1");
-                    TYPE.replace("Type", hijos.getHijos().get(0).getValor());
-                    recorrerTabla(hijos, scope);
-                    System.out.println("Regreso de recorrerTabla, caso de void, caso de id, scope es: " + scope);
+                    //TYPE.replace("Type", hijos.getHijos().get(0).getValor());
+                    recorrerTabla(hijos);
+                    System.out.println("Regreso de recorrerTabla, caso de void, caso de id, scope es: " + scope_global);
                     break; 
                     case "id":
                         if (nodo.getNombre().equals("location") == false && nodo.getNombre().equals("method_name") == false){
-                            System.out.println("-------- id   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre() + ", el scope: " +scope);
-                            insertSymbol(hijos, scope);
+                            System.out.println("-------- id   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre() + ", el scope: " +scope_global);
+                            insertSymbol(hijos, scope_global);
                             TYPE.replace("Espero","0");
+                            
                         }
+                        
+                        if(nodo.getNombre().equals("location") == true){
+                            nombre_loock_up = hijos;
+                        }
+                        /*
                         else {
                             // lookup
-                            System.out.println("-------- id/lookup   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre()+ ", el scope: " +scope);
+                            System.out.println("-------- id/lookup   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre()+ ", el scope: " +scope_global);
+                        }*/
+                        recorrerTabla(hijos);
+                        System.out.println("Regreso de recorrerTabla, caso de id, scope es: " + scope_global);
+                        break;
+                    case "Corche_A":
+                        if(nodo.getNombre().equals("field_name") == true){
+                            TYPE.replace("Espero_corchete","1");
+                            recorrerTabla(hijos);
                         }
-                        recorrerTabla(hijos, scope);
-                        System.out.println("Regreso de recorrerTabla, caso de id, scope es: " + scope);
+                        else{
+                            
+                            recorrerTabla(hijos);
+                        }
+                        break;
+                    case "int_literal":
+                        if(nodo.getNombre().equals("field_name") == true){
+                            insertSymbol(hijos.getHijos().get(0),scope_global);
+                            TYPE.replace("Espero_corchete","0");
+                            recorrerTabla(hijos);
+                        }
+                        else{
+                            recorrerTabla(hijos);
+                        }
                         break;
                     case "block":
+                        
                             if (nodo.getNombre().equals("statement")) {
-                                    System.out.println("-------- Soy el block | mi padre es: " + nodo.getNombre() + "cree un nuevo scope: " + (scope + 1));
-                                    
-                                    pushScope(scope+1);
+                                    System.out.println("-------- Soy el block | mi padre es: " + nodo.getNombre() + "cree un nuevo scope: " + (scope_global));
+                                    scope_global = scope_global +1;
+                                    pushScope(scope_global);
+                                    recorrerTabla(hijos);
                             }
-                            recorrerTabla(hijos, scope+1);
-                            System.out.println("Regreso de recorrerTabla, caso de block, scope es: " + scope);
+                            else{
+                                recorrerTabla(hijos);
+                            }
+                        
+                            
+                            
+                            System.out.println("Regreso de recorrerTabla, caso de block, scope es: " + scope_global);
                         break;
                     case "Llave_C":
-                            System.out.println("-------- Soy el { | mi padre es: " + nodo.getNombre() + "borré el scope: " + (scope));
-                            popScope(scope);
+                            System.out.println("-------- Soy el { | mi padre es: " + nodo.getNombre() + "borré el scope: " + (scope_global));
+                            popScope(scope_global);
                             TYPE.replace("Espero","0");
                             TYPE.replace("Type", "");
                             type.setValor("");
-                            recorrerTabla(hijos, scope);
-                            scope = scope - 1;
-                            System.out.println("Regreso de recorrerTabla, caso de llave c, scope es: " + scope);
+                            //recorrerTabla(hijos, scope);
+                            scope_global = scope_global - 1;
+                            System.out.println("Regreso de recorrerTabla, caso de llave c, scope es: " + scope_global);
                         break;
                     case "Punto_coma":
                         System.out.println("-------- Punto_coma   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre());
                         TYPE.replace("Espero","0");
                         TYPE.replace("Type", "");
                         type.setValor("");
-                        recorrerTabla(hijos, scope);
-                        System.out.println("Regreso de recorrerTabla, caso de punto y coma, scope es: " + scope);
+                        recorrerTabla(hijos);
+                        System.out.println("Regreso de recorrerTabla, caso de punto y coma, scope es: " + scope_global);
                         break;
+                    case "assign_op":
+                        System.out.println("=============look_up==============");
+                        System.out.println(lookup(nombre_loock_up, scope_global));
+                        nombre_loock_up = hijos;
+                        //Tenemos que llamar a la funcion look_up y ver si el id ya fue declarado.
+                        
                     default:
-                        if ("0".equals(TYPE.get("Espero")) && ("".equals(TYPE.get("Type")) == false) && (nodo.getNombre().equals("field decl") == true || nodo.getNombre().equals("field_decl_coma_field") == true)){
+                        if ("0".equals(TYPE.get("Espero")) && ("".equals(TYPE.get("Type")) == false) && (nodo.getNombre().equals("field decl") == true || nodo.getNombre().equals("field_decl_coma_field") == true || nodo.getNombre().equals("var_decl") == true || nodo.getNombre().equals("var_decl_coma_id") == true)){
                             System.out.println("-------- Espero: 0 Type: no vacio:   " + nodo.getNombre() + " soy: " + hijos.getNombre());
                             type.setValor(TYPE.get("Type"));
-                            insertSymbol(type,scope);
+                            insertSymbol(type,scope_global);
                             TYPE.replace("Espero","1");
-                            recorrerTabla(hijos, scope);
-                            System.out.println("Regreso de recorrerTabla, caso 0 y type no vacio, scope es: " + scope);
+                            recorrerTabla(hijos);
+                            System.out.println("Regreso de recorrerTabla, caso 0 y type no vacio, scope es: " + scope_global);
                         }
                         /*else if ("1".equals(TYPE.get("Espero")) && ("".equals(TYPE.get("Type")) == false) && (nodo.getNombre().equals("method_decl") == true)){
                             System.out.println("-------- Espero: 1 Type: no vacio:   " + nodo.getNombre() + " soy: " + hijos.getNombre());
@@ -216,16 +268,16 @@ public class Semantic {
                             type.setValor("");
                             }*/
                         else if ( hijos.getNombre().equals("LEFT_PAR") && nodo.getNombre().equals("method_decl")){
-                            System.out.println("-------- Soy el parentesis (:  | mi padre es: " + nodo.getNombre() + " cree un nuevo scope: " + (scope + 1));
-                            pushScope(scope+1);
-                            recorrerTabla(hijos, scope);
-                            scope = scope + 1;
-                            System.out.println("Regreso de recorrerTabla, caso parentesisi, scope es: " + scope);
+                            System.out.println("-------- Soy el parentesis (:  | mi padre es: " + nodo.getNombre() + " cree un nuevo scope: " + (scope_global + 1));
+                            pushScope(scope_global+1);
+                            recorrerTabla(hijos);
+                            scope_global = scope_global + 1;
+                            System.out.println("Regreso de recorrerTabla, caso parentesisi, scope es: " + scope_global);
                         }
                         else
                         {System.out.println("-------- ningun caso: soy:  "+ hijos.getNombre() + " mi padre: " + nodo.getNombre());
-                        recorrerTabla(hijos, scope);
-                        System.out.println("Regreso de recorrerTabla, no cumpli ningun caso, scope es: " + scope);
+                        recorrerTabla(hijos);
+                        System.out.println("Regreso de recorrerTabla, no cumpli ningun caso, scope es: " + scope_global);
                                 }
                         break;
                 }
@@ -251,11 +303,14 @@ public class Semantic {
                 analisis.parse(); 
                 TYPE.put("Espero","0");
                 TYPE.put("Type","");
+                TYPE.put("Espero_corchete","0");
                 System.out.println(graficarNodo(analisis.padre));
-                
-                recorrerTabla(analisis.padre, 1);
+                scope_global = 1;
+                recorrerTabla(analisis.padre);
                 System.out.println("-------- Aquí viene la tabla de símbolo");
                 //System.out.println(tabla);
+                
+                /*
                 for (String i : Tabla.keySet()) {
                     System.out.println(i);
                     System.out.println("Var declarations: \n");
@@ -265,7 +320,10 @@ public class Semantic {
                             System.out.println( "   "+y + ": " + Tabla.get(i).get(x).data.get(y));
                         }
                     }
-                }
+                }*/
+                System.out.println(tabla);
+                
+                
                 Tabla.clear();
             }
             catch (Exception e){
