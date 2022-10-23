@@ -89,8 +89,6 @@ Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
 "["                {return new Symbol(sym.Corche_A, yychar, yyline, yytext());}
 "]"                {return new Symbol(sym.Corche_C, yychar, yyline, yytext());}
 ","                {return new Symbol(sym.Coma, yychar, yyline, yytext());}
-"'"                {return new Symbol(sym.Comillas, yychar, yyline, yytext());}
-"''"                {return new Symbol(sym.ComillasDoble, yychar, yyline, yytext());}
 "!"                {return new Symbol(sym.Exclamacion, yychar, yyline, yytext());}
 
 

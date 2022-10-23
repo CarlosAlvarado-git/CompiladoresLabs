@@ -56,7 +56,7 @@ public class Semantic {
     }
 
     public static void insertSymbol(Nodo nuevoSymbol, int scope){
-        if ("0".equals(TYPE.get("Espero")) == true){
+        if ("0".equals(TYPE.get("Espero")) == true && (nuevoSymbol.getNombre().equals("Digit") == false && nuevoSymbol.getNombre().equals("Decimal_literal") == false && nuevoSymbol.getNombre().equals("Hex_literal") == false)){
             HashMap<String, String> nuevo_symbol = new HashMap<>();
             nuevo_symbol.put("Indentifier","");
             nuevo_symbol.put("Type",nuevoSymbol.getValor());
@@ -193,11 +193,11 @@ public class Semantic {
                         break;
                     case "Corche_A":
                         if(nodo.getNombre().equals("field_name") == true){
+                            System.out.println("-------- Corchete_A   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre() + ", el scope: " +scope_global);
                             TYPE.replace("Espero_corchete","1");
                             recorrerTabla(hijos);
                         }
                         else{
-                            
                             recorrerTabla(hijos);
                         }
                         break;
@@ -323,7 +323,7 @@ public class Semantic {
                 }*/
                 System.out.println(tabla);
                 
-                
+                tabla = "";
                 Tabla.clear();
             }
             catch (Exception e){
