@@ -149,6 +149,7 @@ public class Semantic {
                         TYPE.replace("Espero","1");
                         TYPE.replace("Type", hijos.getHijos().get(0).getValor());
                         recorrerTabla(hijos, scope);
+                        System.out.println("Regreso de recorrerTabla, caso de type, caso de id, scope es: " + scope);
                         break; 
                     case "void":
                     System.out.println("-------- void   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre());
@@ -156,6 +157,7 @@ public class Semantic {
                     TYPE.replace("Espero","1");
                     TYPE.replace("Type", hijos.getHijos().get(0).getValor());
                     recorrerTabla(hijos, scope);
+                    System.out.println("Regreso de recorrerTabla, caso de void, caso de id, scope es: " + scope);
                     break; 
                     case "id":
                         if (nodo.getNombre().equals("location") == false && nodo.getNombre().equals("method_name") == false){
@@ -168,7 +170,7 @@ public class Semantic {
                             System.out.println("-------- id/lookup   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre()+ ", el scope: " +scope);
                         }
                         recorrerTabla(hijos, scope);
-                        System.out.println("Regreso de recorrerTabla, scope es: " + scope);
+                        System.out.println("Regreso de recorrerTabla, caso de id, scope es: " + scope);
                         break;
                     case "block":
                             if (nodo.getNombre().equals("statement")) {
@@ -177,7 +179,7 @@ public class Semantic {
                                     pushScope(scope+1);
                             }
                             recorrerTabla(hijos, scope+1);
-                            System.out.println("Regreso de recorrerTabla, scope es: " + scope);
+                            System.out.println("Regreso de recorrerTabla, caso de block, scope es: " + scope);
                         break;
                     case "Llave_C":
                             System.out.println("-------- Soy el { | mi padre es: " + nodo.getNombre() + "borré el scope: " + (scope));
@@ -187,7 +189,7 @@ public class Semantic {
                             type.setValor("");
                             recorrerTabla(hijos, scope);
                             scope = scope - 1;
-                            System.out.println("Regreso de recorrerTabla, scope es: " + scope);
+                            System.out.println("Regreso de recorrerTabla, caso de llave c, scope es: " + scope);
                         break;
                     case "Punto_coma":
                         System.out.println("-------- Punto_coma   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre());
@@ -195,7 +197,7 @@ public class Semantic {
                         TYPE.replace("Type", "");
                         type.setValor("");
                         recorrerTabla(hijos, scope);
-                        System.out.println("Regreso de recorrerTabla, scope es: " + scope);
+                        System.out.println("Regreso de recorrerTabla, caso de punto y coma, scope es: " + scope);
                         break;
                     default:
                         if ("0".equals(TYPE.get("Espero")) && ("".equals(TYPE.get("Type")) == false) && (nodo.getNombre().equals("field decl") == true || nodo.getNombre().equals("field_decl_coma_field") == true)){
@@ -204,7 +206,7 @@ public class Semantic {
                             insertSymbol(type,scope);
                             TYPE.replace("Espero","1");
                             recorrerTabla(hijos, scope);
-                            System.out.println("Regreso de recorrerTabla, scope es: " + scope);
+                            System.out.println("Regreso de recorrerTabla, caso 0 y type no vacio, scope es: " + scope);
                         }
                         /*else if ("1".equals(TYPE.get("Espero")) && ("".equals(TYPE.get("Type")) == false) && (nodo.getNombre().equals("method_decl") == true)){
                             System.out.println("-------- Espero: 1 Type: no vacio:   " + nodo.getNombre() + " soy: " + hijos.getNombre());
@@ -218,12 +220,12 @@ public class Semantic {
                             pushScope(scope+1);
                             recorrerTabla(hijos, scope);
                             scope = scope + 1;
-                            System.out.println("Regreso de recorrerTabla, scope es: " + scope);
+                            System.out.println("Regreso de recorrerTabla, caso parentesisi, scope es: " + scope);
                         }
                         else
                         {System.out.println("-------- ningun caso: soy:  "+ hijos.getNombre() + " mi padre: " + nodo.getNombre());
                         recorrerTabla(hijos, scope);
-                        System.out.println("Regreso de recorrerTabla, scope es: " + scope);
+                        System.out.println("Regreso de recorrerTabla, no cumpli ningun caso, scope es: " + scope);
                                 }
                         break;
                 }
