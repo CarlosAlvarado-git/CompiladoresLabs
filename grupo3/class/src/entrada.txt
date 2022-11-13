@@ -1,9 +1,7 @@
 class Program {
     int w;
-    void laotra(){
-        w = 5;
-    }
     void main() {
-       
+       w = 10;
+       for w = 1,0x12  {}
     }
 }

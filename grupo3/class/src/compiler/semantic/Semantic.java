@@ -61,38 +61,87 @@ public class Semantic {
     }
 
     public static void insertSymbol(Nodo nuevoSymbol, int scope){
-        if ("0".equals(TYPE.get("Espero")) == true && (nuevoSymbol.getNombre().equals("Digit") == false && nuevoSymbol.getNombre().equals("Decimal_literal") == false && nuevoSymbol.getNombre().equals("Hex_literal") == false)){
-            HashMap<String, String> nuevo_symbol = new HashMap<>();
-            nuevo_symbol.put("Indentifier","");
-            nuevo_symbol.put("Type",nuevoSymbol.getValor());
-            nuevo_symbol.put("Scope",scope + "");
-            nuevo_symbol.put("Location","");
-            nuevo_symbol.put("Memoria", "");
-            nuevo_symbol.put("Valor", "");
-            if (Tabla.get("Scope: " + scope) == null){
-            System.out.println("Entre porque no hay lista, scope: " + scope);
-            ValoresTabla data = new ValoresTabla();
-            data.Adddata(nuevo_symbol);
-            ArrayList<ValoresTabla> lista = new ArrayList<>();
-            lista.add(data);
-            Tabla.replace("Scope: " + scope, lista);
-            }
-            else{
-                System.out.println("Ya hay lista, solo agrego, scope: " + scope);
+        if (TYPE.get("For").equals("0")){
+            if ("0".equals(TYPE.get("Espero")) == true && (nuevoSymbol.getNombre().equals("Digit") == false && nuevoSymbol.getNombre().equals("Decimal_literal") == false && nuevoSymbol.getNombre().equals("Hex_literal") == false)){
+                HashMap<String, String> nuevo_symbol = new HashMap<>();
+                nuevo_symbol.put("Indentifier","");
+                nuevo_symbol.put("Type",nuevoSymbol.getValor());
+                nuevo_symbol.put("Scope",scope + "");
+                nuevo_symbol.put("Location","");
+                nuevo_symbol.put("Memoria", "");
+                nuevo_symbol.put("Valor inicial", "");
+                nuevo_symbol.put("Valor final", "");
+                if (Tabla.get("Scope: " + scope) == null){
+                System.out.println("Entre porque no hay lista, scope: " + scope);
                 ValoresTabla data = new ValoresTabla();
                 data.Adddata(nuevo_symbol);
-                Tabla.get("Scope: " + scope).add(data);
-            }
-        }
-        else{
-            if("1".equals(TYPE.get("Espero_corchete"))){
-                int ultimo = Tabla.get("Scope: " + scope).size() - 1;
-                Tabla.get("Scope: " + scope).get(ultimo).data.replace("Memoria", nuevoSymbol.getValor());
+                ArrayList<ValoresTabla> lista = new ArrayList<>();
+                lista.add(data);
+                Tabla.replace("Scope: " + scope, lista);
+                }
+                else{
+                    System.out.println("Ya hay lista, solo agrego, scope: " + scope);
+                    ValoresTabla data = new ValoresTabla();
+                    data.Adddata(nuevo_symbol);
+                    Tabla.get("Scope: " + scope).add(data);
+                }
             }
             else{
-            int ultimo = Tabla.get("Scope: " + scope).size() - 1;
-            Tabla.get("Scope: " + scope).get(ultimo).data.replace("Indentifier", nuevoSymbol.getIdentifier());
-            Tabla.get("Scope: " + scope).get(ultimo).data.replace("Location", nuevoSymbol.getLocation() + "");
+                if("1".equals(TYPE.get("Espero_corchete"))){
+                    int ultimo = Tabla.get("Scope: " + scope).size() - 1;
+                    Tabla.get("Scope: " + scope).get(ultimo).data.replace("Memoria", nuevoSymbol.getValor());
+                }
+                else{
+                int ultimo = Tabla.get("Scope: " + scope).size() - 1;
+                Tabla.get("Scope: " + scope).get(ultimo).data.replace("Indentifier", nuevoSymbol.getIdentifier());
+                Tabla.get("Scope: " + scope).get(ultimo).data.replace("Location", nuevoSymbol.getLocation() + "");
+                }
+            }
+        }
+        else {
+            if (Tabla.get("Scope: " + scope) == null && TYPE.get("For look").equals("0")){
+                HashMap<String, String> nuevo_symbol = new HashMap<>();
+                nuevo_symbol.put("Indentifier",nuevoSymbol.getIdentifier());
+                nuevo_symbol.put("Type", "Int");
+                nuevo_symbol.put("Scope",scope + "");
+                nuevo_symbol.put("Location",nuevoSymbol.getLocation() + "");
+                nuevo_symbol.put("Valor inicial", "");
+                nuevo_symbol.put("Valor final", "");
+                System.out.println("Entre porque no hay lista, scope: " + scope);
+                ValoresTabla data = new ValoresTabla();
+                data.Adddata(nuevo_symbol);
+                ArrayList<ValoresTabla> lista = new ArrayList<>();
+                lista.add(data);
+                Tabla.replace("Scope: " + scope, lista);
+            }
+            else{
+                if (TYPE.get("For look").equals("0")) {
+                    int ultimo = Tabla.get("Scope: " + scope).size() - 1;
+                    if (Tabla.get("Scope: " + scope).get(ultimo).data.get("Valor inicial").equals("")){
+                        // meto el valor inicial
+                        Tabla.get("Scope: " + scope).get(ultimo).data.replace("Valor inicial", nuevoSymbol.getValor() + "");
+                    }
+                    else {
+                        // meto el valor final
+                        Tabla.get("Scope: " + scope).get(ultimo).data.replace("Valor final", nuevoSymbol.getValor() + "");
+
+                    }
+                
+                }
+                else {
+                    if (Tabla.get("Scope: " + TYPE.get("For look")).get(Integer.valueOf(TYPE.get("For look data"))).data.get("Valor inicial").equals("")){
+                        // meto el valor inicial
+                        Tabla.get("Scope: " + TYPE.get("For look")).get(Integer.valueOf(TYPE.get("For look data"))).data.replace("Valor inicial", nuevoSymbol.getValor() + "");                       
+                    }
+                    else {
+                        // meto el valor final
+                        Tabla.get("Scope: " + TYPE.get("For look")).get(Integer.valueOf(TYPE.get("For look data"))).data.replace("Valor final", nuevoSymbol.getIdentifier() + "");
+                        TYPE.replace("For look", "0");
+                        TYPE.replace("For look data", "0");
+
+                    }
+                }
+                
             }
         }
         
@@ -125,8 +174,10 @@ public class Semantic {
                                     //System.out.println("si existe en el scope, " + scope + ", el simbolo: " + symbol.getidentifier());
                                     
                                     String.valueOf(symbol.getIdentifier());
-                                    if (vengodeassig == 1){ TYPE.replace("Type", Tabla.get("Scope: " + scope).get(x).data.get("Type")); }
-                                    else { 
+                                    if (vengodeassig == 1){
+                                        TYPE.replace("Type", Tabla.get("Scope: " + scope).get(x).data.get("Type")); 
+                                    }
+                                    else if (vengodeassig == 0) { 
                                         if (TYPE.get("Assing_up").equals("1")) { 
                                             if (  TYPE.get("Type").equals(Tabla.get("Scope: " + scope).get(x).data.get("Type"))){
                                                     System.out.println("Todo bien desde lookup");
@@ -137,9 +188,14 @@ public class Semantic {
                                             }
                                         }
                                         else{
-                                        System.out.println("Todo bien desde lookup porque no estoy en una assignación");
+                                            
+                                            System.out.println("Todo bien desde lookup porque no estoy en una assignación");
                                         }
                                          
+                                    }
+                                    else {
+                                        TYPE.replace("For look", scope + "");
+                                        TYPE.replace("For look data",  x + "");
                                     }
                                     resultado = 1;
                                     resultado_r = true;
@@ -202,10 +258,18 @@ public class Semantic {
                     break; 
                     case "id":
                         if (nodo.getNombre().equals("location") == false && nodo.getNombre().equals("method_name") == false){
-                            System.out.println("-------- id   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre() + ", el scope: " +scope_global);
-                            insertSymbol(hijos, scope_global);
-                            TYPE.replace("Espero","0");
+                            if (TYPE.get("For").equals("0")){
+                                System.out.println("-------- id   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre() + ", el scope: " +scope_global);
+                                insertSymbol(hijos, scope_global);
+                                TYPE.replace("Espero","0");
+                            }
+                            else {
                             
+                                System.out.println("-------- id/lookup   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre()+ ", el scope: " +scope_global);
+                                System.out.println("=============look_up por FOR==============");
+                                System.out.println(lookup(hijos, scope_global, 2));
+                            }
+
                         }
                         else {
                             System.out.println("-------- id/lookup   " + "Padre: " + nodo.getNombre() + " soy: " + hijos.getNombre()+ ", el scope: " +scope_global);
@@ -214,7 +278,6 @@ public class Semantic {
                             // verificar si esta o no esta. 
                             nombre_loock_up = hijos;
                         }
-                     
                         recorrerTabla(hijos);
                         System.out.println("Regreso de recorrerTabla, caso de id, scope es: " + scope_global);
                         break;
@@ -235,25 +298,37 @@ public class Semantic {
                             recorrerTabla(hijos);
                         }
                         else{
-                            if (TYPE.get("Assing_up").equals("1") && TYPE.get("Type").equals("Int")){
-                                System.out.println("Soy int literal y sigue todo bien con el assing up");
-                                recorrerTabla(hijos);
-                            }
-                            else{
+                            if (TYPE.get("Assing_up").equals("1")){
+                                if (TYPE.get("Type").equals("Int")) {
+                                    System.out.println("Soy int literal y sigue todo bien con el assing up");
+                                    recorrerTabla(hijos);
+                                }
+                                else {
                                 System.out.println("Soy int literal y no entro para la asignación ERROR");
                                 // detener todo
                                 recorrerTabla(hijos);
+                                }
+                            }
+                            else if (TYPE.get("For").equals("1")){
+                                // insert del valor del int_literal
+                                insertSymbol(hijos, scope_global);
                             }
                         }
                         break;
                     case "bool_literal":
-                            if (TYPE.get("Assing_up").equals("1") && TYPE.get("Type").equals("Boolean")){
+                            if (TYPE.get("Assing_up").equals("1")){
+                                if (TYPE.get("Type").equals("Boolean")) {
                                 System.out.println("Soy bool_literal y sigue todo bien con el assing up");
+                                recorrerTabla(hijos);}
+                                else {
+                                System.out.println("Soy bool_literal y no entro para la asignación ERROR");
+                                // detener todo sólo si ando en asignación pero no soy igual
                                 recorrerTabla(hijos);
+                                
+                                }
                             }
                             else{
-                                System.out.println("Soy bool_literal y no entro para la asignación ERROR");
-                                // detener todo
+                                System.out.println("Soy bool_literal");
                                 recorrerTabla(hijos);
                             }
                         break;
@@ -261,23 +336,31 @@ public class Semantic {
                     case "CHAR_LITERAL":
                             if (TYPE.get("Assing_up").equals("1")){
                                 System.out.println("Error no puede vener un char en un assing up");
+                                // detengo todo
                                 recorrerTabla(hijos);
                             }
                             else{
                                 System.out.println("Soy un char");
-                                // detener todo
                                 recorrerTabla(hijos);
                             }
                         break;
+                    case "For":
+                        System.out.println("-------- Soy el parentesis For:  | mi padre es: " + nodo.getNombre() + " cree un nuevo scope: " + (scope_global + 1));
+                        pushScope(scope_global+1);
+                        recorrerTabla(hijos);
+                        TYPE.replace("For","1");
+                        scope_global = scope_global + 1;
+                        System.out.println("Regreso de recorrerTabla, caso For, scope es: " + scope_global);
+                        break;
                     case "block":
-                        
-                            if (nodo.getNombre().equals("statement")) {
+                            if (nodo.getNombre().equals("statement") && TYPE.get("For").equals("0")) {
                                     System.out.println("-------- Soy el block | mi padre es: " + nodo.getNombre() + "cree un nuevo scope: " + (scope_global));
                                     scope_global = scope_global +1;
                                     pushScope(scope_global);
                                     recorrerTabla(hijos);
                             }
                             else{
+                                TYPE.replace("For", "0");
                                 recorrerTabla(hijos);
                             }
                         
@@ -375,6 +458,9 @@ public class Semantic {
                 TYPE.put("Type","");
                 TYPE.put("Espero_corchete","0");
                 TYPE.put("Assing_up","0");
+                TYPE.put("For", "0");
+                TYPE.put("For look", "0");
+                TYPE.put("For look data", "0");
                 System.out.println(graficarNodo(analisis.padre));
                 scope_global = 1;
                 recorrerTabla(analisis.padre);
