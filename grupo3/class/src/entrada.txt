@@ -1,9 +1,9 @@
 class Program {
-    int a[5], latuya, latuyax2;
     int w;
-
+    void laotra(){
+        w = 5;
+    }
     void main() {
-       int x, y, z;
-       callout("print_int", z);
+       
     }
 }

@@ -730,7 +730,7 @@ expr ::= location:l{:
         Nodo tmp = new Nodo("expr");
 
         tmp.addHijo((Nodo) lit);
-
+        
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
@@ -742,7 +742,9 @@ expr ::= location:l{:
         tmp.addHijo((Nodo) bo);
 
         tmp.addHijo((Nodo) ex2);
-
+        
+        
+        
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
@@ -817,7 +819,8 @@ bin_op ::= arith_op:ao {:
         Nodo tmp = new Nodo("bin_op");
 
         tmp.addHijo((Nodo) ao);
-
+        Nodo aov = (Nodo) ao;
+        tmp.setValor(aov.getValor());
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
@@ -825,7 +828,8 @@ bin_op ::= arith_op:ao {:
         Nodo tmp = new Nodo("bin_op");
 
         tmp.addHijo((Nodo) ro);
-
+        Nodo rov = (Nodo) ro;
+        tmp.setValor(rov.getValor());
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
@@ -833,7 +837,8 @@ bin_op ::= arith_op:ao {:
         Nodo tmp = new Nodo("bin_op");
         
         tmp.addHijo((Nodo) eo);
-
+        Nodo eov = (Nodo) eo;
+        tmp.setValor(eov.getValor());
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
@@ -841,7 +846,8 @@ bin_op ::= arith_op:ao {:
         Nodo tmp = new Nodo("bin_op");
         
         tmp.addHijo((Nodo) co);
-
+        Nodo cov = (Nodo) co;
+        tmp.setValor(cov.getValor());
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :};
@@ -998,18 +1004,21 @@ cond_op ::= AND {:
 literal ::= int_literal:il {:
     Nodo tmp = new Nodo("literal");
     tmp.addHijo((Nodo) il);
+    Nodo inl = (Nodo) il;
+    tmp.setValor( inl.getValor());
+    
 
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
 :} 
-| CHAR_LITERAL {:
+| CHAR_LITERAL:cl {:
     Nodo tmp = new Nodo("literal");
     Nodo chal = new Nodo("CHAR_LITERAL");
     chal.setValor("CHAR_LITERAL");
     chal.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) chal);
-
+    tmp.setValor("" + cl);
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
@@ -1017,7 +1026,8 @@ literal ::= int_literal:il {:
 | bool_literal:bl {:
     Nodo tmp = new Nodo("literal");
     tmp.addHijo((Nodo) bl);
-
+    Nodo bol = (Nodo) bl;
+    tmp.setValor( bol.getValor());
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
@@ -1030,7 +1040,7 @@ int_literal ::= Decimal_literal:dl {:
     decimal_literal_.setValor("" + dl);
     decimal_literal_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) decimal_literal_);
-
+    tmp.setValor("" + dl);
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
@@ -1038,20 +1048,20 @@ int_literal ::= Decimal_literal:dl {:
 | Hex_literal: hexl {:
     Nodo tmp = new Nodo("int_literal");
     Nodo hex_literal_ = new Nodo("Hex_literal");
-    hex_literal_.setValor(hexl + "");
+    
     hex_literal_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) hex_literal_);
-
+    tmp.setValor(hexl + "");
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
 :}| Digit:dig {:
     Nodo tmp = new Nodo("int_literal");
     Nodo Digit_ = new Nodo("Digit");
-    Digit_.setValor(dig + "");
+    
     Digit_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) Digit_);
-
+    tmp.setValor(dig + "");
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
@@ -1064,7 +1074,7 @@ bool_literal ::= True {:
     true_.setValor("True");
     true_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) true_);
-
+    tmp.setValor("true");
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
@@ -1075,7 +1085,7 @@ bool_literal ::= True {:
     false_.setValor("False");
     false_.setNumNodo(parser.contador++);
     tmp.addHijo((Nodo) false_);
-
+    tmp.setValor("false");
     tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
