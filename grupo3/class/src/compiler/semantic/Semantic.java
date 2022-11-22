@@ -467,8 +467,8 @@ public class Semantic {
                 System.out.println("-------- Aquí viene la tabla de símbolo");
                 //System.out.println(tabla);
                 
-                /*
-                for (String i : Tabla.keySet()) {
+                
+                /*for (String i : Tabla.keySet()) {
                     System.out.println(i);
                     System.out.println("Var declarations: \n");
                     for (int x = 0; x < Tabla.get(i).size(); x++) {
