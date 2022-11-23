@@ -149,7 +149,7 @@ field_decl ::= field_decl:fd type:t field_name:fn  {:
                 }
                 RESULT = tmp;
 
-                :} field_decl_coma_field:fdcf Punto_coma
+                :} field_decl_coma_field:fdcf Punto_coma {: Nodo tmp = new Nodo("field_decl_coma_field"); RESULT = tmp; :}
              | 
 ;
 
@@ -200,19 +200,19 @@ method_decl ::= type:t Id:id {:
                     parser.TABLA.BANDERAS.replace("Funcion", "ERROR");
                 }
                 
-                
+                RESULT = tmp;
 
 
 
                 :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR  {:
-
+                        Nodo tmp = new Nodo("LEFT_PAR method_decl_corche:mdc RIGHT_PAR");
                         parser.global_scope = parser.global_scope + 1;
                         parser.TABLA.pushScope(parser.global_scope);
-
+                        RESULT = tmp;
 
                     :}  block:b method_decl:md {:
-                
-                
+                        Nodo tmp = new Nodo("block:b method_decl:md");
+                        RESULT = tmp;
                 :} |
                 Void Id:id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md {:
                 Nodo tmp = new Nodo("method_decl");
@@ -270,7 +270,7 @@ method_decl_corche ::=
         parser.TABLA.insertSymbol_m(tmp);
         
         RESULT = tmp;
-        :} method_decl_corche_coma_type:mdcct
+        :} method_decl_corche_coma_type:mdcct {:Nodo tmp = new Nodo("method_decl_corche_coma_type"); RESULT = tmp; :}
         |
 ;
 
