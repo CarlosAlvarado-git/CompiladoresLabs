@@ -401,7 +401,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
 
                 tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
-                :} statement:stm 
+                :} statement:stm
         | method_call:mc Punto_coma statement:stm {:
                 Nodo tmp = new Nodo("statement");
                 tmp.addHijo((Nodo) mc);
