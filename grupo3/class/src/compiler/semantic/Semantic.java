@@ -463,7 +463,7 @@ public class Semantic {
                 TYPE.put("For look data", "0");
                 System.out.println(graficarNodo(analisis.padre));
                 scope_global = 1;
-                recorrerTabla(analisis.padre);
+                //recorrerTabla(analisis.padre);
                 System.out.println("-------- Aquí viene la tabla de símbolo");
                 //System.out.println(tabla);
                 
@@ -482,6 +482,9 @@ public class Semantic {
                 
                 tabla = "";
                 Tabla.clear();
+                System.out.println("------------- TABLA DEL PARSER");
+                analisis.TABLA.popScope(1);
+                System.out.println("La tabla: \n" + analisis.TABLA.tabla_print());
             }
             catch (Exception e){
                 System.out.println(e);

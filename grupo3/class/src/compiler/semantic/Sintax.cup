@@ -19,7 +19,11 @@ parser code
     public Symbol getS(){
         return this.s;
     }
+ 
 
+    public Semantic_fun TABLA = new Semantic_fun();
+    public int global_scope = 1;
+    
    
 :};
 
@@ -85,61 +89,55 @@ program ::= Class Program Llave_A field_decl:fd method_decl:md Llave_C {:
 
 field_name ::= Id:id {: 
             
-            Nodo tmp = new Nodo("field_name");
-            Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
-
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
-            tmp.setNumNodo(parser.contador++);
+            Nodo tmp = new Nodo("field_name_id");
+            tmp.setllamada("variable");
+            tmp.setIdentifier(id + "");
+            tmp.setValor("0");
+            tmp.setLocation(idright + 1);
+            tmp.setmemoria(1);
             RESULT = tmp;
             
             :}
             | Id:id Corche_A int_literal:il Corche_C {:
-            Nodo tmp = new Nodo("field_name");
-
-            Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
+            Nodo tmp = new Nodo("field_name_vector");
             
-            Nodo Corche_a = new Nodo("Corche_A");
-            Corche_a.setValor("Corche_A");
-            Corche_a.setNumNodo(parser.contador++);
-            tmp.addHijo((Nodo) Corche_a);
-
-            tmp.addHijo((Nodo) il);
-
-            Nodo Corche_c = new Nodo("Corche_C");
-            Corche_c.setValor("Corche_C");
-            Corche_c.setNumNodo(parser.contador++);
-            tmp.addHijo((Nodo) Corche_c);
-
-            tmp.setNumNodo(parser.contador++);
+            tmp.setllamada("vector");
+            tmp.setIdentifier(id + "");
+            tmp.setValor("0");
+            tmp.setLocation(idright + 1);
+            Nodo inl = (Nodo) il;
+            try {
+                tmp.setmemoria(Integer.valueOf(inl.getValor()));
+                }
+            catch(Exception es){
+                System.out.println(es);
+                }
+            
             RESULT = tmp;
             :};
 
 field_decl ::= field_decl:fd type:t field_name:fn field_decl_coma_field:fdcf Punto_coma {:
                 Nodo tmp = new Nodo("field decl");
-                tmp.addHijo((Nodo) fd);
-                tmp.addHijo((Nodo) t);
-                tmp.addHijo((Nodo) fn);
-                tmp.addHijo((Nodo) fdcf);
 
-                Nodo ptm = new Nodo("Punto_coma");
-                ptm.setValor("Punto_coma");
-                ptm.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) ptm);
+                
+                
+                
+                Nodo field = (Nodo) fn;
+                Nodo ty = (Nodo) t;
+                field.settype(ty.getValor());
+                field.setscope(parser.global_scope);
+                
+                parser.TABLA.insertSymbol(field, parser.global_scope);
 
-                tmp.setNumNodo(parser.contador++);
+                
+
+                
                 RESULT = tmp;
 
                 :}
-             | ;
+             | {:parser.TABLA.pushScope(parser.global_scope);
+             parser.global_scope = parser.global_scope + 1;
+    :};
 
 field_decl_coma_field ::=
             Coma field_name:fn field_decl_coma_field:fdcf {:
@@ -330,20 +328,12 @@ var_decl_coma_id ::=
 
 type ::= Int {:
         Nodo tmp = new Nodo("type");
-        Nodo int_ = new Nodo("Int");
-        int_.setValor("Int");
-        int_.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) int_);
-        tmp.setNumNodo(parser.contador++);
+        tmp.setValor("Int");
         RESULT = tmp;
 
         :} | Boolean {:
         Nodo tmp = new Nodo("type");
-        Nodo bol = new Nodo("Boolean");
-        bol.setValor("Boolean");
-        bol.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) bol);
-        tmp.setNumNodo(parser.contador++);
+        tmp.setValor("Boolean");
         RESULT = tmp;
         
         :};
@@ -397,7 +387,6 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 pm.setValor("Punto_coma");
                 pm.setNumNodo(parser.contador++);
                 tmp.addHijo((Nodo) pm);
-                tmp.addHijo((Nodo) stm);
 
                 tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;

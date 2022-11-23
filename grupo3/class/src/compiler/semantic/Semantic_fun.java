@@ -12,12 +12,13 @@ import java.util.HashMap;
  * @author carlosalvarado
  */
 public class Semantic_fun {
-    public static HashMap<String, ArrayList<ValoresTabla>> Tabla = new HashMap<String, ArrayList<ValoresTabla>>();
+    public static HashMap<String, ArrayList<ValoresTabla_fun>> Tabla = new HashMap<String, ArrayList<ValoresTabla_fun>>();
     public static String tabla = "";
     public static int scope_global = 0;
+        
+    public Semantic_fun(){}
     
-    
-    public static void pushScope(int scope){
+    public void pushScope(int scope){
         if (Tabla.containsKey("Scope: " + scope)){
 
         }
@@ -26,8 +27,13 @@ public class Semantic_fun {
         }
         
     }  
+    
+    public String tabla_print(){
+        return tabla;
+        
+    }
 
-    public static void popScope(int scope){
+    public void popScope(int scope){
         String i = "Scope: " + scope;
         
         tabla = tabla + i;
@@ -46,11 +52,33 @@ public class Semantic_fun {
         Tabla.remove("Scope: " + scope);
          System.out.println("Borre el:  " + i);
     }
-    public static void insertSymbol(Nodo nuevoSymbol, int scope){
+    public void insertSymbol(Nodo nuevoSymbol, int scope){
+        HashMap<String, String> nuevo_symbol = new HashMap<>();
+        nuevo_symbol.put("llamada", nuevoSymbol.getllamada());
+        nuevo_symbol.put("type", nuevoSymbol.gettype());
+        nuevo_symbol.put("id", nuevoSymbol.getIdentifier());
+        nuevo_symbol.put("location", "" + nuevoSymbol.getLocation());
+        nuevo_symbol.put("scope", "" + nuevoSymbol.getscope());
+        nuevo_symbol.put("memoria", "" + nuevoSymbol.getmemoria());
+        
+        if (Tabla.get("Scope: " + scope) == null){
+                System.out.println("Entre porque no hay lista, scope: " + scope);
+                ValoresTabla_fun data = new ValoresTabla_fun();
+                data.Adddata(nuevo_symbol);
+                ArrayList<ValoresTabla_fun> lista = new ArrayList<>();
+                lista.add(data);
+                Tabla.replace("Scope: " + scope, lista);
+                }
+                else{
+                    System.out.println("Ya hay lista, solo agrego, scope: " + scope);
+                    ValoresTabla_fun data = new ValoresTabla_fun();
+                    data.Adddata(nuevo_symbol);
+                    Tabla.get("Scope: " + scope).add(data);
+                }
         
     }
     
-        public static boolean lookup(Nodo symbol,int scope, int vengodeassig){
+    public boolean lookup(Nodo symbol,int scope, int vengodeassig){
         int resultado = 2;
         // 0 error de casteo, retorna false
         // 1 lo encontro, retorna true
@@ -104,17 +132,9 @@ public class Semantic_fun {
             
         }
         return resultado_r;
-    }
-    
-    
-    
-    
-    
-    
-    
-    
+    } 
 }
-class ValoresTabla{
+class ValoresTabla_fun{
     public HashMap<String, String> data;
 
     public void Adddata(HashMap<String, String> valor){

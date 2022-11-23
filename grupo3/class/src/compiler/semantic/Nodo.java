@@ -15,37 +15,18 @@ import java.util.ArrayList;
 
 public class Nodo {
     private String nombre;
-    private ArrayList<Nodo> hijos;
-    private String valor;
-    private int numNodo;
-    // Para todos los Id's 
-    // para guardar algo en la tabla, tenemos que ser hijos de un field_decl | var_decl
-    // si soy hijo y me llamo type, entonces, llamo a insertarSymbol | sino, significa que soy 
-    private String Identifier;//yytext
-    private String Type; //ver al "hermano" anterior. 
-    private int Location; // yyline? 
-    // dos bandes: 
-        // type: decir que estoy esperando un type. Se activa cuando soy un type OR todos acquellos que se generan con coma. Y nomás meta el id, se desactiva.  
-        // location: se activa cuando sea un location. Se desactiva cuando sea el id. 
-        
-    // nomas creamos el method declaration: creamos un nuevo scope para sus var declaration.
-    //bandera: 
-        // void: lo mismo que el type, solo que para funciones. para meterlo al scope. TABLA. luego se quita. 
-    // nomas ceramos el scope en la TABLA, debemos crear su "scope" para la TABLA PARAMETROS, guardo el key en una variable
-        // si encuentro ( activo bandera de: inician parámetros. 
-        // si encuentro ) desacativo bandera parametros. 
-    // SI ESTA ACTIVO bandera parametros, y la key que tengo guardad es un main. ERROR. 
+    // valores de la tabla
+    private String llamada; // ==>columna llamada
+    private String type; // columna type
+    private String Identifier; // ==> columna id 
+    private String valor; // ==> columna valor
+    private int Location; // yyline? ==> columna location
+    private int scope; // ==> columna scope
+    private int memoria; // ==> columna memoria
     
-    // con el IF:
-        // si soy un statement y MI HIJO ES IF, activo bandera de IF
-            // TENGO 3 POSIBLES RESULTADOS DESPUES DE UN IF:
-                // si soy: LOCATION O METHODCALL: es hacer un lookup, GUARDAR EL TYPE
-                // si soy un literal: GUARDAR que literal soy.
-        // si viene un !
-            // activo bandera de exlacion
-                // debe de ser un bool lo que me "devuela" la expresion. SINO ERROR
-        // ⟨arith op⟩s and ⟨rel op⟩s SI ENCUENTRO UNO en el if,
-            // bandera: ver si al menos uno de dos de expresion o al menos que alguno me devuelva int. int_literal
+    //============
+    private int numNodo; 
+    private ArrayList<Nodo> hijos; 
                 
     
     public Nodo(String nombre)
@@ -56,25 +37,65 @@ public class Nodo {
         setNumNodo(0);
     }
     
+    
+    
+    public String getllamada() {
+        return this.llamada;
+    }
+    public void setllamada(String llamada) {
+        this.llamada = llamada;
+    }
+    
+    public String gettype() {
+        return this.type;
+    }
+    
+    public void settype(String type) {
+        this.type = type;
+    }
+    
     public String getIdentifier() {
         return this.Identifier;
     }
+    
     public void setIdentifier(String id) {
         this.Identifier = id;
     }
-    public String getType() {
-        return this.Type;
+    
+    public String getValor() {
+        return valor;
     }
-    public void setType(String type) {
-        this.Type = type;
+
+    public void setValor(String valor) {
+        this.valor = valor;
     }
+    
     public int getLocation() {
         return this.Location;
     }
     public void setLocation(int location) {
         this.Location = location;
     }
+
+    public int getscope() {
+        return this.scope;
+    }
     
+    public void setscope(int scope) {
+        this.scope = scope;
+    }
+    
+    public int getmemoria() {
+        return this.memoria;
+    }
+    
+    public void setmemoria(int memoria) {
+        this.memoria = memoria;
+    }
+    
+    //=====================
+    
+   
     public void addHijo(Nodo hijo)
     {
         this.hijos.add(hijo);
@@ -97,15 +118,9 @@ public class Nodo {
     }
 
     
-    public String getValor() {
-        return valor;
-    }
+    
 
-
-    public void setValor(String valor) {
-        this.valor = valor;
-    }
-
+     
 
     public int getNumNodo() {
         return this.numNodo;

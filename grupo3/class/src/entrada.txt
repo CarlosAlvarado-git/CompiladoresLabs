@@ -1,11 +1,4 @@
 class Program {
-    int w;
-    int z, y;
-    void main() { 
-       w += 10;
-       w = z + 1;
-    }
-    void int() {
-        z = 10;
-    }
+    int w[5];
+
 }
