@@ -158,7 +158,7 @@ field_decl_coma_field ::=
                 Nodo tmp = new Nodo("field_decl_coma_field");
                 
                 Nodo field = (Nodo) fn;
-                System.out.println("HOLAAAAAAAAAAA" + parser.TABLA.BANDERAS.get("Type"));
+                //System.out.println("HOLAAAAAAAAAAA" + parser.TABLA.BANDERAS.get("Type"));
                 field.settype(parser.TABLA.BANDERAS.get("Type"));
                 if (field.gettype().equals("Boolean")){ field.setValor("True");}
                 if (field.gettype().equals("Int")){ field.setmemoria(field.getmemoria() * 4);} else { field.setmemoria(field.getmemoria() * 1); }
@@ -199,15 +199,15 @@ method_decl ::= type:t Id:id {:
                     System.out.println("El método " + tmp.getIdentifier() + ", esta repetido");
                     parser.TABLA.BANDERAS.replace("Funcion", "ERROR");
                 }
-                
+                parser.global_scope = parser.global_scope + 1;
+                parser.TABLA.pushScope(parser.global_scope);
                 RESULT = tmp;
 
 
 
                 :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR  {:
                         Nodo tmp = new Nodo("LEFT_PAR method_decl_corche:mdc RIGHT_PAR");
-                        parser.global_scope = parser.global_scope + 1;
-                        parser.TABLA.pushScope(parser.global_scope);
+                        
                         RESULT = tmp;
 
                     :}  block:b method_decl:md {:

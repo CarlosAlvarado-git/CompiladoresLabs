@@ -22,15 +22,17 @@ public class Semantic_fun {
     public Semantic_fun(){
             BANDERAS.put("Type", "");
             BANDERAS.put("Error_repeticion", "");
+            BANDERAS.put("Funcion", ""); 
             Tabla_m.put("DATA", null);
     }
     
     public void pushScope(int scope){
         if (Tabla.containsKey("Scope: " + scope)){
-
+            System.out.println("Ya existe el scope:  " + scope);
         }
         else{
             Tabla.put("Scope: " + scope, null);
+            System.out.println("Se crea el scope:  " + scope);
         }
         
     }  
