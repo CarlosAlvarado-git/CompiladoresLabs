@@ -461,7 +461,7 @@ public class Semantic {
                 TYPE.put("For", "0");
                 TYPE.put("For look", "0");
                 TYPE.put("For look data", "0");
-                System.out.println(graficarNodo(analisis.padre));
+                //System.out.println(graficarNodo(analisis.padre));
                 scope_global = 1;
                 //recorrerTabla(analisis.padre);
                 System.out.println("-------- Aquí viene la tabla de símbolo");
@@ -478,13 +478,18 @@ public class Semantic {
                         }
                     }
                 }*/
-                System.out.println(tabla);
+                //System.out.println(tabla);
                 
-                tabla = "";
-                Tabla.clear();
-                System.out.println("------------- TABLA DEL PARSER");
+                //tabla = "";
+                //Tabla.clear();
+                System.out.println("------------- TABLA GENERAL");
                 analisis.TABLA.popScope(1);
+                analisis.TABLA.pop_m();
                 System.out.println("La tabla: \n" + analisis.TABLA.tabla_print());
+                
+                
+                System.out.println("------------- TABLA PARAMETROS");
+                System.out.println("La tabla: \n" + analisis.TABLA.tabla_print_m());
             }
             catch (Exception e){
                 System.out.println(e);

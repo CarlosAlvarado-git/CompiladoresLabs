@@ -23,6 +23,7 @@ public class Nodo {
     private int Location; // yyline? ==> columna location
     private int scope; // ==> columna scope
     private int memoria; // ==> columna memoria
+    private String funcion; //==> solo para las variables de parámetros
     
     //============
     private int numNodo; 
@@ -37,7 +38,12 @@ public class Nodo {
         setNumNodo(0);
     }
     
-    
+    public String getfuncion() {
+        return this.funcion;
+    }
+    public void setfuncion(String funcion) {
+        this.funcion = funcion;
+    }
     
     public String getllamada() {
         return this.llamada;
