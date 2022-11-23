@@ -1,7 +1,7 @@
 class Program {
     int w[5];
     int z, x[10];
-    boolean s()
+    boolean s(int n, boolean r)
     {
         
     }

@@ -184,9 +184,9 @@ method_decl ::= type:t Id:id {:
                 System.out.println("El valor es: " + ty.getValor());
                 tmp.settype(ty.getValor());
                 tmp.setIdentifier(id + "");
-                //if (tmp.gettype().equals("Int")){ tmp.setValor("0"); } else { tmp.setValor("True"); }
+                if (tmp.gettype().equals("Int")){ tmp.setValor("0"); } else { tmp.setValor("True"); }
                 tmp.setLocation(idright + 1);
-                //if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
+                if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
                 tmp.setscope(parser.global_scope);
                 int bandera = parser.TABLA.lookup(tmp, parser.global_scope);
                 if (bandera == 2){
@@ -259,9 +259,9 @@ method_decl_corche ::=
         Nodo ty = (Nodo) t;
         tmp.settype(ty.getValor());
         tmp.setIdentifier(id + "");
-        //if (tmp.gettype().equals("Int")){ tmp.setValor("0"); } else { tmp.setValor("True"); }
+        if (tmp.gettype().equals("Int")){ tmp.setValor("0"); } else { tmp.setValor("True"); }
         tmp.setLocation(idright + 1);
-        //if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
+        if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
         tmp.setscope(parser.global_scope);
         tmp.setfuncion(parser.TABLA.BANDERAS.get("Funcion"));
         
@@ -282,16 +282,16 @@ method_decl_corche_coma_type ::=
         Nodo ty = (Nodo) t;
         tmp.settype(ty.getValor());
         tmp.setIdentifier(id + "");
-        /*if (tmp.gettype().equals("Int")) 
+        if (tmp.gettype().equals("Int")) 
         { 
             tmp.setValor("0"); 
         } 
         else 
         { 
             tmp.setValor("True"); 
-        }*/
+        }
         tmp.setLocation(idright + 1);
-        //if (tmp.gettype().equals("Int")){ tmp.setmemoria(4); } else { tmp.setmemoria(1); }
+        if (tmp.gettype().equals("Int")){ tmp.setmemoria(4); } else { tmp.setmemoria(1); }
         
         tmp.setscope(parser.global_scope);
         tmp.setfuncion(parser.TABLA.BANDERAS.get("Funcion"));
