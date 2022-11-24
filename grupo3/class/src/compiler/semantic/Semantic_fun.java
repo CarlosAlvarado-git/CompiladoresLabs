@@ -23,6 +23,7 @@ public class Semantic_fun {
             BANDERAS.put("Type", "");
             BANDERAS.put("Funcion", ""); 
             BANDERAS.put("Funcion_type", ""); 
+            BANDERAS.put("For", ""); 
             Tabla_m.put("DATA", null);
             //for (int x = 0; x < Tabla.get("Scope: " + parser.global_scope).size(); x++)
               //  if

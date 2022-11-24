@@ -4,7 +4,7 @@ class Program {
     int main(int y){
         int a;
         boolean p;
-        y = 10;
+        y = 10 + (a + 5);
         p = a < 5;
         if ( a == 10 ) {
             int nueva, nueva2;
@@ -12,23 +12,19 @@ class Program {
                     int dentro;
                     dentro = 10;
                     dentro = hg;
+                    break;
                 }
-            
         }
         else 
         {
            int nuevablockeelse, nueva2blocke; 
            for hg = 1, 10 {}
         }
+        {
+           int BLOCKE; 
+        }
         return a;
         
     }
         
 }
-        // falta
-        //break ;
-        //continue ;
-        //⟨block⟩
-        // method_call de statement
-        // todo method_call
-        // callout_args
