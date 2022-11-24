@@ -24,6 +24,7 @@ public class Semantic_fun {
             BANDERAS.put("Funcion", ""); 
             BANDERAS.put("Funcion_type", ""); 
             BANDERAS.put("For", ""); 
+            BANDERAS.put("Llamada_fun", "");
             Tabla_m.put("DATA", null);
             //for (int x = 0; x < Tabla.get("Scope: " + parser.global_scope).size(); x++)
               //  if
@@ -84,6 +85,7 @@ public class Semantic_fun {
         
         for (int x = 0; x < Tabla_m.get(i).size(); x++) {
             tabla_m = tabla_m + ("------- \n");
+             System.out.println("El valor x, que va a llegar hasta el size: " + x);
             for (String y : Tabla_m.get(i).get(x).data.keySet()) {
                 tabla_m = tabla_m + ( "   "+y + ": " + Tabla_m.get(i).get(x).data.get(y) + "\n");
             }

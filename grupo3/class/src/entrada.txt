@@ -1,6 +1,7 @@
 class Program {
     int w[5], y;
     boolean r;
+    int s(int param) {}
     int main(int y){
         int a;
         boolean p;
@@ -23,6 +24,7 @@ class Program {
         {
            int BLOCKE; 
         }
+        s();
         return a;
         
     }

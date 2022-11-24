@@ -451,21 +451,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 RESULT = tmp;
                 :} statement:stm
-        | method_call:mc Punto_coma statement:stm {:
+        | method_call:mc Punto_coma  {:
                 Nodo tmp = new Nodo("statement");
-                tmp.addHijo((Nodo) mc);
-
-                Nodo pm = new Nodo("Punto_coma");
-                pm.setValor("Punto_coma");
-                pm.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) pm); 
-
-                tmp.addHijo((Nodo) stm);
-
-                tmp.setNumNodo(parser.contador++);
+                System.out.println("Llamada a metodo: ");
                 RESULT = tmp;
                 
-                :}
+                :} statement:stm
         | If LEFT_PAR expr:ex RIGHT_PAR {: 
             Nodo tmp = new Nodo("statement");
                 Nodo expr_r = (Nodo) ex;
@@ -645,22 +636,33 @@ assign_op ::= ASSIGN {:
                 
                 :};
 
-method_call ::= method_name:mn LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
-                Nodo tmp = new Nodo("method_call");
-                tmp.addHijo((Nodo) mn);
-                Nodo lpar  = new Nodo("LEFT_PAR");
-                lpar.setValor("LEFT_PAR");
-                lpar.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) lpar); 
-                tmp.addHijo((Nodo) mcc);
-                Nodo rpar  = new Nodo("RIGHT_PAR");
-                rpar.setValor("RIGHT_PAR");
-                rpar.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) rpar); 
-                tmp.setNumNodo(parser.contador++);
-                RESULT = tmp;
-
-                :}
+method_call ::= method_name:mn {:
+                Nodo mtodo = (Nodo) mn;
+                
+                int [] bandera = parser.TABLA.lookup(mtodo, parser.global_scope);
+                if (bandera[0] == 1 && bandera[2] == 1) {  
+                    // ver si la hash contiene con values, Metodo. 
+                    if (parser.TABLA.Tabla.get("Scope: " + 1).get(bandera[1]).data.containsValue("Metodo")){
+                        System.out.println("Funcion " + mtodo.getIdentifier() + " llamada");
+                        parser.TABLA.BANDERAS.replace("Llamada_fun", mtodo.getIdentifier());
+                        for (int x = 0; x < parser.TABLA.Tabla_m.get("DATA").size(); x++) {
+                            for (String y : parser.TABLA.Tabla_m.get("DATA").get(x).data.keySet()) {
+                                tabla = tabla + ( "   "+y + ": " + Tabla.get(i).get(x).data.get(y) + "\n");
+                            }
+                        }
+                         
+                    }
+                    else {
+                        System.out.println("No existe el metodo " + mtodo.getIdentifier());
+                        System.exit(0);
+                        }
+                }
+                else {
+                    System.out.println("No existe el metodo " + mtodo.getIdentifier());
+                    System.exit(0);
+                }
+        
+        :} LEFT_PAR method_call_corche:mcc RIGHT_PAR 
         |Callout LEFT_PAR STRING_LITERAL method_call_corche_dos:mccd RIGHT_PAR {:
                 Nodo tmp = new Nodo("method_call");
                 Nodo call_out   = new Nodo("Callout");
@@ -689,8 +691,7 @@ method_call ::= method_name:mn LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
 
                 :};
 //----- Carlos
-method_call_corche ::=
-        expr:ex method_call_corche_expr:mcce {:
+method_call_corche ::= xpr:ex {:
                 Nodo tmp = new Nodo("method_call_corche");
 
                 tmp.addHijo((Nodo) ex);
@@ -699,11 +700,15 @@ method_call_corche ::=
                 
                 tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
-            :}|
+            :} method_call_corche_expr:mcce  
+        | {: 
+
+        
+            :}
 ;
 
 method_call_corche_expr ::=
-        Coma expr:ex method_call_corche_expr:mcce{:
+        Coma expr:ex {:
                 Nodo tmp = new Nodo("method_call_corche_expr");
                 Nodo cm = new Nodo("Coma");
                 cm.setValor("Coma");
@@ -716,7 +721,7 @@ method_call_corche_expr ::=
 
                 tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
-        :}|
+        :} method_call_corche_expr:mcce|
 ;
 
 method_call_corche_dos ::=
@@ -753,15 +758,11 @@ method_call_coma_callout ::=
 
 method_name ::= Id:id {:
         Nodo tmp = new Nodo("method_name");
-        
-        Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
 
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
-        tmp.setNumNodo(parser.contador++);
+
+        tmp.setIdentifier(id + "");
+        System.out.println("ENTRE A LOCATION ::= Id");
+        
         RESULT = tmp;
 :};
 
