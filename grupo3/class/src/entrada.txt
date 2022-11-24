@@ -3,11 +3,12 @@ class Program {
     boolean r;
     int s(int param)
     {}
+    boolean ew(){}
     int main(int y){
         int a;
         boolean p;
         a = 10 + s(1);
-        p = a < 5;
+        p = a < ew();
         if ( a == 10 ) {
             int nueva, nueva2;
             for hg = 1, 10 {
