@@ -22,6 +22,7 @@ public class Semantic_fun {
     public Semantic_fun(){
             BANDERAS.put("Type", "");
             BANDERAS.put("Funcion", ""); 
+            BANDERAS.put("Funcion_type", ""); 
             Tabla_m.put("DATA", null);
             //for (int x = 0; x < Tabla.get("Scope: " + parser.global_scope).size(); x++)
               //  if
@@ -114,6 +115,7 @@ public class Semantic_fun {
             ValoresTabla_fun data = new ValoresTabla_fun();
             data.Adddata(nuevo_symbol);
             Tabla.get("Scope: " + scope).add(data);
+            System.out.println("Ya agregue la última en el: " + scope);
         }
         
     }

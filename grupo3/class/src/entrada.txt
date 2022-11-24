@@ -8,22 +8,27 @@ class Program {
         p = a < 5;
         if ( a == 10 ) {
             int nueva, nueva2;
+            for hg = 1, 10 {
+                    int dentro;
+                    dentro = 10;
+                    dentro = hg;
+                }
             
         }
         else 
         {
            int nuevablockeelse, nueva2blocke; 
+           for hg = 1, 10 {}
         }
+        return a;
         
-        for hg = 1, 10 {}
-        // falta usar las variables de los parámetros
-        //return ⟨expr⟩ ; 
+    }
+        
+}
+        // falta
         //break ;
         //continue ;
         //⟨block⟩
         // method_call de statement
         // todo method_call
         // callout_args
-    }
-        
-}

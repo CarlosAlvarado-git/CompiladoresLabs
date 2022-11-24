@@ -195,6 +195,7 @@ method_decl ::= type:t Id:id {:
                     System.out.println("DESDE METHOD: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
+                    parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
                 }
                 else {
                     System.out.println("El nombre del metodo esta repetido " + tmp.getIdentifier());
@@ -223,6 +224,7 @@ method_decl ::= type:t Id:id {:
                     System.out.println("DESDE METHOD VOID: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
+                    parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
                 }
                 else {
                     System.out.println("El nombre del método esta repetido:  " + tmp.getIdentifier());
@@ -517,6 +519,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                     nueva.setValor("0");
                     nueva.setLocation(idright + 1);
                     nueva.setmemoria(4);
+                    nueva.setscope(parser.global_scope);
 
                     parser.TABLA.insertSymbol(nueva, parser.global_scope);
                     if (nueva.gettype().equals(e.gettype())){
@@ -539,23 +542,20 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 RESULT = tmp;
 
                 :} block:b statement:stm
-        | Return statement_expr:stmex Punto_coma statement:stm {:
+        | Return statement_expr:stmex Punto_coma  {:
                 Nodo tmp = new Nodo("statement");
+                
+                Nodo stmex_x = (Nodo) stmex;
+                if (parser.TABLA.BANDERAS.get("Funcion_type").equals(stmex_x.gettype())){
+                    System.out.println("Return correcto");
+                }
+                else {
+                    System.out.println("El valor de retorno no es del mismo type de la funcion: " + parser.TABLA.BANDERAS.get("Funcion_type") + " != " + stmex_x.gettype());
+                    System.exit(0);
+                }
 
-                Nodo rt = new Nodo("Return");
-                rt.setValor("Return");
-                rt.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) rt); 
-
-                tmp.addHijo((Nodo) stmex); 
-                Nodo pm = new Nodo("Punto_coma");
-                pm.setValor("Punto_coma");
-                pm.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) pm); 
-                tmp.addHijo((Nodo) stm); 
-                tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
-                :}
+                :} statement:stm
         | Break Punto_coma statement:stm {:
                 Nodo tmp = new Nodo("statement");
                 Nodo br = new Nodo("Break");
@@ -606,11 +606,10 @@ statement_else_block ::=
         :} block:b|
 ;
 
-statement_expr ::=
-    expr:ex {:
+statement_expr ::= expr:ex {:
         Nodo tmp = new Nodo("statement_expr");
-        tmp.addHijo((Nodo) ex);
-        tmp.setNumNodo(parser.contador++);
+        Nodo e = (Nodo) ex;
+        tmp.settype(e.gettype());        
         RESULT = tmp;
         
         :}|
