@@ -24,6 +24,8 @@ public class Semantic_fun {
             BANDERAS.put("Error_repeticion", "");
             BANDERAS.put("Funcion", ""); 
             Tabla_m.put("DATA", null);
+            //for (int x = 0; x < Tabla.get("Scope: " + parser.global_scope).size(); x++)
+              //  if
     }
     
     public void pushScope(int scope){
@@ -163,7 +165,7 @@ public class Semantic_fun {
                 if (Tabla.get("Scope: " + scope).get(x).data.containsValue(symbol.getIdentifier())){
                     System.out.println("Si existe, " + symbol.getIdentifier());
                     try{
-                        if (Integer.valueOf(Tabla.get("Scope: " + scope).get(x).data.get("Location")) < Integer.valueOf(symbol.getLocation())){
+                        if (Integer.valueOf(Tabla.get("Scope: " + scope).get(x).data.get("location")) < Integer.valueOf(symbol.getLocation())){
                             //if (Tabla.get("Scope: " + scope).get(x).data.containsValue("int")){
                                 try{
                                     
@@ -203,7 +205,7 @@ public class Semantic_fun {
     
     
     public int lookup_f(Nodo symbol,int scope){
-        int resultado = 1;
+        int resultado = 2;
         // 0 error de casteo, retorna false
         // 1 lo encontro, retorna true
         // 2 no lo ha encontrado. igual retorno un false
@@ -222,7 +224,7 @@ public class Semantic_fun {
                 if (Tabla.get("Scope: " + scope).get(x).data.containsValue(symbol.getIdentifier())){
                     System.out.println("Si existe, " + symbol.getIdentifier());
                     try{
-                        if (Integer.valueOf(Tabla.get("Scope: " + scope).get(x).data.get("Location")) < Integer.valueOf(symbol.getLocation())){
+                        if (Integer.valueOf(Tabla.get("Scope: " + scope).get(x).data.get("location")) < Integer.valueOf(symbol.getLocation())){
                             //if (Tabla.get("Scope: " + scope).get(x).data.containsValue("int")){
                                 try{
                                     
@@ -255,6 +257,7 @@ public class Semantic_fun {
             
             }
             scope = scope - 1;
+            resultado_r = 3;
             
         }
         return resultado_r;

@@ -1,14 +1,14 @@
 class Program {
     int w[5];
-    int z, x[10];
+    int z, z[10];
     int s(int n, boolean r)
     {
-        int z;
-        boolean b, p;
+        int z, y;
+        boolean b, b;
     }
-    void s2(int n, boolean r)
+    void s2(int n2, boolean r)
     {
-        
+        int z;
     }
 
 }

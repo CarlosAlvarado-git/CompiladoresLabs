@@ -139,6 +139,7 @@ field_decl ::= field_decl:fd type:t field_name:fn  {:
                 if (field.gettype().equals("Boolean")){ field.setValor("True");}
                 if (field.gettype().equals("Int")){ field.setmemoria(field.getmemoria() * 4);} else { field.setmemoria(field.getmemoria() * 1); }
                 int bandera = parser.TABLA.lookup_f(field, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
                 if (bandera == 2){
                     System.out.println("La variable " + field.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(field, parser.global_scope);
@@ -164,6 +165,7 @@ field_decl_coma_field ::=
                 if (field.gettype().equals("Int")){ field.setmemoria(field.getmemoria() * 4);} else { field.setmemoria(field.getmemoria() * 1); }
                 field.setscope(parser.global_scope);
                 int bandera = parser.TABLA.lookup_f(field, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
                 if (bandera == 2){
                     System.out.println("DESDE LAS COMAS: La variable " + field.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(field, parser.global_scope);
@@ -189,6 +191,7 @@ method_decl ::= type:t Id:id {:
                 if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
                 tmp.setscope(parser.global_scope);
                 int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
                 if (bandera == 2){
                     System.out.println("DESDE METHOD: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
@@ -217,6 +220,7 @@ method_decl ::= type:t Id:id {:
                 tmp.setmemoria(0);
                 tmp.setscope(parser.global_scope);
                 int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
                 if (bandera == 2){
                     System.out.println("DESDE METHOD VOID: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
@@ -312,10 +316,12 @@ var_decl ::= type:t Id:id {:
             tmp.settype(ty.getValor());
             tmp.setIdentifier(id + "");
             tmp.setscope(parser.global_scope);
+            tmp.setValor("0");
             if (tmp.gettype().equals("Boolean")){ tmp.setValor("True");} else {tmp.setValor("0");}
             if (tmp.gettype().equals("Boolean")){ tmp.setmemoria(1);} else {tmp.setmemoria(4);}
             tmp.setLocation(idright + 1);
             int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+            System.out.println("La bandera trae: " + bandera);
             if (bandera == 2){
                 System.out.println("La variable " + tmp.getIdentifier() + ", se guardará");
                 parser.TABLA.insertSymbol(tmp, parser.global_scope);
@@ -340,7 +346,9 @@ var_decl_coma_id ::=
                 tmp.setIdentifier(id + "");
                 tmp.setLocation(idright + 1);
                 tmp.setscope(parser.global_scope);
+                tmp.setValor("0");
                 int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
                 if (bandera == 2){
                     System.out.println("DESDE LAS COMAS var_decl: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
@@ -373,6 +381,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 Nodo asig = (Nodo) asop;
                 if (asig.getValor().equals("ASSIGN"))
                 {
+                    // buscar el id en la tabla
+                    // cambiandole el valor. 
+                    //int bandera = parser.TABLA.lookup(loc, parser.global_scope);
+                    //if (bandera == 1) {
+                    //    parser.TABLA.Tabla.
+                    //}
                     System.out.println(loc.getIdentifier());
                     loc.setValor(e.getValor());
                     System.out.println("Se hizo loc = exr");
@@ -730,17 +744,9 @@ method_name ::= Id:id {:
 location ::= Id:id {:
         Nodo tmp = new Nodo("location");
 
-        Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
 
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
-
-        tmp.setNumNodo(parser.contador++);
+        tmp.setIdentifier(id + "");
         System.out.println("ENTRE A LOCATION ::= Id");
-        tmp.setValor("0");
         
         RESULT = tmp;
         :}
