@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class Semantic_fun {
     public static HashMap<String, ArrayList<ValoresTabla_fun>> Tabla = new HashMap<String, ArrayList<ValoresTabla_fun>>();
     public static HashMap<String, ArrayList<ValoresTabla_fun>> Tabla_m = new HashMap<String, ArrayList<ValoresTabla_fun>>();
+    public static HashMap<String, ArrayList<ValoresTabla_fun>> Tabla_fun = new HashMap<String, ArrayList<ValoresTabla_fun>>();
     public static String tabla = "";
     public static String tabla_m= "";
     public static int scope_global = 0;
@@ -25,7 +26,9 @@ public class Semantic_fun {
             BANDERAS.put("Funcion_type", ""); 
             BANDERAS.put("For", ""); 
             BANDERAS.put("Llamada_fun", "");
+            BANDERAS.put("Llamada_fun_type", "");
             Tabla_m.put("DATA", null);
+            Tabla_fun.put("PARAM", null);
             //for (int x = 0; x < Tabla.get("Scope: " + parser.global_scope).size(); x++)
               //  if
     }

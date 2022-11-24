@@ -1,11 +1,12 @@
 class Program {
     int w[5], y;
     boolean r;
-    int s(int param) {}
+    int s(int param)
+    {}
     int main(int y){
         int a;
         boolean p;
-        y = 10 + (a + 5);
+        a = 10 + s(1);
         p = a < 5;
         if ( a == 10 ) {
             int nueva, nueva2;
@@ -24,7 +25,7 @@ class Program {
         {
            int BLOCKE; 
         }
-        s();
+        
         return a;
         
     }

@@ -1,7 +1,8 @@
 package compiler.semantic;
 
 import java_cup.runtime.Symbol;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 parser code
 {:
     private Symbol s;
@@ -23,7 +24,14 @@ parser code
 
     public Semantic_fun TABLA = new Semantic_fun();
     public int global_scope = 0;
-    
+    public int param_cont = 0;
+    class ValoresTabla_fun{
+    public HashMap<String, String> data;
+
+    public void Adddata(HashMap<String, String> valor){
+        this.data = valor;
+    }
+}
    
 :};
 
@@ -453,7 +461,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 :} statement:stm
         | method_call:mc Punto_coma  {:
                 Nodo tmp = new Nodo("statement");
-                System.out.println("Llamada a metodo: ");
+                System.out.println("SE LLAMO A UN Metodo");
                 RESULT = tmp;
                 
                 :} statement:stm
@@ -647,7 +655,22 @@ method_call ::= method_name:mn {:
                         parser.TABLA.BANDERAS.replace("Llamada_fun", mtodo.getIdentifier());
                         for (int x = 0; x < parser.TABLA.Tabla_m.get("DATA").size(); x++) {
                             for (String y : parser.TABLA.Tabla_m.get("DATA").get(x).data.keySet()) {
-                                tabla = tabla + ( "   "+y + ": " + Tabla.get(i).get(x).data.get(y) + "\n");
+                                if (y.equals("Funcion") && parser.TABLA.Tabla_m.get("DATA").get(x).data.get(y).equals(mtodo.getIdentifier())){   
+                                        if (parser.TABLA.Tabla_fun.get("PARAM") == null){
+                                                parser.TABLA.BANDERAS.replace("Llamada_fun_type", parser.TABLA.Tabla_m.get("DATA").get(x).data.get("type"));
+                                                System.out.println("LA DE PARAM ESTA VACIA");
+                                                ValoresTabla_fun data = parser.TABLA.Tabla_m.get("DATA").get(x);
+                                                ArrayList<ValoresTabla_fun> lista = new ArrayList<>();
+                                                lista.add(data);
+                                                parser.TABLA.Tabla_fun.replace("PARAM", lista);
+                                        }
+                                        else{
+                                            System.out.println("Ya hay en PARAM, SOLO AGREGO");
+                                            ValoresTabla_fun data = parser.TABLA.Tabla_m.get("DATA").get(x);
+                                            parser.TABLA.Tabla_fun.get("PARAM").add(data);
+                                        }
+                                }
+
                             }
                         }
                          
@@ -662,7 +685,11 @@ method_call ::= method_name:mn {:
                     System.exit(0);
                 }
         
-        :} LEFT_PAR method_call_corche:mcc RIGHT_PAR 
+        :} LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
+                parser.param_cont = 0;
+                parser.TABLA.Tabla_fun.replace("PARAM", null);
+
+            :}
         |Callout LEFT_PAR STRING_LITERAL method_call_corche_dos:mccd RIGHT_PAR {:
                 Nodo tmp = new Nodo("method_call");
                 Nodo call_out   = new Nodo("Callout");
@@ -691,18 +718,26 @@ method_call ::= method_name:mn {:
 
                 :};
 //----- Carlos
-method_call_corche ::= xpr:ex {:
+method_call_corche ::= expr:ex {:
                 Nodo tmp = new Nodo("method_call_corche");
-
-                tmp.addHijo((Nodo) ex);
                 
-                tmp.addHijo((Nodo) mcce);
+                Nodo expr_x = (Nodo) ex;
+                if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(expr_x.gettype())) {
+                    System.out.println("Primer parámetro bueno");
+                    parser.param_cont = parser.param_cont + 1;
+                } else {
+                    System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type") + ", no puede ser: " + expr_x.gettype());
+                    System.exit(0);
+                }
                 
-                tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
             :} method_call_corche_expr:mcce  
         | {: 
-
+                if(parser.TABLA.Tabla_fun.get("PARAM") == null) {System.out.println("Todo bien");}
+                else {
+                    System.out.println("La funcion requiere paramtros");
+                    System.exit(0);
+                }
         
             :}
 ;
@@ -710,16 +745,15 @@ method_call_corche ::= xpr:ex {:
 method_call_corche_expr ::=
         Coma expr:ex {:
                 Nodo tmp = new Nodo("method_call_corche_expr");
-                Nodo cm = new Nodo("Coma");
-                cm.setValor("Coma");
-                cm.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) cm);
-
-                tmp.addHijo((Nodo) ex);
+                Nodo expr_x = (Nodo) ex;
+                if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(expr_x.gettype())) {
+                    System.out.println("Parámetro bueno");
+                    parser.param_cont = parser.param_cont + 1;
+                } else {
+                    System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(0).data.get("type") + ", no puede ser: " + expr_x.gettype());
+                    System.exit(0);
+                }
                 
-                tmp.addHijo((Nodo) mcce);
-
-                tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
         :} method_call_corche_expr:mcce|
 ;
@@ -805,9 +839,7 @@ expr ::= location:l{:
         | method_call:mc{:
         Nodo tmp = new Nodo("expr");
 
-        tmp.addHijo((Nodo) mc);
-
-        tmp.setNumNodo(parser.contador++);
+        tmp.settype(parser.TABLA.BANDERAS.get("Llamada_fun_type"));
         RESULT = tmp;
         :}
         | literal:lit{:
