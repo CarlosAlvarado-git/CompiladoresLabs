@@ -37,35 +37,7 @@ public class Semantic {
             // Este lexer debe ser el nuevo, que se conecte con cup.
             Sintax analisis = new Sintax(new LexerCup(lector));
             try {
-                analisis.parse(); 
-                /*TYPE.put("Espero","0");
-                TYPE.put("Type","");
-                TYPE.put("Espero_corchete","0");
-                TYPE.put("Assing_up","0");
-                TYPE.put("For", "0");
-                TYPE.put("For look", "0");
-                TYPE.put("For look data", "0");*/
-                //System.out.println(graficarNodo(analisis.padre));
-                //scope_global = 1;
-                //recorrerTabla(analisis.padre);
-                //System.out.println("-------- Aquí viene la tabla de símbolo");
-                //System.out.println(tabla);
-                
-                
-                /*for (String i : Tabla.keySet()) {
-                    System.out.println(i);
-                    System.out.println("Var declarations: \n");
-                    for (int x = 0; x < Tabla.get(i).size(); x++) {
-                        System.out.println("-------");
-                        for (String y : Tabla.get(i).get(x).data.keySet()) {
-                            System.out.println( "   "+y + ": " + Tabla.get(i).get(x).data.get(y));
-                        }
-                    }
-                }*/
-                //System.out.println(tabla);
-                
-                //tabla = "";
-                //Tabla.clear();
+                analisis.parse();
                 System.out.println("------------- TABLA GENERAL");
                 analisis.TABLA.popScope(1);
                 analisis.TABLA.pop_m();
@@ -74,6 +46,7 @@ public class Semantic {
                 
                 System.out.println("------------- TABLA PARAMETROS");
                 System.out.println("La tabla: \n" + analisis.TABLA.tabla_print_m());
+                
             }
             catch (Exception e){
                 System.out.println(e);

@@ -1,14 +1,29 @@
 class Program {
-    int w[5];
-    int z, z[10];
-    int s(int n, boolean r)
-    {
-        int z, y;
-        boolean b, b;
+    int w[5], y;
+    boolean r;
+    int main(int y){
+        int a;
+        boolean p;
+        y = 10;
+        p = a < 5;
+        if ( a == 10 ) {
+            int nueva, nueva2;
+            
+        }
+        else 
+        {
+           int nuevablockeelse, nueva2blocke; 
+        }
+        
+        for hg = 1, 10 {}
+        // falta usar las variables de los parámetros
+        //return ⟨expr⟩ ; 
+        //break ;
+        //continue ;
+        //⟨block⟩
+        // method_call de statement
+        // todo method_call
+        // callout_args
     }
-    void s2(int n2, boolean r)
-    {
-        int z;
-    }
-
+        
 }

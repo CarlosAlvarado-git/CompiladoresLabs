@@ -145,8 +145,8 @@ field_decl ::= field_decl:fd type:t field_name:fn  {:
                     parser.TABLA.insertSymbol(field, parser.global_scope);
                 }
                 else {
-                    parser.TABLA.BANDERAS.replace("Error_repeticion", "La variable " + field.getIdentifier() + ", esta repetida");
-                    System.out.println("La variable " + field.getIdentifier() + ", esta repetida");
+                    System.out.println("La variable " + field.getIdentifier() + " ya existe");
+                    System.exit(0);
                 }
                 RESULT = tmp;
 
@@ -159,7 +159,6 @@ field_decl_coma_field ::=
                 Nodo tmp = new Nodo("field_decl_coma_field");
                 
                 Nodo field = (Nodo) fn;
-                //System.out.println("HOLAAAAAAAAAAA" + parser.TABLA.BANDERAS.get("Type"));
                 field.settype(parser.TABLA.BANDERAS.get("Type"));
                 if (field.gettype().equals("Boolean")){ field.setValor("True");}
                 if (field.gettype().equals("Int")){ field.setmemoria(field.getmemoria() * 4);} else { field.setmemoria(field.getmemoria() * 1); }
@@ -171,8 +170,8 @@ field_decl_coma_field ::=
                     parser.TABLA.insertSymbol(field, parser.global_scope);
                 }
                 else {
-                    parser.TABLA.BANDERAS.replace("Error_repeticion", "La variable " + field.getIdentifier() + ", esta repetida");
                     System.out.println("La variable " + field.getIdentifier() + ", esta repetida");
+                    System.exit(0);
                 }
                 RESULT = tmp;
             :}
@@ -198,9 +197,8 @@ method_decl ::= type:t Id:id {:
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
                 }
                 else {
-                    parser.TABLA.BANDERAS.replace("Error_repeticion", "El método " + tmp.getIdentifier() + ", esta repetido");
-                    System.out.println("El método " + tmp.getIdentifier() + ", esta repetido");
-                    parser.TABLA.BANDERAS.replace("Funcion", "ERROR");
+                    System.out.println("El nombre del metodo esta repetido " + tmp.getIdentifier());
+                    System.exit(0);
                 }
                 parser.global_scope = parser.global_scope + 1;
                 parser.TABLA.pushScope(parser.global_scope);
@@ -227,9 +225,8 @@ method_decl ::= type:t Id:id {:
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
                 }
                 else {
-                    parser.TABLA.BANDERAS.replace("Error_repeticion desde VOID", "El método " + tmp.getIdentifier() + ", esta repetido");
-                    System.out.println("El método " + tmp.getIdentifier() + ", esta repetido");
-                    parser.TABLA.BANDERAS.replace("Funcion", "ERROR");
+                    System.out.println("El nombre del método esta repetido:  " + tmp.getIdentifier());
+                    System.exit(0);
                 }
                 parser.global_scope = parser.global_scope + 1;
                 parser.TABLA.pushScope(parser.global_scope);
@@ -327,8 +324,8 @@ var_decl ::= type:t Id:id {:
                 parser.TABLA.insertSymbol(tmp, parser.global_scope);
             }
             else {
-                parser.TABLA.BANDERAS.replace("Error_repeticion", "La variable " + tmp.getIdentifier() + ", esta repetida");
-                System.out.println("La variable " + tmp.getIdentifier() + ", esta repetida");
+                System.out.println("La variable " + tmp.getIdentifier() + ",está repetida");
+                System.exit(0);
             }
             RESULT = tmp;
     
@@ -354,8 +351,8 @@ var_decl_coma_id ::=
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
                 }
                 else {
-                    parser.TABLA.BANDERAS.replace("Error_repeticion", "La variable " + tmp.getIdentifier() + ", esta repetida");
                     System.out.println("La variable " + tmp.getIdentifier() + ", esta repetida");
+                    System.exit(0);
                 }
                 RESULT = tmp;
             :}|
@@ -382,54 +379,74 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 if (asig.getValor().equals("ASSIGN"))
                 {
                     // buscar el id en la tabla
-                    // cambiandole el valor. 
-                    //int bandera = parser.TABLA.lookup(loc, parser.global_scope);
-                    //if (bandera == 1) {
-                    //    parser.TABLA.Tabla.
-                    //}
-                    System.out.println(loc.getIdentifier());
-                    loc.setValor(e.getValor());
-                    System.out.println("Se hizo loc = exr");
+                    //System.out.println("El type de loc es: " + loc.gettype());
+                    //System.out.println("El type de e es: " + e.gettype());
+                    int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
+                    if (bandera[0] == 1) {
+                        loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                        if (loc.gettype().equals(e.gettype())){
+                            System.out.println("Asignacion correcta");
+                       }
+                       else {
+                            System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                            System.exit(0);
+                        }
+                    }
+                    else {
+                        System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                        System.exit(0);
+                    }
                 }
                 else if (asig.getValor().equals("PLUS_EQUAL")) 
                 {
-                    try {
-                        int valorAc = Integer.valueOf(loc.getValor());
-                        int valorex = Integer.valueOf(e.getValor());
-                        int nuevo_valor = valorAc + valorex;
-                        loc.setValor( String.valueOf(nuevo_valor));
-                        System.out.println("Se hizo loc += exr");
+                    int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
+                    if (bandera[0] == 1) {
+                        loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                        if (loc.gettype().equals("Int")){
+                            if (loc.gettype().equals(e.gettype())){
+                                System.out.println("Asignacion correcta");
+                           }
+                           else {
+                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.exit(0);
+                            }
+                        }
+                        else {
+                            System.out.println("No se puede realizar la operacion += con booleanos");
+                            System.exit(0);
+                        }
+
                     }
-                    catch(NumberFormatException es){
-                        System.out.println("Loc: " + loc.getValor() + "    e: " + e.getValor());
-                        System.out.println("ERROR EN +=, EXPR TRAER COMO VALOR ALGO QUE NO PUEDE SER INTEGER");
+                    else {
+                        System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                        System.exit(0);
                     }
                 }
                 else {
-                    try {
-                        int valorAc = Integer.valueOf(loc.getValor());
-                        int valorex = Integer.valueOf(e.getValor());
-                        int nuevo_valor = valorAc + valorex;
-                        loc.setValor( String.valueOf(nuevo_valor));
-                        System.out.println("Se hizo loc -= exr");
+                    int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
+                    if (bandera[0] == 1) {
+                        loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                        if (loc.gettype().equals("Int")){
+                            if (loc.gettype().equals(e.gettype())){
+                                System.out.println("Asignacion correcta");
+                           }
+                           else {
+                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.exit(0);
+                            }
+                        }
+                        else {
+                            System.out.println("No se puede realizar la operacion -= con booleanos");
+                            System.exit(0);
+                        }
+
                     }
-                    catch(NumberFormatException es){
-                        System.out.println("Loc: " + loc.getValor() + "    e: " + e.getValor());
-                        System.out.println("ERROR EN -=, EXPR TRAER COMO VALOR ALGO QUE NO PUEDE SER INTEGER");
+                    else {
+                        System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                        System.exit(0);
                     }
                 }
                 
-                
-                tmp.addHijo( loc);
-                tmp.addHijo( asig);
-                tmp.addHijo(e);
-
-                Nodo pm = new Nodo("Punto_coma");
-                pm.setValor("Punto_coma");
-                pm.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) pm);
-
-                tmp.setNumNodo(parser.contador++);
                 RESULT = tmp;
                 :} statement:stm
         | method_call:mc Punto_coma statement:stm {:
@@ -447,63 +464,81 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 RESULT = tmp;
                 
                 :}
-        | If LEFT_PAR expr:ex RIGHT_PAR block:b statement_else_block:seb statement:stm {:
-                Nodo tmp = new Nodo("statement");
-                Nodo if_ = new Nodo("If");
-                if_.setValor("If");
-                if_.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) if_); 
-
-                Nodo lpar = new Nodo("LEFT_PAR");
-                lpar.setValor("LEFT_PAR");
-                lpar.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) lpar); 
-
-                tmp.addHijo((Nodo) ex);
-                Nodo rpar = new Nodo("RIGHT_PAR");
-                rpar.setValor("RIGHT_PAR");
-                rpar.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) rpar); 
-
-                tmp.addHijo((Nodo) b);
-                tmp.addHijo((Nodo) seb);
-                tmp.addHijo((Nodo) stm);
-                tmp.setNumNodo(parser.contador++);
+        | If LEFT_PAR expr:ex RIGHT_PAR {: 
+            Nodo tmp = new Nodo("statement");
+                Nodo expr_r = (Nodo) ex;
+                if (expr_r.gettype().equals("Int")){
+                    System.out.println("El resultado de expr no es boolean");
+                    System.exit(0);
+                }
+                parser.global_scope = parser.global_scope + 1;
+                parser.TABLA.pushScope(parser.global_scope);
                 RESULT = tmp;
-                :}
-        | For Id:id ASSIGN expr:ex Coma expr:ex2 block:b statement:stm  {:
+                
+
+             :} block:b statement_else_block:seb statement:stm 
+        | For Id:id ASSIGN expr:ex Coma expr:ex2   {:
                 Nodo tmp = new Nodo("statement");
-                Nodo for_ = new Nodo("For");
-                for_.setValor("For");
-                for_.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) for_); 
+                Nodo e = (Nodo) ex;
+                Nodo e2 = (Nodo) ex2;
+                tmp.setIdentifier("" + id);
+                int [] bandera = parser.TABLA.lookup(tmp, parser.global_scope);
+                if (bandera[0] == 1) {  
+                    // se crea nuevo scope
+                    tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                    
+                    if (tmp.gettype().equals(e.gettype())){
+                        parser.global_scope = parser.global_scope + 1;
+                        parser.TABLA.pushScope(parser.global_scope);
+                        
+                        if(e2.gettype().equals("Int")){
+                            System.out.println("Asignacion correcta");
+                        }
+                        else
+                        {
+                        System.out.println("La variable del loop debe ser integer");
+                        System.exit(0);
+                            }
+                   }
+                   else {
+                        System.out.println("La variable " + tmp.getIdentifier() + "no es del mismo type del valor asignado");
+                        System.exit(0);
+                    }
+                }
+                else {
+                    //  genera nuevo scope y entra la variable
+                    parser.global_scope = parser.global_scope + 1;
+                    parser.TABLA.pushScope(parser.global_scope);
 
-                Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
+                    Nodo nueva = new Nodo("id");
+                    nueva.setllamada("variable");
+                    nueva.setIdentifier(id + "");
+                    nueva.settype("Int");
+                    nueva.setValor("0");
+                    nueva.setLocation(idright + 1);
+                    nueva.setmemoria(4);
 
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
-
-                Nodo assing  = new Nodo("ASSIGN");
-                assing.setValor("ASSIGN");
-                assing.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) assing); 
-
-                tmp.addHijo((Nodo) ex); 
-                Nodo cm  = new Nodo("Coma");
-                cm.setValor("Coma");
-                cm.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) cm); 
-
-                tmp.addHijo((Nodo) ex2); 
-                tmp.addHijo((Nodo) b); 
-                tmp.addHijo((Nodo) stm); 
-                tmp.setNumNodo(parser.contador++);
+                    parser.TABLA.insertSymbol(nueva, parser.global_scope);
+                    if (nueva.gettype().equals(e.gettype())){
+                        if(e2.gettype().equals("Int")){
+                            System.out.println("Asignacion correcta");
+                        }
+                        else
+                        {
+                        System.out.println("La variable del loop debe ser integer");
+                        System.exit(0);
+                            }
+                   }
+                   else {
+                        System.out.println("La variable " + nueva.getIdentifier() + "no es del mismo type del valor asignado");
+                        System.exit(0);
+                    }
+                    
+                }
+                
                 RESULT = tmp;
 
-                :}
+                :} block:b statement:stm
         | Return statement_expr:stmex Punto_coma statement:stm {:
                 Nodo tmp = new Nodo("statement");
 
@@ -564,17 +599,11 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
         |;
 
 statement_else_block ::=
-    Else block:b {:
-        Nodo tmp = new Nodo("statement_else_block");
-        Nodo el = new Nodo("Else");
-        el.setValor("Else");
-        el.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) el); 
-        tmp.addHijo((Nodo) b); 
-        tmp.setNumNodo(parser.contador++);
-        RESULT = tmp;
-
-        :}|
+    Else  {:
+        parser.global_scope = parser.global_scope + 1;
+        parser.TABLA.pushScope(parser.global_scope);
+    
+        :} block:b|
 ;
 
 statement_expr ::=
@@ -752,27 +781,11 @@ location ::= Id:id {:
         :}
         | Id:id Corche_A expr:ex Corche_C {:
         Nodo tmp = new Nodo("location");
-        Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
 
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
 
-        Nodo Corche_a = new Nodo("Corche_A");
-        Corche_a.setValor("Corche_A");
-        Corche_a.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) Corche_a);
-
-        tmp.addHijo((Nodo) ex);
-
-        Nodo Corche_c = new Nodo("Corche_C");
-        Corche_c.setValor("Corche_C");
-        Corche_c.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) Corche_c);
-
-        tmp.setNumNodo(parser.contador++);
+        tmp.setIdentifier(id + "");
+        System.out.println("ENTRE A LOCATION ::= Id[num]");
+        
         RESULT = tmp;
 
         :};
@@ -780,9 +793,17 @@ location ::= Id:id {:
 expr ::= location:l{:
         Nodo tmp = new Nodo("expr");
 
-        tmp.addHijo((Nodo) l);
-
-        tmp.setNumNodo(parser.contador++);
+        // buscar el id del location
+        // guardar su valor en tmp.setValor();
+        Nodo loc = (Nodo) l;
+        int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
+        if (bandera[0] == 1) {
+           tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+        }
+        else {
+            System.out.println("La variable " + loc.getIdentifier() + " no ha sido declarada");
+            System.exit(0);
+        }
         RESULT = tmp;
         :}
         | method_call:mc{:
@@ -798,67 +819,106 @@ expr ::= location:l{:
 
         tmp.addHijo((Nodo) lit);
         Nodo liter = (Nodo) lit;
-        tmp.setValor(liter.getValor());
+        tmp.settype(liter.gettype());
         
-        tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
         | expr:ex bin_op:bo expr:ex2{:
         Nodo tmp = new Nodo("expr");
 
-        tmp.addHijo((Nodo) ex);
+        Nodo expr1 = (Nodo) ex;
+        Nodo bin_op_ = (Nodo) bo;
+        Nodo expr2 = (Nodo) ex2;
 
-        tmp.addHijo((Nodo) bo);
 
-        tmp.addHijo((Nodo) ex2);
+        if (bin_op_.getNombre().equals("arith_op") || bin_op_.getNombre().equals("rel_op") )
+        {
+            if(expr1.gettype().equals("Int")){
+                if (expr1.gettype().equals(expr2.gettype())){
+                switch(bin_op_.getValor()) {
+                    case "Mas":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "Menos":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "Multi":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "Div":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "Mod":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "GREATER":
+                            tmp.settype("Boolean"); 
+                        break;
+                    case "LESS":
+                            tmp.settype("Boolean"); 
+                        break;
+                    case "LESS_EQUAL":
+                            tmp.settype("Boolean"); 
+                        break;
+                    case "GREATER_EQUAL":
+                            tmp.settype("Boolean"); 
+                        break;
+                    default:
+                        System.out.println("No entro nada");
+                
+                    }
+                }
+                else {
+                    System.out.println("Operación de distinto tipo");
+                    System.exit(0);
+                }
+
+            }
+            else {
+                System.out.println("No se pueden operar las variables booleanas con este signo: " + bin_op_.getValor());
+                System.exit(0);
+                }
+    
+        }else{
+            if(expr1.gettype().equals(expr2.gettype())){
+                tmp.settype("Boolean");
+                }
+            else{
+                System.out.println("Operación de variables de distintos tipos");
+                System.exit(0);
+            }
+        }
         
-        
-        
-        tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
         | Menos expr:ex{:
         Nodo tmp = new Nodo("expr");
-
-        Nodo menos = new Nodo("Menos");
-        menos.setValor("Menos");
-        menos.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) menos);
-
-        tmp.addHijo((Nodo) ex);
-        
-        tmp.setNumNodo(parser.contador++);
+        Nodo expr1 = (Nodo) ex;
+        if (expr1.gettype().equals("Int")){
+            tmp.settype("Int");
+        }
+        else {
+            System.out.println("No se puede usar el - menos con booleanos");
+            System.exit(0);
+        }
         RESULT = tmp;
         :}
         | Exclamacion expr:ex{:
-        Nodo tmp = new Nodo("expr");
-
-        Nodo exclamacion = new Nodo("Exclamacion");
-        exclamacion.setValor("Exclamacion");
-        exclamacion.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) exclamacion);
-
-        tmp.addHijo((Nodo) ex);
-
-        tmp.setNumNodo(parser.contador++);
+       Nodo tmp = new Nodo("expr");
+        Nodo expr1 = (Nodo) ex;
+        if (expr1.gettype().equals("Boolean")){
+            tmp.settype("Boolean");
+        }
+        else {
+            System.out.println("No se puede usar el signo ! con integers");
+            System.exit(0);
+        }
         RESULT = tmp;
         :}
         | LEFT_PAR expr:ex RIGHT_PAR{:
-        Nodo tmp = new Nodo("expr");
+        Nodo tmp = (Nodo) ex;
 
-        Nodo lefp = new Nodo("LEFT_PAR");
-        lefp.setValor("LEFT_PAR");
-        lefp.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) lefp);
-
-        tmp.addHijo((Nodo) ex);
-
-        Nodo rightp = new Nodo("RIGHT_PAR");
-        rightp.setValor("RIGHT_PAR");
-        rightp.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) rightp);
-
-        tmp.setNumNodo(parser.contador++);
+        
         RESULT = tmp;
         :};
 
@@ -885,219 +945,133 @@ callout_arg ::= expr:ex {:
         :};
 
 bin_op ::= arith_op:ao {:
-        Nodo tmp = new Nodo("bin_op");
-
-        tmp.addHijo((Nodo) ao);
+        Nodo tmp = new Nodo("arith_op");
         Nodo aov = (Nodo) ao;
         tmp.setValor(aov.getValor());
-        tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
         | rel_op:ro{:
-        Nodo tmp = new Nodo("bin_op");
-
-        tmp.addHijo((Nodo) ro);
+        Nodo tmp = new Nodo("rel_op");
         Nodo rov = (Nodo) ro;
         tmp.setValor(rov.getValor());
-        tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
         | eq_op:eo{:
-        Nodo tmp = new Nodo("bin_op");
-        
-        tmp.addHijo((Nodo) eo);
+        Nodo tmp = new Nodo("eq_op");
         Nodo eov = (Nodo) eo;
         tmp.setValor(eov.getValor());
-        tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
         | cond_op:co{:
-        Nodo tmp = new Nodo("bin_op");
-        
-        tmp.addHijo((Nodo) co);
+        Nodo tmp = new Nodo("cond_op");
         Nodo cov = (Nodo) co;
         tmp.setValor(cov.getValor());
-        tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :};
 
 arith_op ::= Mas {:
-        Nodo tmp = new Nodo("arith_op");
-        
-        Nodo mas = new Nodo("Mas");
-        mas.setValor("Mas");
-        mas.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) mas);
-
-        tmp.setNumNodo(parser.contador++);
+        Nodo tmp = new Nodo("Mas");
+        tmp.setValor("Mas");
         RESULT = tmp;
         :}
         | Menos{:
-        Nodo tmp = new Nodo("arith_op");
-        
-        Nodo menos = new Nodo("Menos");
-        menos.setValor("Menos");
-        menos.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) menos);
-
-        tmp.setNumNodo(parser.contador++);
+        Nodo tmp = new Nodo("Menos");
+        tmp.setValor("Menos");
         RESULT = tmp;
         :} 
         | Multiplicacion {:
-        Nodo tmp = new Nodo("arith_op");
-        
-        Nodo multiplicacion = new Nodo("Multiplicacion");
-        multiplicacion.setValor("Multiplicacion");
-        multiplicacion.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) multiplicacion);
-
-        tmp.setNumNodo(parser.contador++);
+        Nodo tmp = new Nodo("Multi");
+        tmp.setValor("Multi");
         RESULT = tmp;
         :}
         | Division{:
-        Nodo tmp = new Nodo("arith_op");
-        
-        Nodo division = new Nodo("Division");
-        division.setValor("Division");
-        division.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) division);
-
-        tmp.setNumNodo(parser.contador++);
+        Nodo tmp = new Nodo("Div");
+        tmp.setValor("Div");
         RESULT = tmp;
         :} 
         | Mod{:
-        Nodo tmp = new Nodo("arith_op");
-        
-        Nodo mod = new Nodo("Mod");
-        mod.setValor("Mod");
-        mod.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) mod);
-
-        tmp.setNumNodo(parser.contador++);
+        Nodo tmp = new Nodo("Mod");
+        tmp.setValor("Mod");
         RESULT = tmp;
         :} ;
 
 //----- Mario 
 
 rel_op ::= GREATER {:
-        Nodo tmp = new Nodo("rel_op");
-        Nodo greater_ = new Nodo("GREATER");
-        greater_.setValor("GREATER");
-        greater_.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) greater_);
-
-        tmp.setNumNodo(parser.contador++);
+        Nodo tmp = new Nodo("GREATER");
+        tmp.setValor("GREATER");
         RESULT = tmp;
 
     :} 
 | LESS {:
-    Nodo tmp = new Nodo("rel_op");
-    Nodo less_ = new Nodo("LESS");
-    less_.setValor("LESS");
-    less_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) less_);
-
-    tmp.setNumNodo(parser.contador++);
-    RESULT = tmp;
+    Nodo tmp = new Nodo("LESS");
+        tmp.setValor("LESS");
+        RESULT = tmp;
 
 :} 
 | LESS_EQUAL {:
-    Nodo tmp = new Nodo("rel_op");
-    Nodo less_equal_ = new Nodo("LESS_EQUAL");
-    less_equal_.setValor("LESS_EQUAL");
-    less_equal_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) less_equal_);
-
-    tmp.setNumNodo(parser.contador++);
-    RESULT = tmp;
+    Nodo tmp = new Nodo("LESS_EQUAL");
+        tmp.setValor("LESS_EQUAL");
+        RESULT = tmp;
 
 :} 
 | GREATER_EQUAL {:
-    Nodo tmp = new Nodo("rel_op");
-    Nodo greater_equal_ = new Nodo("GREATER_EQUAL");
-    greater_equal_.setValor("GREATER_EQUAL");
-    greater_equal_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) greater_equal_);
-
-    tmp.setNumNodo(parser.contador++);
-    RESULT = tmp;
+    Nodo tmp = new Nodo("GREATER_EQUAL");
+        tmp.setValor("GREATER_EQUAL");
+        RESULT = tmp;
 
 :} ;
 
 eq_op ::= EQUAL {:
-    Nodo tmp = new Nodo("eq_op");
-    Nodo equal_ = new Nodo("EQUAL");
-    equal_.setValor("EQUAL");
-    equal_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) equal_);
-
-    tmp.setNumNodo(parser.contador++);
-    RESULT = tmp;
+    Nodo tmp = new Nodo("EQUAL");
+        tmp.setValor("EQUAL");
+        RESULT = tmp;
 
 :} 
 | NOT_EQUAL {:
-    Nodo tmp = new Nodo("eq_op");
-    Nodo not_equal_ = new Nodo("NOT_EQUAL");
-    not_equal_.setValor("NOT_EQUAL");
-    not_equal_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) not_equal_);
-
-    tmp.setNumNodo(parser.contador++);
-    RESULT = tmp;
+    Nodo tmp = new Nodo("NOT_EQUAL");
+        tmp.setValor("NOT_EQUAL");
+        RESULT = tmp;
 
 :} ;
 
 cond_op ::= AND {:
-    Nodo tmp = new Nodo("cond_op");
-    Nodo and_ = new Nodo("AND");
-    and_.setValor("AND");
-    and_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) and_);
-
-    tmp.setNumNodo(parser.contador++);
-    RESULT = tmp;
+    Nodo tmp = new Nodo("AND");
+        tmp.setValor("AND");
+        RESULT = tmp;
 
 :} 
 | OR {:
-    Nodo tmp = new Nodo("cond_op");
-    Nodo or_ = new Nodo("OR");
-    or_.setValor("OR");
-    or_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) or_);
-
-    tmp.setNumNodo(parser.contador++);
-    RESULT = tmp;
+    Nodo tmp = new Nodo("OR");
+        tmp.setValor("OR");
+        RESULT = tmp;
 
 :} ;
 
 literal ::= int_literal:il {:
     Nodo tmp = new Nodo("literal");
-    tmp.addHijo((Nodo) il);
     Nodo inl = (Nodo) il;
     tmp.setValor( inl.getValor());
+    tmp.settype( inl.gettype());
     
-
-    tmp.setNumNodo(parser.contador++);
     RESULT = tmp;
 
 :} 
 | CHAR_LITERAL:cl {:
     Nodo tmp = new Nodo("literal");
-    Nodo chal = new Nodo("CHAR_LITERAL");
-    chal.setValor("CHAR_LITERAL");
-    chal.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) chal);
-    tmp.setValor("" + cl);
-    tmp.setNumNodo(parser.contador++);
+    Nodo chl = (Nodo) cl;
+    tmp.setValor( chl.getValor());
+    tmp.settype( chl.gettype());
+    
     RESULT = tmp;
 
 :} 
 | bool_literal:bl {:
     Nodo tmp = new Nodo("literal");
-    tmp.addHijo((Nodo) bl);
-    Nodo bol = (Nodo) bl;
-    tmp.setValor( bol.getValor());
-    tmp.setNumNodo(parser.contador++);
+    Nodo bool = (Nodo) bl;
+    tmp.setValor( bool.getValor());
+    tmp.settype( bool.gettype());
+    
     RESULT = tmp;
 
 :} ;
@@ -1105,33 +1079,22 @@ literal ::= int_literal:il {:
 
 int_literal ::= Decimal_literal:dl {:
     Nodo tmp = new Nodo("int_literal");
-    Nodo decimal_literal_ = new Nodo("Decimal_literal");
-    decimal_literal_.setValor("" + dl);
-    decimal_literal_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) decimal_literal_);
     tmp.setValor("" + dl);
-    tmp.setNumNodo(parser.contador++);
+    tmp.settype("Int");
     RESULT = tmp;
 
 :} 
 | Hex_literal: hexl {:
-    Nodo tmp = new Nodo("int_literal");
-    Nodo hex_literal_ = new Nodo("Hex_literal");
-    
-    hex_literal_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) hex_literal_);
-    tmp.setValor(hexl + "");
-    tmp.setNumNodo(parser.contador++);
+    Nodo tmp = new Nodo("Hex_literal");
+    // convertirlo. 
+    tmp.setValor("" + hexl);
+    tmp.settype("Int");
     RESULT = tmp;
 
 :}| Digit:dig {:
-    Nodo tmp = new Nodo("int_literal");
-    Nodo Digit_ = new Nodo("Digit");
-    
-    Digit_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) Digit_);
-    tmp.setValor(dig + "");
-    tmp.setNumNodo(parser.contador++);
+    Nodo tmp = new Nodo("Digit");
+    tmp.setValor("" + dig);
+    tmp.settype("Int");
     RESULT = tmp;
 
 :};
@@ -1139,23 +1102,15 @@ int_literal ::= Decimal_literal:dl {:
 
 bool_literal ::= True {:
     Nodo tmp = new Nodo("bool_literal");
-    Nodo true_ = new Nodo("True");
-    true_.setValor("True");
-    true_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) true_);
     tmp.setValor("true");
-    tmp.setNumNodo(parser.contador++);
+    tmp.settype("Boolean");
     RESULT = tmp;
 
 :}  
 | False {:
     Nodo tmp = new Nodo("bool_literal");
-    Nodo false_ = new Nodo("False");
-    false_.setValor("False");
-    false_.setNumNodo(parser.contador++);
-    tmp.addHijo((Nodo) false_);
     tmp.setValor("false");
-    tmp.setNumNodo(parser.contador++);
+    tmp.settype("Boolean");
     RESULT = tmp;
 
 :} ;
