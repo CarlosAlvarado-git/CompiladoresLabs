@@ -138,7 +138,7 @@ field_decl ::= field_decl:fd type:t field_name:fn  {:
                 field.setscope(parser.global_scope);
                 if (field.gettype().equals("Boolean")){ field.setValor("True");}
                 if (field.gettype().equals("Int")){ field.setmemoria(field.getmemoria() * 4);} else { field.setmemoria(field.getmemoria() * 1); }
-                int bandera = parser.TABLA.lookup(field, parser.global_scope);
+                int bandera = parser.TABLA.lookup_f(field, parser.global_scope);
                 if (bandera == 2){
                     System.out.println("La variable " + field.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(field, parser.global_scope);
@@ -149,7 +149,7 @@ field_decl ::= field_decl:fd type:t field_name:fn  {:
                 }
                 RESULT = tmp;
 
-                :} field_decl_coma_field:fdcf Punto_coma {: Nodo tmp = new Nodo("field_decl_coma_field"); RESULT = tmp; :}
+                :} field_decl_coma_field:fdcf Punto_coma 
              | 
 ;
 
@@ -163,7 +163,7 @@ field_decl_coma_field ::=
                 if (field.gettype().equals("Boolean")){ field.setValor("True");}
                 if (field.gettype().equals("Int")){ field.setmemoria(field.getmemoria() * 4);} else { field.setmemoria(field.getmemoria() * 1); }
                 field.setscope(parser.global_scope);
-                int bandera = parser.TABLA.lookup(field, parser.global_scope);
+                int bandera = parser.TABLA.lookup_f(field, parser.global_scope);
                 if (bandera == 2){
                     System.out.println("DESDE LAS COMAS: La variable " + field.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(field, parser.global_scope);
@@ -188,7 +188,7 @@ method_decl ::= type:t Id:id {:
                 tmp.setLocation(idright + 1);
                 if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
                 tmp.setscope(parser.global_scope);
-                int bandera = parser.TABLA.lookup(tmp, parser.global_scope);
+                int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
                 if (bandera == 2){
                     System.out.println("DESDE METHOD: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
@@ -205,49 +205,34 @@ method_decl ::= type:t Id:id {:
 
 
 
-                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR  {:
-                        Nodo tmp = new Nodo("LEFT_PAR method_decl_corche:mdc RIGHT_PAR");
-                        
-                        RESULT = tmp;
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md 
+                | Void Id:id {:
 
-                    :}  block:b method_decl:md {:
-                        Nodo tmp = new Nodo("block:b method_decl:md");
-                        RESULT = tmp;
-                :} |
-                Void Id:id LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md {:
                 Nodo tmp = new Nodo("method_decl");
-
-                Nodo vd = new Nodo("void");
-                vd.setValor("void");
-                vd.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) vd);
-                
-                Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
-
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
-
-                Nodo lefp = new Nodo("LEFT_PAR");
-                lefp.setValor("LEFT_PAR");
-                lefp.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) lefp);
-
-                tmp.addHijo((Nodo) mdc);
-
-                Nodo rightp = new Nodo("RIGHT_PAR");
-                rightp.setValor("RIGHT_PAR");
-                rightp.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) rightp);
-
-                tmp.addHijo((Nodo) b);
-                tmp.addHijo((Nodo) md);
-                
-                tmp.setNumNodo(parser.contador++);
+                tmp.setllamada("Metodo");
+                tmp.settype("Void");
+                tmp.setIdentifier(id + "");
+                tmp.setValor(""); 
+                tmp.setLocation(idright + 1);
+                tmp.setmemoria(0);
+                tmp.setscope(parser.global_scope);
+                int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+                if (bandera == 2){
+                    System.out.println("DESDE METHOD VOID: La variable " + tmp.getIdentifier() + ", se guardará");
+                    parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                    parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
+                }
+                else {
+                    parser.TABLA.BANDERAS.replace("Error_repeticion desde VOID", "El método " + tmp.getIdentifier() + ", esta repetido");
+                    System.out.println("El método " + tmp.getIdentifier() + ", esta repetido");
+                    parser.TABLA.BANDERAS.replace("Funcion", "ERROR");
+                }
+                parser.global_scope = parser.global_scope + 1;
+                parser.TABLA.pushScope(parser.global_scope);
                 RESULT = tmp;
-                :}| 
+
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md 
+| 
 
 ;
 
@@ -262,6 +247,9 @@ method_decl_corche ::=
         if (tmp.gettype().equals("Int")){ tmp.setValor("0"); } else { tmp.setValor("True"); }
         tmp.setLocation(idright + 1);
         if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
+        
+        System.out.print("El global_scope es: " + parser.global_scope);
+        System.out.print("El Funcion guardado es: " + parser.TABLA.BANDERAS.get("Funcion"));
         tmp.setscope(parser.global_scope);
         tmp.setfuncion(parser.TABLA.BANDERAS.get("Funcion"));
         
@@ -270,7 +258,7 @@ method_decl_corche ::=
         parser.TABLA.insertSymbol_m(tmp);
         
         RESULT = tmp;
-        :} method_decl_corche_coma_type:mdcct {:Nodo tmp = new Nodo("method_decl_corche_coma_type"); RESULT = tmp; :}
+        :} method_decl_corche_coma_type:mdcct 
         |
 ;
 
@@ -305,60 +293,62 @@ method_decl_corche_coma_type ::=
 
 block ::= Llave_A var_decl:vd statement:stm Llave_C {:
         Nodo tmp = new Nodo("block");
-        Nodo llavea = new Nodo("Llave_A");
-        llavea.setValor("Llave_A");
-        llavea.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) llavea);
+        
 
-        tmp.addHijo((Nodo) vd);
-        tmp.addHijo((Nodo) stm);
 
-        Nodo llavec = new Nodo("Llave_C");
-        llavec.setValor("Llave_C");
-        llavec.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) llavec);
-        tmp.setNumNodo(parser.contador++);
+
+        // ultimo
+        
+        parser.TABLA.popScope(parser.global_scope);
+        parser.global_scope = parser.global_scope - 1;
         RESULT = tmp;
         :};
 
-var_decl ::= type:t Id:id var_decl_coma_id:vdci Punto_coma var_decl:vd {:
-        Nodo tmp = new Nodo("var_decl");
-        tmp.addHijo((Nodo) t);
-
-        Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
-
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
-
-        tmp.addHijo((Nodo) vdci);
-        Nodo pm = new Nodo("Punto_coma");
-        pm.setValor("Punto_coma");
-        pm.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) pm);
-        tmp.addHijo((Nodo) vd);
-        tmp.setNumNodo(parser.contador++);
-        RESULT = tmp;
-                :}| ;
+var_decl ::= type:t Id:id {:
+            Nodo tmp = new Nodo("var decl");                
+            Nodo ty = (Nodo) t;
+            tmp.setllamada("variable");
+            parser.TABLA.BANDERAS.replace("Type", ty.getValor());
+            tmp.settype(ty.getValor());
+            tmp.setIdentifier(id + "");
+            tmp.setscope(parser.global_scope);
+            if (tmp.gettype().equals("Boolean")){ tmp.setValor("True");} else {tmp.setValor("0");}
+            if (tmp.gettype().equals("Boolean")){ tmp.setmemoria(1);} else {tmp.setmemoria(4);}
+            tmp.setLocation(idright + 1);
+            int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+            if (bandera == 2){
+                System.out.println("La variable " + tmp.getIdentifier() + ", se guardará");
+                parser.TABLA.insertSymbol(tmp, parser.global_scope);
+            }
+            else {
+                parser.TABLA.BANDERAS.replace("Error_repeticion", "La variable " + tmp.getIdentifier() + ", esta repetida");
+                System.out.println("La variable " + tmp.getIdentifier() + ", esta repetida");
+            }
+            RESULT = tmp;
+    
+    
+    :} var_decl_coma_id:vdci Punto_coma var_decl:vd | ;
 
 var_decl_coma_id ::=
             Coma Id:id var_decl_coma_id:vdci {:
                 Nodo tmp = new Nodo("var_decl_coma_id");
-                Nodo cm = new Nodo("Coma");
-                cm.setValor("Coma");
-                cm.setNumNodo(parser.contador++);
-                tmp.addHijo((Nodo) cm);  
-                Nodo id_ = new Nodo("id");
-            id_.setValor("id");
-            id_.setNumNodo(parser.contador++);
-
-            id_.setIdentifier(id + "");
-            id_.setLocation(idright + 1);
-            tmp.addHijo((Nodo) id_);
-                tmp.addHijo((Nodo) vdci);
-                tmp.setNumNodo(parser.contador++);
+                tmp.setllamada("variable");
+                tmp.settype(parser.TABLA.BANDERAS.get("Type"));
+                if (tmp.gettype().equals("Boolean")){ tmp.setValor("True");} else {tmp.setValor("0");}
+                if (tmp.gettype().equals("Boolean")){ tmp.setmemoria(1);} else {tmp.setmemoria(4);}
+                
+                tmp.setIdentifier(id + "");
+                tmp.setLocation(idright + 1);
+                tmp.setscope(parser.global_scope);
+                int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+                if (bandera == 2){
+                    System.out.println("DESDE LAS COMAS var_decl: La variable " + tmp.getIdentifier() + ", se guardará");
+                    parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                }
+                else {
+                    parser.TABLA.BANDERAS.replace("Error_repeticion", "La variable " + tmp.getIdentifier() + ", esta repetida");
+                    System.out.println("La variable " + tmp.getIdentifier() + ", esta repetida");
+                }
                 RESULT = tmp;
             :}|
 ;

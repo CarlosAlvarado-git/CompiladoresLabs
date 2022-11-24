@@ -200,6 +200,65 @@ public class Semantic_fun {
         }
         return resultado_r;
     } 
+    
+    
+    public int lookup_f(Nodo symbol,int scope){
+        int resultado = 1;
+        // 0 error de casteo, retorna false
+        // 1 lo encontro, retorna true
+        // 2 no lo ha encontrado. igual retorno un false
+        int resultado_r = 2;
+        // recorrer el hasmap hasta ver si esta o no la variable.
+        int scope_estoy = scope;
+        while(resultado == 2 && scope == scope_estoy){
+            if (Tabla.get("Scope: " + scope) != null){
+            for (int x = 0; x < Tabla.get("Scope: " + scope).size(); x++) {
+                System.out.println("Entre");
+                for (String y : Tabla.get("Scope: " + scope).get(x).data.keySet()) {
+                     System.out.println( "   "+y + ": " + Tabla.get("Scope: " + scope).get(x).data.get(y));
+                 }
+                System.out.println("Soy: " + symbol.getIdentifier());
+           
+                if (Tabla.get("Scope: " + scope).get(x).data.containsValue(symbol.getIdentifier())){
+                    System.out.println("Si existe, " + symbol.getIdentifier());
+                    try{
+                        if (Integer.valueOf(Tabla.get("Scope: " + scope).get(x).data.get("Location")) < Integer.valueOf(symbol.getLocation())){
+                            //if (Tabla.get("Scope: " + scope).get(x).data.containsValue("int")){
+                                try{
+                                    
+                                    resultado = 1;
+                                    resultado_r = 1;
+                                    break;
+                                }
+                                catch(NumberFormatException ex){
+                                    resultado = 0;
+                                    resultado_r = 0;
+                                    break;
+                                }
+                            //}
+                        }
+                    }
+                    catch(NumberFormatException ex){
+                        // no puede castear a int la location
+                        resultado = 0;
+                        resultado_r = 0;
+                        break;
+                    }
+                    
+                }
+                else{
+                    resultado = 2;
+                    resultado_r = 2;
+                }
+            }
+            
+            
+            }
+            scope = scope - 1;
+            
+        }
+        return resultado_r;
+    } 
 }
 class ValoresTabla_fun{
     public HashMap<String, String> data;

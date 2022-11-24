@@ -1,7 +1,12 @@
 class Program {
     int w[5];
     int z, x[10];
-    boolean s(int n, boolean r)
+    int s(int n, boolean r)
+    {
+        int z;
+        boolean b, p;
+    }
+    void s2(int n, boolean r)
     {
         
     }
