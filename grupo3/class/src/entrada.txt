@@ -1,19 +1,19 @@
 class Program {
     int w[5], y; 
     boolean r;
-    int s(int param)
+    int s(int param, int dos)
     {}
     boolean ew(){}
     int main(int y, int parame){
         int a;
         boolean p;
-        a = 10 + callout("ew") + parame;
-        if ( a == 10 ) {
+        a = 10 + callout("s", a,"w[3]") + parame;
+        if ( parame == 10 ) {
             int nueva, nueva2;
-            for hg = 1, 10 {
+            for parame = 1, 10 {
                     int dentro;
                     dentro = 10;
-                    dentro = hg;
+                    dentro = parame;
                     break;
                 }
         }

@@ -1064,15 +1064,62 @@ callout_arg ::= expr:ex {:
         
         RESULT = tmp;
         :}
-        | STRING_LITERAL {:
+        | STRING_LITERAL:Sl {:
         Nodo tmp = new Nodo("callout_arg");
-
         Nodo strl   = new Nodo("STRING_LITERAL");
-        strl.setValor("STRING_LITERAL");
-        strl.setNumNodo(parser.contador++);
-        tmp.addHijo((Nodo) strl); 
+        strl.setValor("" + Sl);
+        String valor = strl.getValor();
+        valor = valor.substring(1,valor.length()-1);
+        strl.setValor(valor);
+        try{
+            int entero = Integer.valueOf(strl.getValor());
+            tmp.settype("Int");
+            
+        }catch (Exception es){
+            strl.setIdentifier(valor);
+            if (strl.getIdentifier().equals("true") || strl.getIdentifier().equals("false")){
+                tmp.settype("Boolean");
+            }else {
+                int esta = valor.indexOf("[");
+                if(esta != -1){
+                    valor = valor.substring(0,esta);
+                    strl.setIdentifier(valor);
+                    System.out.println("El identi del strl es: " + strl.getIdentifier());
+                    int [] bandera = parser.TABLA.lookup(strl, parser.global_scope);
+                    if (bandera[0] == 1) {
+                       tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                    }
+                    else {
+                        bandera = parser.TABLA.lookup_param(strl);
+                        if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                            tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
 
-        tmp.setNumNodo(parser.contador++);
+                        }else {
+                        System.out.println("La variable " + strl.getIdentifier() + ",no existe");
+                        System.exit(0);
+                        }
+                    }
+                    
+                }else {
+                    strl.setIdentifier(valor);
+                    System.out.println("El identi del strl es: " + strl.getIdentifier());
+                    int [] bandera = parser.TABLA.lookup(strl, parser.global_scope);
+                    if (bandera[0] == 1) {
+                       tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                    }
+                    else {
+                        bandera = parser.TABLA.lookup_param(strl);
+                        if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                            tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+
+                        }else {
+                        System.out.println("La variable " + strl.getIdentifier() + ",no existe");
+                        System.exit(0);
+                        }
+                    }
+                }   
+            }
+        }
         RESULT = tmp;
         :};
 
