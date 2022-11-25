@@ -16,8 +16,8 @@ import java_cup.runtime.Symbol;
 //hex_literal = (0[Xx]{hex_digit}+)
 
 
-string_literal = ([\"].+[\"])
-char_literal = ([\'].[\'])
+string_literal = ([\"][^\".]+[\"])
+char_literal = ([\'][^\'.][\'])
 digit = [0-9]
 alpha = [a-zA-Z]
 hex_digit = [0-9a-fA-F]

@@ -51,7 +51,11 @@ non terminal INICIO, program, field_decl, method_decl,
                 var_decl_coma_id,statement_else_block,statement_expr,field_decl_coma_field,
                 method_call_corche,method_call_corche_expr,method_call_corche_dos,method_call_coma_callout;
 
-precedence left Mas, Menos,Multiplicacion, Division, Mod,GREATER, LESS, LESS_EQUAL, GREATER_EQUAL,EQUAL, NOT_EQUAL,AND, OR ;
+
+precedence left Multiplicacion, Division, Mod ;
+precedence left Mas, Menos;
+precedence left GREATER, LESS, LESS_EQUAL, GREATER_EQUAL,EQUAL, NOT_EQUAL;
+precedence left AND, OR;
 precedence left ASSIGN, MINUS_EQUAL, PLUS_EQUAL;
 start with INICIO;
 
@@ -187,6 +191,15 @@ field_decl_coma_field ::=
 ;
 
 method_decl ::= type:t Id:id {:
+                if (parser.global_scope != 0){
+                    System.out.println("MAS DE 1 SCOPE");
+                }
+                else {
+                    System.out.println("HACER EL 1 SCOPE");
+                    System.out.println("desde method decl ");
+                    parser.global_scope = parser.global_scope + 1;
+                    parser.TABLA.pushScope(parser.global_scope);
+                }
                 Nodo tmp = new Nodo("method_decl");
                 tmp.setllamada("Metodo");
                 Nodo ty = (Nodo) t;
@@ -746,8 +759,19 @@ method_call ::= method_name:mn {:
                 }
         
         :} LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
+                if (parser.TABLA.Tabla_fun.get("PARAM") != null && parser.param_cont == parser.TABLA.Tabla_fun.get("PARAM").size()){
                 parser.param_cont = 0;
-                parser.TABLA.Tabla_fun.replace("PARAM", null);
+                parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                    else {
+                        if (parser.param_cont != 0){
+                        System.out.println("Faltan parámetros");
+                        System.exit(0);}
+                        else {
+                            parser.param_cont = 0;
+                            parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                        }
+
+                    
 
             :}
         |Callout LEFT_PAR STRING_LITERAL:Sl {:
@@ -795,8 +819,19 @@ method_call ::= method_name:mn {:
                     System.exit(0);
                 }
                     :}method_call_corche_dos:mccd RIGHT_PAR {:
+                  
+                    if (parser.TABLA.Tabla_fun.get("PARAM") != null && parser.param_cont == parser.TABLA.Tabla_fun.get("PARAM").size()){
                 parser.param_cont = 0;
-                parser.TABLA.Tabla_fun.replace("PARAM", null);
+                parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                    else {
+                        if (parser.param_cont != 0){
+                        System.out.println("Faltan parámetros");
+                        System.exit(0);
+                        }
+                        else {
+                            parser.param_cont = 0;
+                            parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                        }
 
                 :};
 //----- Carlos

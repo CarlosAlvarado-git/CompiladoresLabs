@@ -2,12 +2,15 @@ class Program {
     int w[5], y; 
     boolean r;
     int s(int param, int dos)
-    {}
+    {
+        param = 10;
+        }
     boolean ew(){}
     int main(int y, int parame){
         int a;
         boolean p;
-        a = 10 + callout("s", a,"w[3]") + parame;
+        a = 10 + s(1,2) + parame;
+        p = a > 5 + 10;
         if ( parame == 10 ) {
             int nueva, nueva2;
             for parame = 1, 10 {
@@ -23,11 +26,14 @@ class Program {
            for hg = 1, 10 {}
         }
         {
-           int BLOCKE; 
+           int BLOCKE;
+           BLOCKE = callout("ew");
         }
         
         return a;
         
     }
+
+    
         
 }
