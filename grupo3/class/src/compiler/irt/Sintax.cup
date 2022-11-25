@@ -1,0 +1,1330 @@
+package compiler.irt;
+
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.HashMap;
+parser code
+{:
+    private Symbol s;
+    public String resultado="";
+    public Nodo padre;
+    public int contador = 1;
+    public void syntax_error(Symbol s){
+        //this.s = s;
+        System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna: " +(s.left)+ ". Identificador " +s.value + " no reconocido." + "el type: " + s.sym);
+    }
+    public void unrecovered_syntax_error(Symbol s){
+        System.out.println(s);
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+ 
+
+    public Semantic_fun TABLA = new Semantic_fun();
+    public int global_scope = 0;
+    public int param_cont = 0;
+    class ValoresTabla_fun{
+    public HashMap<String, String> data;
+
+    public void Adddata(HashMap<String, String> valor){
+        this.data = valor;
+    }
+}
+   
+:};
+
+terminal Int, Boolean, Callout, If, For, Else, Return, Break, Continue, True, 
+        False, Void, Class, Program, Id, Digit, Alpha, Hex_digit,
+        Decimal_literal,Hex_literal,GREATER, LESS,LESS_EQUAL,GREATER_EQUAL,
+        PLUS_EQUAL, ASSIGN, MINUS_EQUAL,EQUAL,NOT_EQUAL,AND,OR, LEFT_PAR,
+        RIGHT_PAR,Punto_coma,Mas, Menos,Multiplicacion, Division, Mod, Llave_A,
+        Llave_C,Corche_A, Corche_C, Coma, Exclamacion, ERROR,CHAR_LITERAL, STRING_LITERAL;
+
+
+non terminal INICIO, program, field_decl, method_decl, 
+                block, var_decl, type, statement,
+                assign_op, method_call, method_name, location, expr, callout_arg, bin_op,
+                arith_op, rel_op, eq_op, cond_op, literal, int_literal,bool_literal,alpha_num_asterisco,
+                field_name,method_decl_corche,method_decl_corche_coma_type,
+                var_decl_coma_id,statement_else_block,statement_expr,field_decl_coma_field,
+                method_call_corche,method_call_corche_expr,method_call_corche_dos,method_call_coma_callout;
+
+
+precedence left Multiplicacion, Division, Mod ;
+precedence left Mas, Menos;
+precedence left GREATER, LESS, LESS_EQUAL, GREATER_EQUAL,EQUAL, NOT_EQUAL;
+precedence left AND, OR;
+precedence left ASSIGN, MINUS_EQUAL, PLUS_EQUAL;
+start with INICIO;
+
+INICIO::= program:s {:
+            Nodo tmp = new Nodo("INICIO");
+            tmp.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) s);
+            parser.padre = (Nodo) tmp;
+            System.out.println("Correcto");
+            RESULT=tmp;
+        :};
+
+program ::= Class Program Llave_A field_decl:fd method_decl:md Llave_C {:
+
+            Nodo tmp = new Nodo("program");
+            Nodo class_ = new Nodo("class");
+            class_.setValor("class");
+            class_.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) class_);
+            
+            Nodo pr = new Nodo("Program");
+            pr.setValor("Program");
+            pr.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) pr);
+
+            Nodo llavea = new Nodo("Llave_A");
+            llavea.setValor("Llave_A");
+            llavea.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) llavea);
+
+            tmp.addHijo((Nodo) fd);
+            tmp.addHijo((Nodo) md);
+
+            Nodo llavec = new Nodo("Llave_C");
+            llavec.setValor("Llave_C");
+            llavec.setNumNodo(parser.contador++);
+            tmp.addHijo((Nodo) llavec);
+
+            tmp.setNumNodo(parser.contador++);
+            RESULT = tmp;
+        
+        :};
+
+field_name ::= Id:id {: 
+            
+            Nodo tmp = new Nodo("field_name_id");
+            tmp.setllamada("variable");
+            tmp.setIdentifier(id + "");
+            tmp.setValor("0");
+            tmp.setLocation(idright + 1);
+            tmp.setmemoria(1);
+            RESULT = tmp;
+            
+            :}
+            | Id:id Corche_A int_literal:il Corche_C {:
+            Nodo tmp = new Nodo("field_name_vector");
+            
+            tmp.setllamada("vector");
+            tmp.setIdentifier(id + "");
+            tmp.setValor("0");
+            tmp.setLocation(idright + 1);
+            Nodo inl = (Nodo) il;
+            try {
+                tmp.setmemoria(Integer.valueOf(inl.getValor()));
+                }
+            catch(Exception es){
+                System.out.println(es);
+                }
+            
+            RESULT = tmp;
+            :};
+
+field_decl ::= field_decl:fd type:t field_name:fn  {:
+                Nodo tmp = new Nodo("field decl");
+                Nodo field = (Nodo) fn;
+                if (parser.global_scope != 0){
+                    System.out.println("MAS DE 1 SCOPE");
+                }
+                else {
+                    System.out.println("HACER EL 1 SCOPE");
+                    System.out.println("La cree con: " + field.getIdentifier());
+                    parser.global_scope = parser.global_scope + 1;
+                    parser.TABLA.pushScope(parser.global_scope);
+                    
+                
+                }
+                
+                
+                Nodo ty = (Nodo) t;
+                parser.TABLA.BANDERAS.replace("Type", ty.getValor());
+                field.settype(ty.getValor());
+                field.setscope(parser.global_scope);
+                if (field.gettype().equals("Boolean")){ field.setValor("True");}
+                if (field.gettype().equals("Int")){ field.setmemoria(field.getmemoria() * 4);} else { field.setmemoria(field.getmemoria() * 1); }
+                int bandera = parser.TABLA.lookup_f(field, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
+                if (bandera == 2){
+                    System.out.println("La variable " + field.getIdentifier() + ", se guardará");
+                    parser.TABLA.insertSymbol(field, parser.global_scope);
+                }
+                else {
+                    System.out.println("La variable " + field.getIdentifier() + " ya existe");
+                    System.exit(0);
+                }
+                RESULT = tmp;
+
+                :} field_decl_coma_field:fdcf Punto_coma 
+             | 
+;
+
+field_decl_coma_field ::=
+            Coma field_name:fn field_decl_coma_field:fdcf {:
+                Nodo tmp = new Nodo("field_decl_coma_field");
+                
+                Nodo field = (Nodo) fn;
+                field.settype(parser.TABLA.BANDERAS.get("Type"));
+                if (field.gettype().equals("Boolean")){ field.setValor("True");}
+                if (field.gettype().equals("Int")){ field.setmemoria(field.getmemoria() * 4);} else { field.setmemoria(field.getmemoria() * 1); }
+                field.setscope(parser.global_scope);
+                int bandera = parser.TABLA.lookup_f(field, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
+                if (bandera == 2){
+                    System.out.println("DESDE LAS COMAS: La variable " + field.getIdentifier() + ", se guardará");
+                    parser.TABLA.insertSymbol(field, parser.global_scope);
+                }
+                else {
+                    System.out.println("La variable " + field.getIdentifier() + ", esta repetida");
+                    System.exit(0);
+                }
+                RESULT = tmp;
+            :}
+            |
+;
+
+method_decl ::= type:t Id:id {:
+                if (parser.global_scope != 0){
+                    System.out.println("MAS DE 1 SCOPE");
+                }
+                else {
+                    System.out.println("HACER EL 1 SCOPE");
+                    System.out.println("desde method decl ");
+                    parser.global_scope = parser.global_scope + 1;
+                    parser.TABLA.pushScope(parser.global_scope);
+                }
+                Nodo tmp = new Nodo("method_decl");
+                tmp.setllamada("Metodo");
+                Nodo ty = (Nodo) t;
+                System.out.println("El valor es: " + ty.getValor());
+                tmp.settype(ty.getValor());
+                tmp.setIdentifier(id + "");
+                if (tmp.gettype().equals("Int")){ tmp.setValor("0"); } else { tmp.setValor("True"); }
+                tmp.setLocation(idright + 1);
+                if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
+                tmp.setscope(parser.global_scope);
+                int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
+                if (bandera == 2){
+                    System.out.println("DESDE METHOD: La variable " + tmp.getIdentifier() + ", se guardará");
+                    parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                    parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
+                    parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
+                }
+                else {
+                    System.out.println("El nombre del metodo esta repetido " + tmp.getIdentifier());
+                    System.exit(0);
+                }
+                parser.global_scope = parser.global_scope + 1;
+                parser.TABLA.pushScope(parser.global_scope);
+                RESULT = tmp;
+
+
+
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md 
+                | Void Id:id {:
+
+                Nodo tmp = new Nodo("method_decl");
+                tmp.setllamada("Metodo");
+                tmp.settype("Void");
+                tmp.setIdentifier(id + "");
+                tmp.setValor(""); 
+                tmp.setLocation(idright + 1);
+                tmp.setmemoria(0);
+                tmp.setscope(parser.global_scope);
+                int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
+                if (bandera == 2){
+                    System.out.println("DESDE METHOD VOID: La variable " + tmp.getIdentifier() + ", se guardará");
+                    parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                    parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
+                    parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
+                }
+                else {
+                    System.out.println("El nombre del método esta repetido:  " + tmp.getIdentifier());
+                    System.exit(0);
+                }
+                parser.global_scope = parser.global_scope + 1;
+                parser.TABLA.pushScope(parser.global_scope);
+                RESULT = tmp;
+
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md 
+| 
+
+;
+
+method_decl_corche ::=
+        type:t Id:id  {:
+        Nodo tmp = new Nodo("method_decl_corche");
+
+        tmp.setllamada("variable");
+        Nodo ty = (Nodo) t;
+        tmp.settype(ty.getValor());
+        tmp.setIdentifier(id + "");
+        if (tmp.gettype().equals("Int")){ tmp.setValor("0"); } else { tmp.setValor("True"); }
+        tmp.setLocation(idright + 1);
+        if (tmp.gettype().equals("Int")){ tmp.setmemoria(4);} else { tmp.setmemoria(1); }
+        
+        System.out.print("El global_scope es: " + parser.global_scope);
+        System.out.print("El Funcion guardado es: " + parser.TABLA.BANDERAS.get("Funcion"));
+        tmp.setscope(parser.global_scope);
+        tmp.setfuncion(parser.TABLA.BANDERAS.get("Funcion"));
+        
+
+        System.out.println("DESDE variables del metodo: La variable " + tmp.getIdentifier() + ", se guardará");
+        parser.TABLA.insertSymbol_m(tmp);
+        
+        RESULT = tmp;
+        :} method_decl_corche_coma_type:mdcct 
+        |
+;
+
+method_decl_corche_coma_type ::=
+    Coma type:t Id:id method_decl_corche_coma_type:mdcct {:
+        Nodo tmp = new Nodo("method_decl_corche_coma_type");
+
+        tmp.setllamada("variable");
+        Nodo ty = (Nodo) t;
+        tmp.settype(ty.getValor());
+        tmp.setIdentifier(id + "");
+        if (tmp.gettype().equals("Int")) 
+        { 
+            tmp.setValor("0"); 
+        } 
+        else 
+        { 
+            tmp.setValor("True"); 
+        }
+        tmp.setLocation(idright + 1);
+        if (tmp.gettype().equals("Int")){ tmp.setmemoria(4); } else { tmp.setmemoria(1); }
+        
+        tmp.setscope(parser.global_scope);
+        tmp.setfuncion(parser.TABLA.BANDERAS.get("Funcion"));
+        
+
+        System.out.println("DESDE variables del metodo el resto: La variable" + tmp.getIdentifier() + ", se guardará");
+        parser.TABLA.insertSymbol_m(tmp);
+        RESULT = tmp;
+    :}|
+;
+
+block ::= Llave_A var_decl:vd statement:stm Llave_C {:
+        Nodo tmp = new Nodo("block");
+        
+
+
+
+        // ultimo
+        
+        parser.TABLA.popScope(parser.global_scope);
+        parser.global_scope = parser.global_scope - 1;
+        RESULT = tmp;
+        :};
+
+var_decl ::= type:t Id:id {:
+            Nodo tmp = new Nodo("var decl");                
+            Nodo ty = (Nodo) t;
+            tmp.setllamada("variable");
+            parser.TABLA.BANDERAS.replace("Type", ty.getValor());
+            tmp.settype(ty.getValor());
+            tmp.setIdentifier(id + "");
+            tmp.setscope(parser.global_scope);
+            tmp.setValor("0");
+            if (tmp.gettype().equals("Boolean")){ tmp.setValor("True");} else {tmp.setValor("0");}
+            if (tmp.gettype().equals("Boolean")){ tmp.setmemoria(1);} else {tmp.setmemoria(4);}
+            tmp.setLocation(idright + 1);
+            int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+            System.out.println("La bandera trae: " + bandera);
+            if (bandera == 2){
+                System.out.println("La variable " + tmp.getIdentifier() + ", se guardará");
+                parser.TABLA.insertSymbol(tmp, parser.global_scope);
+            }
+            else {
+                System.out.println("La variable " + tmp.getIdentifier() + ",está repetida");
+                System.exit(0);
+            }
+            RESULT = tmp;
+    
+    
+    :} var_decl_coma_id:vdci Punto_coma var_decl:vd | ;
+
+var_decl_coma_id ::=
+            Coma Id:id var_decl_coma_id:vdci {:
+                Nodo tmp = new Nodo("var_decl_coma_id");
+                tmp.setllamada("variable");
+                tmp.settype(parser.TABLA.BANDERAS.get("Type"));
+                if (tmp.gettype().equals("Boolean")){ tmp.setValor("True");} else {tmp.setValor("0");}
+                if (tmp.gettype().equals("Boolean")){ tmp.setmemoria(1);} else {tmp.setmemoria(4);}
+                
+                tmp.setIdentifier(id + "");
+                tmp.setLocation(idright + 1);
+                tmp.setscope(parser.global_scope);
+                tmp.setValor("0");
+                int bandera = parser.TABLA.lookup_f(tmp, parser.global_scope);
+                System.out.println("La bandera trae: " + bandera);
+                if (bandera == 2){
+                    System.out.println("DESDE LAS COMAS var_decl: La variable " + tmp.getIdentifier() + ", se guardará");
+                    parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                }
+                else {
+                    System.out.println("La variable " + tmp.getIdentifier() + ", esta repetida");
+                    System.exit(0);
+                }
+                RESULT = tmp;
+            :}|
+;
+
+type ::= Int {:
+        Nodo tmp = new Nodo("type");
+        tmp.setValor("Int");
+        RESULT = tmp;
+
+        :} | Boolean {:
+        Nodo tmp = new Nodo("type");
+        tmp.setValor("Boolean");
+        RESULT = tmp;
+        
+        :};
+
+statement ::= location:l assign_op:asop expr:ex Punto_coma {:
+                Nodo tmp = new Nodo("statement");
+                
+                Nodo loc = (Nodo) l;
+                Nodo e = (Nodo) ex;
+                Nodo asig = (Nodo) asop;
+                if (asig.getValor().equals("ASSIGN"))
+                {
+                    // buscar el id en la tabla
+                    //System.out.println("El type de loc es: " + loc.gettype());
+                    //System.out.println("El type de e es: " + e.gettype());
+                    int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
+                    if (bandera[0] == 1) {
+                        loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                        if (loc.gettype().equals(e.gettype())){
+                            System.out.println("Asignacion correcta");
+                       }
+                       else {
+                            System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                            System.exit(0);
+                        }
+                    }
+                    else {
+                        bandera = parser.TABLA.lookup_param(loc);
+                        if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                            loc.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                            if (loc.gettype().equals(e.gettype())){
+                                System.out.println("Asignacion correcta");
+                           }
+                           else {
+                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.exit(0);
+                            }
+                        }else {
+                        System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                        System.exit(0);
+                        }
+                    }
+                }
+                else if (asig.getValor().equals("PLUS_EQUAL")) 
+                {
+                    int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
+                    if (bandera[0] == 1) {
+                        loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                        if (loc.gettype().equals("Int")){
+                            if (loc.gettype().equals(e.gettype())){
+                                System.out.println("Asignacion correcta");
+                           }
+                           else {
+                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.exit(0);
+                            }
+                        }
+                        else {
+                            System.out.println("No se puede realizar la operacion += con booleanos");
+                            System.exit(0);
+                        }
+
+                    }
+                    else {
+                            bandera = parser.TABLA.lookup_param(loc);
+                            if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                                loc.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                                if (loc.gettype().equals(e.gettype())){
+                                    System.out.println("Asignacion correcta");
+                               }
+                               else {
+                                    System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                    System.exit(0);
+                                }
+                            }else {
+                            System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                            System.exit(0);
+                        }
+                    }
+                }
+                else {
+                    int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
+                    if (bandera[0] == 1) {
+                        loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                        if (loc.gettype().equals("Int")){
+                            if (loc.gettype().equals(e.gettype())){
+                                System.out.println("Asignacion correcta");
+                           }
+                           else {
+                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.exit(0);
+                            }
+                        }
+                        else {
+                            System.out.println("No se puede realizar la operacion -= con booleanos");
+                            System.exit(0);
+                        }
+
+                    }
+                    else {
+                        bandera = parser.TABLA.lookup_param(loc);
+                            if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                                loc.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                                if (loc.gettype().equals(e.gettype())){
+                                    System.out.println("Asignacion correcta");
+                               }
+                               else {
+                                    System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                    System.exit(0);
+                                }
+                            }else {
+                            System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                            System.exit(0);
+                    }
+                    }
+                }
+                
+                RESULT = tmp;
+                :} statement:stm
+        | method_call:mc Punto_coma  {:
+                Nodo tmp = new Nodo("statement");
+                System.out.println("SE LLAMO A UN Metodo");
+                RESULT = tmp;
+                
+                :} statement:stm
+        | If LEFT_PAR expr:ex RIGHT_PAR {: 
+            Nodo tmp = new Nodo("statement");
+                Nodo expr_r = (Nodo) ex;
+                if (expr_r.gettype().equals("Int")){
+                    System.out.println("El resultado de expr no es boolean");
+                    System.exit(0);
+                }
+                parser.global_scope = parser.global_scope + 1;
+                parser.TABLA.pushScope(parser.global_scope);
+                RESULT = tmp;
+                
+
+             :} block:b statement_else_block:seb statement:stm 
+        | For Id:id ASSIGN expr:ex Coma expr:ex2   {:
+                Nodo tmp = new Nodo("statement");
+                Nodo e = (Nodo) ex;
+                Nodo e2 = (Nodo) ex2;
+                tmp.setIdentifier("" + id);
+                int [] bandera = parser.TABLA.lookup(tmp, parser.global_scope);
+                if (bandera[0] == 1) {  
+                    // se crea nuevo scope
+                    tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                    
+                    if (tmp.gettype().equals(e.gettype())){
+                        parser.global_scope = parser.global_scope + 1;
+                        parser.TABLA.pushScope(parser.global_scope);
+                        
+                        if(e2.gettype().equals("Int")){
+                            System.out.println("Asignacion correcta");
+                            parser.TABLA.BANDERAS.replace("For", "Si");
+                        }
+                        else
+                        {
+                        System.out.println("La variable del loop debe ser integer");
+                        System.exit(0);
+                            }
+                   }
+                   else {
+                        System.out.println("La variable " + tmp.getIdentifier() + "no es del mismo type del valor asignado");
+                        System.exit(0);
+                    }
+                }
+                else 
+                {   
+                    bandera = parser.TABLA.lookup_param(tmp);
+                    if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                        tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                        if (tmp.gettype().equals(e.gettype())){
+                            parser.global_scope = parser.global_scope + 1;
+                            parser.TABLA.pushScope(parser.global_scope);
+                            
+                            
+                            if(e2.gettype().equals("Int")){
+                                System.out.println("Asignacion correcta");
+                                parser.TABLA.BANDERAS.replace("For", "Si");
+                            }
+                            else
+                            {
+                                System.out.println("La variable del loop debe ser integer");
+                                System.exit(0);
+                            }
+                       }
+                       else {
+                            System.out.println("La variable " + tmp.getIdentifier() + "no es del mismo type del valor asignado");
+                            System.exit(0);
+                        }
+                    }else {
+                            //  genera nuevo scope y entra la variable
+                            parser.global_scope = parser.global_scope + 1;
+                            parser.TABLA.pushScope(parser.global_scope);
+
+                            Nodo nueva = new Nodo("id");
+                            nueva.setllamada("variable");
+                            nueva.setIdentifier(id + "");
+                            nueva.settype("Int");
+                            nueva.setValor("0");
+                            nueva.setLocation(idright + 1);
+                            nueva.setmemoria(4);
+                            nueva.setscope(parser.global_scope);
+
+                            parser.TABLA.insertSymbol(nueva, parser.global_scope);
+                            if (nueva.gettype().equals(e.gettype())){
+                                if(e2.gettype().equals("Int")){
+                                    System.out.println("Asignacion correcta");
+                                    parser.TABLA.BANDERAS.replace("For", "Si");
+                                }
+                                else
+                                {
+                                System.out.println("La variable del loop debe ser integer");
+                                System.exit(0);
+                                    }
+                           }
+                           else {
+                                System.out.println("La variable " + nueva.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.exit(0);
+                            }
+                    }
+                }
+                
+                RESULT = tmp;
+
+                :} block:b statement:stm
+        | Return statement_expr:stmex Punto_coma  {:
+                Nodo tmp = new Nodo("statement");
+                
+                Nodo stmex_x = (Nodo) stmex;
+                if (parser.TABLA.BANDERAS.get("Funcion_type").equals(stmex_x.gettype())){
+                    System.out.println("Return correcto");
+                }
+                else {
+                    System.out.println("El valor de retorno no es del mismo type de la funcion: " + parser.TABLA.BANDERAS.get("Funcion_type") + " != " + stmex_x.gettype());
+                    System.exit(0);
+                }
+
+                RESULT = tmp;
+                :} statement:stm
+        | Break Punto_coma  {:
+                Nodo tmp = new Nodo("statement");
+                
+                if (parser.TABLA.BANDERAS.get("For").equals("Si")){
+                    System.out.println("Break correcto");
+                    parser.TABLA.BANDERAS.replace("For", "");
+                }
+                else {
+                    System.out.println("No puede usar break si no se está dentro de un For");
+                    System.exit(0);
+                }
+                RESULT = tmp;
+                
+                :} statement:stm
+        | Continue Punto_coma  {:
+                Nodo tmp = new Nodo("statement");
+                
+                if (parser.TABLA.BANDERAS.get("For").equals("Si")){
+                    System.out.println("Continue correcto");
+                    parser.TABLA.BANDERAS.replace("For", "");
+                }
+                else {
+                    System.out.println("No puede usar Continue si no se está dentro de un For");
+                    System.exit(0);
+                }
+                RESULT = tmp;
+                :} statement:stm
+        | {:
+                Nodo tmp = new Nodo("statement");
+                parser.global_scope = parser.global_scope + 1;
+                parser.TABLA.pushScope(parser.global_scope);
+                RESULT = tmp;
+
+                :}  block:b statement:stm 
+        |;
+
+statement_else_block ::=
+    Else  {:
+        parser.global_scope = parser.global_scope + 1;
+        parser.TABLA.pushScope(parser.global_scope);
+    
+        :} block:b|
+;
+
+statement_expr ::= expr:ex {:
+        Nodo tmp = new Nodo("statement_expr");
+        Nodo e = (Nodo) ex;
+        tmp.settype(e.gettype());        
+        RESULT = tmp;
+        
+        :}|
+;
+
+assign_op ::= ASSIGN {:
+                Nodo tmp = new Nodo("assign_op");
+                Nodo assing  = new Nodo("ASSIGN");
+                assing.setValor("ASSIGN");
+                tmp.setValor("ASSIGN");
+                assing.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) assing); 
+                tmp.setNumNodo(parser.contador++);
+                RESULT = tmp;
+                :}
+          | PLUS_EQUAL {:
+                Nodo tmp = new Nodo("assign_op");
+                Nodo pl_e  = new Nodo("PLUS_EQUAL");
+                pl_e.setValor("PLUS_EQUAL");
+                tmp.setValor("PLUS_EQUAL");
+                pl_e.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) pl_e); 
+
+                tmp.setNumNodo(parser.contador++);
+                RESULT = tmp;
+                :}
+          | MINUS_EQUAL {:
+                Nodo tmp = new Nodo("assign_op");
+                Nodo mn_e  = new Nodo("MINUS_EQUAL");
+                mn_e.setValor("MINUS_EQUAL");
+                tmp.setValor("MINUS_EQUAL");
+                mn_e.setNumNodo(parser.contador++);
+                tmp.addHijo((Nodo) mn_e); 
+
+                tmp.setNumNodo(parser.contador++);
+                RESULT = tmp;
+                
+                :};
+
+method_call ::= method_name:mn {:
+                Nodo mtodo = (Nodo) mn;
+                
+                int [] bandera = parser.TABLA.lookup(mtodo, parser.global_scope);
+                if (bandera[0] == 1 && bandera[2] == 1) {  
+                    // ver si la hash contiene con values, Metodo. 
+                    if (parser.TABLA.Tabla.get("Scope: " + 1).get(bandera[1]).data.containsValue("Metodo")){
+                        System.out.println("Funcion " + mtodo.getIdentifier() + " llamada");
+                        parser.TABLA.BANDERAS.replace("Llamada_fun", mtodo.getIdentifier());
+                        for (int x = 0; x < parser.TABLA.Tabla_m.get("DATA").size(); x++) {
+                            for (String y : parser.TABLA.Tabla_m.get("DATA").get(x).data.keySet()) {
+                                if (y.equals("Funcion") && parser.TABLA.Tabla_m.get("DATA").get(x).data.get(y).equals(mtodo.getIdentifier())){   
+                                        if (parser.TABLA.Tabla_fun.get("PARAM") == null){
+                                                parser.TABLA.BANDERAS.replace("Llamada_fun_type", parser.TABLA.Tabla_m.get("DATA").get(x).data.get("type"));
+                                                System.out.println("LA DE PARAM ESTA VACIA");
+                                                ValoresTabla_fun data = parser.TABLA.Tabla_m.get("DATA").get(x);
+                                                ArrayList<ValoresTabla_fun> lista = new ArrayList<>();
+                                                lista.add(data);
+                                                parser.TABLA.Tabla_fun.replace("PARAM", lista);
+                                        }
+                                        else{
+                                            System.out.println("Ya hay en PARAM, SOLO AGREGO");
+                                            ValoresTabla_fun data = parser.TABLA.Tabla_m.get("DATA").get(x);
+                                            parser.TABLA.Tabla_fun.get("PARAM").add(data);
+                                        }
+                                }
+
+                            }
+                        }
+                         
+                    }
+                    else {
+                        System.out.println("No existe el metodo " + mtodo.getIdentifier());
+                        System.exit(0);
+                        }
+                }
+                else {
+                    System.out.println("No existe el metodo " + mtodo.getIdentifier());
+                    System.exit(0);
+                }
+        
+        :} LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
+                if (parser.TABLA.Tabla_fun.get("PARAM") != null && parser.param_cont == parser.TABLA.Tabla_fun.get("PARAM").size()){
+                parser.param_cont = 0;
+                parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                    else {
+                        if (parser.param_cont != 0){
+                        System.out.println("Faltan parámetros");
+                        System.exit(0);}
+                        else {
+                            parser.param_cont = 0;
+                            parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                        }
+
+                    
+
+            :}
+        |Callout LEFT_PAR STRING_LITERAL:Sl {:
+                Nodo fun = new Nodo("");
+                fun.setIdentifier("" + Sl);
+                String valor = fun.getIdentifier();
+                valor = valor.substring(1,valor.length()-1);
+                fun.setIdentifier(valor);
+                parser.TABLA.BANDERAS.replace("Llamada_callout", "Si");
+                System.out.println("Cambie la bandera: " + parser.TABLA.BANDERAS.get("Llamada_callout"));
+                int [] bandera = parser.TABLA.lookup(fun, parser.global_scope);
+                if (bandera[0] == 1 && bandera[2] == 1) {
+                    if (parser.TABLA.Tabla.get("Scope: " + 1).get(bandera[1]).data.containsValue("Metodo")){
+                        System.out.println("Funcion " + fun.getIdentifier() + " llamada por callout");
+                        parser.TABLA.BANDERAS.replace("Llamada_fun", fun.getIdentifier());
+                        for (int x = 0; x < parser.TABLA.Tabla_m.get("DATA").size(); x++) {
+                            for (String y : parser.TABLA.Tabla_m.get("DATA").get(x).data.keySet()) {
+                                if (y.equals("Funcion") && parser.TABLA.Tabla_m.get("DATA").get(x).data.get(y).equals(fun.getIdentifier())){  
+                                    if (parser.TABLA.Tabla_fun.get("PARAM") == null){
+                                        parser.TABLA.BANDERAS.replace("Llamada_fun_type", parser.TABLA.Tabla_m.get("DATA").get(x).data.get("type"));
+                                        System.out.println("LA DE PARAM ESTA VACIA");
+                                        ValoresTabla_fun data = parser.TABLA.Tabla_m.get("DATA").get(x);
+                                        ArrayList<ValoresTabla_fun> lista = new ArrayList<>();
+                                        lista.add(data);
+                                        parser.TABLA.Tabla_fun.replace("PARAM", lista);
+                                    }
+                                    else{
+                                        System.out.println("Ya hay en PARAM, SOLO AGREGO");
+                                        ValoresTabla_fun data = parser.TABLA.Tabla_m.get("DATA").get(x);
+                                        parser.TABLA.Tabla_fun.get("PARAM").add(data);
+                                    }
+                                }
+
+                            }
+                        }
+                         
+                    }
+                    else {
+                        System.out.println("No existe el metodo " + fun.getIdentifier());
+                        System.exit(0);
+                        }
+                }
+                else {
+                    System.out.println("No existe el metodo " + fun.getIdentifier());
+                    System.exit(0);
+                }
+                    :}method_call_corche_dos:mccd RIGHT_PAR {:
+                  
+                    if (parser.TABLA.Tabla_fun.get("PARAM") != null && parser.param_cont == parser.TABLA.Tabla_fun.get("PARAM").size()){
+                parser.param_cont = 0;
+                parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                    else {
+                        if (parser.param_cont != 0){
+                        System.out.println("Faltan parámetros");
+                        System.exit(0);
+                        }
+                        else {
+                            parser.param_cont = 0;
+                            parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                        }
+
+                :};
+//----- Carlos
+method_call_corche ::= expr:ex {:
+                Nodo tmp = new Nodo("method_call_corche");
+                
+                Nodo expr_x = (Nodo) ex;
+                if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(expr_x.gettype())) {
+                    System.out.println("Primer parámetro bueno");
+                    parser.param_cont = parser.param_cont + 1;
+                } else {
+                    System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type") + ", no puede ser: " + expr_x.gettype());
+                    System.exit(0);
+                }
+                
+                RESULT = tmp;
+            :} method_call_corche_expr:mcce  
+        | {: 
+                if(parser.TABLA.Tabla_fun.get("PARAM") == null) {System.out.println("Todo bien");}
+                else {
+                    System.out.println("La funcion requiere paramtros");
+                    System.exit(0);
+                }
+        
+            :}
+;
+
+method_call_corche_expr ::=
+        Coma expr:ex {:
+                Nodo tmp = new Nodo("method_call_corche_expr");
+                Nodo expr_x = (Nodo) ex;
+                if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(expr_x.gettype())) {
+                    System.out.println("Parámetro bueno");
+                    parser.param_cont = parser.param_cont + 1;
+                } else {
+                    System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(0).data.get("type") + ", no puede ser: " + expr_x.gettype());
+                    System.exit(0);
+                }
+                
+                RESULT = tmp;
+        :} method_call_corche_expr:mcce|
+;
+
+method_call_corche_dos ::=
+        Coma callout_arg:ca {:
+            
+        Nodo tmp = new Nodo("call_corche_primero");
+                
+                Nodo callout_arg_x = (Nodo) ca;
+                if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(callout_arg_x.gettype())) {
+                    System.out.println("Primer parámetro bueno");
+                    parser.param_cont = parser.param_cont + 1;
+                } else {
+                    System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type") + ", no puede ser: " + callout_arg_x.gettype());
+                    System.exit(0);
+                }
+                
+                RESULT = tmp;
+            
+    :}method_call_coma_callout:mccc 
+    | {: if(parser.TABLA.Tabla_fun.get("PARAM") == null) {System.out.println("Todo bien");}
+                else {
+                    System.out.println("La funcion requiere paramtros");
+                    System.exit(0);
+                } :}
+;
+
+method_call_coma_callout ::=
+        Coma callout_arg:ca  {:
+                Nodo tmp = new Nodo("method_call_coma_callout");
+
+                Nodo callout_arg_x = (Nodo) ca;
+                if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(callout_arg_x.gettype())) {
+                    System.out.println("Parámetro bueno");
+                    parser.param_cont = parser.param_cont + 1;
+                } else {
+                    System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(0).data.get("type") + ", no puede ser: " + callout_arg_x.gettype());
+                    System.exit(0);
+                }
+                
+
+
+                RESULT = tmp;
+        :}method_call_coma_callout:mccc |
+;
+
+method_name ::= Id:id {:
+        Nodo tmp = new Nodo("method_name");
+
+
+        tmp.setIdentifier(id + "");
+        System.out.println("ENTRE A LOCATION ::= Id");
+        
+        RESULT = tmp;
+:};
+
+location ::= Id:id {:
+        Nodo tmp = new Nodo("location");
+
+
+        tmp.setIdentifier(id + "");
+        System.out.println("ENTRE A LOCATION ::= Id");
+        
+        RESULT = tmp;
+        :}
+        | Id:id Corche_A expr:ex Corche_C {:
+        Nodo tmp = new Nodo("location");
+
+
+        tmp.setIdentifier(id + "");
+        System.out.println("ENTRE A LOCATION ::= Id[num]");
+        
+        RESULT = tmp;
+
+        :};
+
+expr ::= location:l{:
+        Nodo tmp = new Nodo("expr");
+
+        // buscar el id del location
+        // guardar su valor en tmp.setValor();
+        Nodo loc = (Nodo) l;
+        int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
+        if (bandera[0] == 1) {
+           tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+        }
+        else {
+            bandera = parser.TABLA.lookup_param(loc);
+            if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                
+            }else {
+            System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+            System.exit(0);
+            }
+        }
+        RESULT = tmp;
+        :}
+        | method_call:mc{:
+        Nodo tmp = new Nodo("expr");
+        if (parser.TABLA.BANDERAS.get("Llamada_callout").equals("Si")){
+            System.out.println("Cambie la bandera: " + parser.TABLA.BANDERAS.get("Llamada_callout"));
+            tmp.settype("Int");
+            parser.TABLA.BANDERAS.replace("Llamada_callout", "");
+        }
+        else {
+            tmp.settype(parser.TABLA.BANDERAS.get("Llamada_fun_type"));
+        }
+        RESULT = tmp;
+        :}
+        | literal:lit{:
+        Nodo tmp = new Nodo("expr");
+
+        tmp.addHijo((Nodo) lit);
+        Nodo liter = (Nodo) lit;
+        tmp.settype(liter.gettype());
+        
+        RESULT = tmp;
+        :}
+        | expr:ex bin_op:bo expr:ex2{:
+        Nodo tmp = new Nodo("expr");
+
+        Nodo expr1 = (Nodo) ex;
+        Nodo bin_op_ = (Nodo) bo;
+        Nodo expr2 = (Nodo) ex2;
+
+
+        if (bin_op_.getNombre().equals("arith_op") || bin_op_.getNombre().equals("rel_op") )
+        {
+            if(expr1.gettype().equals("Int")){
+                if (expr1.gettype().equals(expr2.gettype())){
+                switch(bin_op_.getValor()) {
+                    case "Mas":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "Menos":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "Multi":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "Div":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "Mod":
+                            tmp.settype(expr1.gettype());
+                        break;
+                    case "GREATER":
+                            tmp.settype("Boolean"); 
+                        break;
+                    case "LESS":
+                            tmp.settype("Boolean"); 
+                        break;
+                    case "LESS_EQUAL":
+                            tmp.settype("Boolean"); 
+                        break;
+                    case "GREATER_EQUAL":
+                            tmp.settype("Boolean"); 
+                        break;
+                    default:
+                        System.out.println("No entro nada");
+                
+                    }
+                }
+                else {
+                    System.out.println("Operación de distinto tipo");
+                    System.exit(0);
+                }
+
+            }
+            else {
+                System.out.println("No se pueden operar las variables booleanas con este signo: " + bin_op_.getValor());
+                System.exit(0);
+                }
+    
+        }else{
+            if(expr1.gettype().equals(expr2.gettype())){
+                tmp.settype("Boolean");
+                }
+            else{
+                System.out.println("Operación de variables de distintos tipos");
+                System.exit(0);
+            }
+        }
+        
+        RESULT = tmp;
+        :}
+        | Menos expr:ex{:
+        Nodo tmp = new Nodo("expr");
+        Nodo expr1 = (Nodo) ex;
+        if (expr1.gettype().equals("Int")){
+            tmp.settype("Int");
+        }
+        else {
+            System.out.println("No se puede usar el - menos con booleanos");
+            System.exit(0);
+        }
+        RESULT = tmp;
+        :}
+        | Exclamacion expr:ex{:
+       Nodo tmp = new Nodo("expr");
+        Nodo expr1 = (Nodo) ex;
+        if (expr1.gettype().equals("Boolean")){
+            tmp.settype("Boolean");
+        }
+        else {
+            System.out.println("No se puede usar el signo ! con integers");
+            System.exit(0);
+        }
+        RESULT = tmp;
+        :}
+        | LEFT_PAR expr:ex RIGHT_PAR{:
+        Nodo tmp = (Nodo) ex;
+
+        
+        RESULT = tmp;
+        :};
+
+
+
+callout_arg ::= expr:ex {:
+        Nodo tmp = new Nodo("callout_arg");
+        Nodo expr_x = (Nodo) ex;
+        tmp.settype(expr_x.gettype());
+        
+        RESULT = tmp;
+        :}
+        | STRING_LITERAL:Sl {:
+        Nodo tmp = new Nodo("callout_arg");
+        Nodo strl   = new Nodo("STRING_LITERAL");
+        strl.setValor("" + Sl);
+        String valor = strl.getValor();
+        valor = valor.substring(1,valor.length()-1);
+        strl.setValor(valor);
+        try{
+            int entero = Integer.valueOf(strl.getValor());
+            tmp.settype("Int");
+            
+        }catch (Exception es){
+            strl.setIdentifier(valor);
+            if (strl.getIdentifier().equals("true") || strl.getIdentifier().equals("false")){
+                tmp.settype("Boolean");
+            }else {
+                int esta = valor.indexOf("[");
+                if(esta != -1){
+                    valor = valor.substring(0,esta);
+                    strl.setIdentifier(valor);
+                    System.out.println("El identi del strl es: " + strl.getIdentifier());
+                    int [] bandera = parser.TABLA.lookup(strl, parser.global_scope);
+                    if (bandera[0] == 1) {
+                       tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                    }
+                    else {
+                        bandera = parser.TABLA.lookup_param(strl);
+                        if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                            tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+
+                        }else {
+                        System.out.println("La variable " + strl.getIdentifier() + ",no existe");
+                        System.exit(0);
+                        }
+                    }
+                    
+                }else {
+                    strl.setIdentifier(valor);
+                    System.out.println("El identi del strl es: " + strl.getIdentifier());
+                    int [] bandera = parser.TABLA.lookup(strl, parser.global_scope);
+                    if (bandera[0] == 1) {
+                       tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                    }
+                    else {
+                        bandera = parser.TABLA.lookup_param(strl);
+                        if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
+                            tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+
+                        }else {
+                        System.out.println("La variable " + strl.getIdentifier() + ",no existe");
+                        System.exit(0);
+                        }
+                    }
+                }   
+            }
+        }
+        RESULT = tmp;
+        :};
+
+bin_op ::= arith_op:ao {:
+        Nodo tmp = new Nodo("arith_op");
+        Nodo aov = (Nodo) ao;
+        tmp.setValor(aov.getValor());
+        RESULT = tmp;
+        :}
+        | rel_op:ro{:
+        Nodo tmp = new Nodo("rel_op");
+        Nodo rov = (Nodo) ro;
+        tmp.setValor(rov.getValor());
+        RESULT = tmp;
+        :}
+        | eq_op:eo{:
+        Nodo tmp = new Nodo("eq_op");
+        Nodo eov = (Nodo) eo;
+        tmp.setValor(eov.getValor());
+        RESULT = tmp;
+        :}
+        | cond_op:co{:
+        Nodo tmp = new Nodo("cond_op");
+        Nodo cov = (Nodo) co;
+        tmp.setValor(cov.getValor());
+        RESULT = tmp;
+        :};
+
+arith_op ::= Mas {:
+        Nodo tmp = new Nodo("Mas");
+        tmp.setValor("Mas");
+        RESULT = tmp;
+        :}
+        | Menos{:
+        Nodo tmp = new Nodo("Menos");
+        tmp.setValor("Menos");
+        RESULT = tmp;
+        :} 
+        | Multiplicacion {:
+        Nodo tmp = new Nodo("Multi");
+        tmp.setValor("Multi");
+        RESULT = tmp;
+        :}
+        | Division{:
+        Nodo tmp = new Nodo("Div");
+        tmp.setValor("Div");
+        RESULT = tmp;
+        :} 
+        | Mod{:
+        Nodo tmp = new Nodo("Mod");
+        tmp.setValor("Mod");
+        RESULT = tmp;
+        :} ;
+
+//----- Mario 
+
+rel_op ::= GREATER {:
+        Nodo tmp = new Nodo("GREATER");
+        tmp.setValor("GREATER");
+        RESULT = tmp;
+
+    :} 
+| LESS {:
+    Nodo tmp = new Nodo("LESS");
+        tmp.setValor("LESS");
+        RESULT = tmp;
+
+:} 
+| LESS_EQUAL {:
+    Nodo tmp = new Nodo("LESS_EQUAL");
+        tmp.setValor("LESS_EQUAL");
+        RESULT = tmp;
+
+:} 
+| GREATER_EQUAL {:
+    Nodo tmp = new Nodo("GREATER_EQUAL");
+        tmp.setValor("GREATER_EQUAL");
+        RESULT = tmp;
+
+:} ;
+
+eq_op ::= EQUAL {:
+    Nodo tmp = new Nodo("EQUAL");
+        tmp.setValor("EQUAL");
+        RESULT = tmp;
+
+:} 
+| NOT_EQUAL {:
+    Nodo tmp = new Nodo("NOT_EQUAL");
+        tmp.setValor("NOT_EQUAL");
+        RESULT = tmp;
+
+:} ;
+
+cond_op ::= AND {:
+    Nodo tmp = new Nodo("AND");
+        tmp.setValor("AND");
+        RESULT = tmp;
+
+:} 
+| OR {:
+    Nodo tmp = new Nodo("OR");
+        tmp.setValor("OR");
+        RESULT = tmp;
+
+:} ;
+
+literal ::= int_literal:il {:
+    Nodo tmp = new Nodo("literal");
+    Nodo inl = (Nodo) il;
+    tmp.setValor( inl.getValor());
+    tmp.settype( inl.gettype());
+    
+    RESULT = tmp;
+
+:} 
+| CHAR_LITERAL:cl {:
+    Nodo tmp = new Nodo("literal");
+    Nodo chl = (Nodo) cl;
+    tmp.setValor( chl.getValor());
+    tmp.settype( chl.gettype());
+    
+    RESULT = tmp;
+
+:} 
+| bool_literal:bl {:
+    Nodo tmp = new Nodo("literal");
+    Nodo bool = (Nodo) bl;
+    tmp.setValor( bool.getValor());
+    tmp.settype( bool.gettype());
+    
+    RESULT = tmp;
+
+:} ;
+
+
+int_literal ::= Decimal_literal:dl {:
+    Nodo tmp = new Nodo("int_literal");
+    tmp.setValor("" + dl);
+    tmp.settype("Int");
+    RESULT = tmp;
+
+:} 
+| Hex_literal: hexl {:
+    Nodo tmp = new Nodo("Hex_literal");
+    // convertirlo. 
+    tmp.setValor("" + hexl);
+    tmp.settype("Int");
+    RESULT = tmp;
+
+:}| Digit:dig {:
+    Nodo tmp = new Nodo("Digit");
+    tmp.setValor("" + dig);
+    tmp.settype("Int");
+    RESULT = tmp;
+
+:};
+
+
+bool_literal ::= True {:
+    Nodo tmp = new Nodo("bool_literal");
+    tmp.setValor("true");
+    tmp.settype("Boolean");
+    RESULT = tmp;
+
+:}  
+| False {:
+    Nodo tmp = new Nodo("bool_literal");
+    tmp.setValor("false");
+    tmp.settype("Boolean");
+    RESULT = tmp;
+
+:} ;
