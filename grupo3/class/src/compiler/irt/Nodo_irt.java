@@ -97,7 +97,8 @@ class Asignacion{
            return resultado; 
         }
 }
-class condiciones{}
+class condicion_if{}
+class condicion_for{}
 class IF_nodo{
     private ArrayList<Nodo_irt> parte_true = new ArrayList<>();
     private ArrayList<Nodo_irt> parte_false = new ArrayList<>();
@@ -117,6 +118,23 @@ class IF_nodo{
     // agregar a parte false
     public void addFalse(Nodo_irt nuevo){
         this.parte_false.add(nuevo);
+        }
+    
+}
+class FOR_nodo{
+    private ArrayList<Nodo_irt> parte_true = new ArrayList<>();
+    private Nodo_irt condicione;
+    public FOR_nodo(){
+        
+    
+        }
+    // funcion que recibe condicion.
+    public void getCondicion(Nodo_irt con){
+        this.condicione = con;
+        }
+    // agregar a parte true
+    public void addTrue(Nodo_irt nuevo){
+        this.parte_true.add(nuevo);
         }
     
 }
