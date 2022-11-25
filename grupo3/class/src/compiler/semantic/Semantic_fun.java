@@ -27,6 +27,7 @@ public class Semantic_fun {
             BANDERAS.put("For", ""); 
             BANDERAS.put("Llamada_fun", "");
             BANDERAS.put("Llamada_fun_type", "");
+            BANDERAS.put("Llamada_callout", "");
             Tabla_m.put("DATA", null);
             Tabla_fun.put("PARAM", null);
             //for (int x = 0; x < Tabla.get("Scope: " + parser.global_scope).size(); x++)
@@ -185,6 +186,31 @@ public class Semantic_fun {
             }
             scope = scope - 1;
             
+        }
+        return resultado_r;
+    } 
+    public int[] lookup_param(Nodo symbol){
+        // 1 lo encontro.
+        // 2 no lo ha encontrado.
+        int [] resultado_r = new int[3];
+        resultado_r[0] = 2;
+        resultado_r[1] = 0; 
+        if (Tabla_m.get("DATA") != null){
+            for (int x = 0; x < Tabla_m.get("DATA").size(); x++) {
+                System.out.println("Entre");
+                for (String y : Tabla_m.get("DATA").get(x).data.keySet()) {
+                     System.out.println( "   "+y + ": " + Tabla_m.get("DATA").get(x).data.get(y));
+                 }
+                System.out.println("Soy: " + symbol.getIdentifier());
+
+                if (Tabla_m.get("DATA").get(x).data.containsValue(symbol.getIdentifier())){
+                    System.out.println("Si existe, " + symbol.getIdentifier());
+                    resultado_r[0] = 1;
+                    resultado_r[1] = x; 
+                    return resultado_r;
+
+                }
+            }
         }
         return resultado_r;
     } 

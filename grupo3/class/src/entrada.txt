@@ -4,11 +4,10 @@ class Program {
     int s(int param)
     {}
     boolean ew(){}
-    int main(int y){
+    int main(int y, int parame){
         int a;
         boolean p;
-        a = 10 + s(1);
-        p = a < ew();
+        a = 10 + callout("ew") + parame;
         if ( a == 10 ) {
             int nueva, nueva2;
             for hg = 1, 10 {
