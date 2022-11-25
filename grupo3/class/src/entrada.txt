@@ -1,5 +1,5 @@
 class Program {
-    int w[5], y;
+    int w[5], y; 
     boolean r;
     int s(int param)
     {}
