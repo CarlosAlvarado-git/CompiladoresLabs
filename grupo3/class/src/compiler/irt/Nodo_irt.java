@@ -13,6 +13,10 @@ import java.util.ArrayList;
 public class Nodo_irt {
     public Operacion op;
     public Asignacion Asig;
+    public IF_nodo if_nodo;
+    public FOR_nodo for_nodo;
+    public method_call method_call_nodo;
+    public parametros parametros_nodo;
     private String Nombre;
     public Nodo_irt(String Nombre){
         this.Nombre = Nombre;
@@ -35,6 +39,26 @@ public class Nodo_irt {
            String resultado =  this.Asig.getAsignacion();
            return resultado; 
         }
+       public void Crear_IF(){ this.if_nodo = new IF_nodo();}
+       public void Crear_FOR(){ this.for_nodo = new FOR_nodo();}
+       
+       public void Crear_method(String f, Nodo_irt param){
+           this.method_call_nodo = new method_call(f, param); 
+       }
+       public String Metodo(){
+           String resultado = this.method_call_nodo.getMethod();
+           return resultado;
+       }
+       
+       public void Crear_parametros(){
+           this.parametros_nodo = new parametros();
+        }
+       public String getParametros(){
+            String resultado = this.parametros_nodo.getParame();
+            return resultado;
+        }
+       
+       
     
 }
 class Operacion{
@@ -97,8 +121,8 @@ class Asignacion{
            return resultado; 
         }
 }
-class condicion_if{}
-class condicion_for{}
+//class condicion_if{}
+//class condicion_for{}
 class IF_nodo{
     private ArrayList<Nodo_irt> parte_true = new ArrayList<>();
     private ArrayList<Nodo_irt> parte_false = new ArrayList<>();
@@ -136,5 +160,40 @@ class FOR_nodo{
     public void addTrue(Nodo_irt nuevo){
         this.parte_true.add(nuevo);
         }
-    
 }
+class method_call{
+      private String funcion;
+      private Nodo_irt parametros;
+      public method_call(String f, Nodo_irt param){
+          this.funcion = f;
+          this.parametros = param;
+      
+        }
+      // print method_call
+      public String getMethod(){
+          String result = "";
+          result = result + "tag: "  + this.funcion + "\n ";
+          result = result + " parametros: \n" + this.parametros.getParametros() + "\n";
+          return result;
+      }
+}
+
+class parametros{
+    private ArrayList<String> parame;
+    public parametros(){}
+    
+    public void addParame(String dato){
+        this.parame.add(dato);
+    }
+    
+    public String getParame(){
+        String result = "";
+        for (int i = 0; i < parame.size(); i++) {
+            result = result + "parametro: "+ i+ ", " + parame.get(i) + "\n" ;
+            
+          }
+        return result;
+    
+    }
+}
+    
