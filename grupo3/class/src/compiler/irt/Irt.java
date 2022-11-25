@@ -64,6 +64,9 @@ public class Irt {
         asignacion.Crear_Asignacion("ASSIGN", "$t0", "a"); // puse $t porque es resultado de una operacion. 
         Lista_IRT.add(operacion);
         Lista_IRT.add(asignacion);
+        //Lista_IRT.get(Lista_IRT.size() - 1).getNombre().equals("IF") ==> 
+            //Lista_IRT.get(Lista_IRT.size() - 1).IF_IRT.addTrue(asignacion);
+               
         for (int i = 0; i < Lista_IRT.size(); i++) {
             System.out.println(Lista_IRT.get(i).getNombre());
             if(Lista_IRT.get(i).getNombre().equals("Operador")){
