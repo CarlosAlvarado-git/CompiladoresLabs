@@ -6,6 +6,7 @@ class Program {
         m2 = (x + 1) + (5 + m2);
         x += y;
         p = true;
+        p = (p != f);
         f = p == true;
     }   
     void do(boolean i){

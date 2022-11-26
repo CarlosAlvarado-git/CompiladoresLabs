@@ -1240,7 +1240,7 @@ expr ::= location:l{:
                             
                         break;
                     case "GREATER":
-                            tmp.settype(expr1.gettype());
+                            tmp.settype("Boolean");
                             
                             operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
                             if (parser.STACK.size() == 0){
@@ -1257,7 +1257,7 @@ expr ::= location:l{:
                              
                         break;
                     case "LESS":
-                            tmp.settype(expr1.gettype());
+                            tmp.settype("Boolean");
                             
                             operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
                             if (parser.STACK.size() == 0){
@@ -1274,7 +1274,7 @@ expr ::= location:l{:
                              
                         break;
                     case "LESS_EQUAL":
-                            tmp.settype(expr1.gettype());
+                            tmp.settype("Boolean");
                             
                             operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
                             if (parser.STACK.size() == 0){
@@ -1291,7 +1291,7 @@ expr ::= location:l{:
                              
                         break;
                     case "GREATER_EQUAL":
-                            tmp.settype(expr1.gettype());
+                            tmp.settype("Boolean");
                             
                             operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
                             if (parser.STACK.size() == 0){
