@@ -62,6 +62,9 @@ public class IRT_C {
                         System.out.println(analisis.Lista_IRT.get(i).Metodo());
                     
                     }
+                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Condicion")){
+                        System.out.println(analisis.Lista_IRT.get(i).Condicion());
+                        }
                     else {
                         System.out.println("No es nada");
                         }

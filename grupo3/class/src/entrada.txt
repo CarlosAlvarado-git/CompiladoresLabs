@@ -1,8 +1,12 @@
 class Program {
     int x;
     int main(){
-        int x,y, m2;
-        m2 = 1;
+        int x,y,m2;
+        boolean p,f,t;
+        m2 = (x + 1) + (5 + m2);
+        x += y;
+        p = true;
+        f = p == true;
     }   
     void do(boolean i){
     

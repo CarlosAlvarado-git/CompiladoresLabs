@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 public class Nodo_irt {
     public Operacion op;
+    public Condicion co;
     public Asignacion Asig;
     public IF_nodo if_nodo;
     public FOR_nodo for_nodo;
@@ -30,6 +31,13 @@ public class Nodo_irt {
         }
        public String Operador(){
            String resultado =  this.op.getOperacion();
+           return resultado; 
+        }
+       public void Crear_condicion(String Oper, String Var1, String Var2){
+           this.co = new Condicion(Oper, Var1, Var2);
+        }
+       public String Condicion(){
+           String resultado =  this.co.getCondicion();
            return resultado; 
         }
        public void Crear_Asignacion(String Oper, String Valor, String result){
@@ -102,6 +110,40 @@ class Operacion{
            return resultado; 
         }
 }
+class Condicion{
+      private String Oper;
+      private String Var1;
+      private String Var2;
+      private String Registro;
+      public Condicion(String Oper, String Var1, String Var2){
+            this.Oper = Oper;
+            this.Var1 = Var1;
+            this.Var2 =  Var2;
+      }
+      public void setRegistro(String R){
+          this.Registro = R;
+        }
+      public String getOper(){
+          return this.Oper;
+        }
+    public String getVar1(){
+          return this.Var1;
+        }
+    public String getVar2(){
+          return this.Var2;
+        }
+    public String getRegistro(){
+          return this.Registro;
+        }
+    public String getCondicion(){
+           String resultado = "\n -------- \n";
+           resultado = resultado+ " Operador: " + this.getOper() + ". \n";
+           resultado = resultado+ " Var 1: " + this.getVar1() + ". \n";
+           resultado = resultado+ " Var 2: " + this.getVar2() + ". \n";
+           resultado = resultado+ " Registro: " + this.getRegistro() + ". \n";
+           return resultado; 
+        }
+}
 class Asignacion{
     private String Oper;
     private String Valor;
@@ -128,8 +170,6 @@ class Asignacion{
            return resultado; 
         }
 }
-//class condicion_if{}
-//class condicion_for{}
 class IF_nodo{
     private ArrayList<Nodo_irt> parte_true = new ArrayList<>();
     private ArrayList<Nodo_irt> parte_false = new ArrayList<>();
