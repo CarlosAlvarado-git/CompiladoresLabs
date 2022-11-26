@@ -28,11 +28,7 @@ public class IRT_C {
         String cupruta = System.getProperty("user.dir");
         cupruta = cupruta + "/src/compiler/irt/Sintax.cup";
         String[] rutaS = {"-parser", "Sintax", cupruta};
-        generar(jflex, rutaS);
-        String cupruta2 = System.getProperty("user.dir");
-        cupruta2 = cupruta2 + "/src/compiler/irt/IRT.cup";
-        String[] rutaS2 = {"-parser", "IRT", cupruta2};
-        generar(jflex, rutaS2);*/
+        generar(jflex, rutaS);*/
         try{
             //Path to file
             String archivo = ruta;
@@ -58,8 +54,12 @@ public class IRT_C {
                     else if(analisis.Lista_IRT.get(i).getNombre().equals("Asignacion")){
                         System.out.println(analisis.Lista_IRT.get(i).Asignacion());
                         }
-                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Metodo")){
+                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Method_call")){
                         System.out.println(analisis.Lista_IRT.get(i).Metodo());
+                    
+                    }
+                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Metodo")){
+                        System.out.println(analisis.Lista_IRT.get(i).Metodo_());
                     
                     }
                     else if(analisis.Lista_IRT.get(i).getNombre().equals("Condicion")){

@@ -237,12 +237,12 @@ method_decl ::= type:t Id:id {:
                         Nodo_irt metodo = new Nodo_irt("Metodo");
                         if (parser.mdc.parametros_nodo != null)
                             {
-                                metodo.Crear_method(("" + id), parser.mdc.parametros_nodo.getParame());
+                                metodo.Crear_metodo(("" + id), parser.mdc.parametros_nodo.getParame());
                                 parser.Lista_IRT.add(metodo);
                                 parser.mdc.parametros_nodo.Clear_parame();
                         }
                         else {
-                                metodo.Crear_method(("" + id), "()");
+                                metodo.Crear_metodo(("" + id), "()");
                                 parser.Lista_IRT.add(metodo);
                                 }
                         
@@ -279,12 +279,12 @@ method_decl ::= type:t Id:id {:
                         Nodo_irt metodo = new Nodo_irt("Metodo");
                         if (parser.mdc.parametros_nodo != null)
                             {
-                                metodo.Crear_method(("" + id), parser.mdc.parametros_nodo.getParame());
+                                metodo.Crear_metodo(("" + id), parser.mdc.parametros_nodo.getParame());
                                 parser.Lista_IRT.add(metodo);
                                 parser.mdc.parametros_nodo.Clear_parame();
                         }
                         else {
-                                metodo.Crear_method(("" + id), "()");
+                                metodo.Crear_metodo(("" + id), "()");
                                 parser.Lista_IRT.add(metodo);
                                 }
                         
@@ -818,17 +818,37 @@ method_call ::= method_name:mn {:
         
         :} LEFT_PAR method_call_corche:mcc RIGHT_PAR {:
                 if (parser.TABLA.Tabla_fun.get("PARAM") != null && parser.param_cont == parser.TABLA.Tabla_fun.get("PARAM").size()){
-                parser.param_cont = 0;
-                parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                            parser.param_cont = 0;
+                            parser.TABLA.Tabla_fun.replace("PARAM", null);
+                            Nodo mename = (Nodo) mn;
+                            Nodo_irt metodo = new Nodo_irt("Method_call");
+                            System.out.println("El valor de parser.mdc.parametros_nodo" + parser.mdc.parametros_nodo);
+                            if (parser.mdc.parametros_nodo != null)
+                                {
+                                    metodo.Crear_method((mename.getIdentifier()), parser.mdc.parametros_nodo.getParame());
+                                    parser.Lista_IRT.add(metodo);
+                                    parser.mdc.parametros_nodo.Clear_parame();
+                            }
+                            else {
+                                    metodo.Crear_method((mename.getIdentifier()), "()");
+                                    parser.Lista_IRT.add(metodo);
+                                    }
+                }         
                     else {
+                        System.out.println("El valor de parser.mdc.parametros_nodo" + parser.mdc.parametros_nodo);
+                        
                         if (parser.param_cont != 0){
                         System.out.println("Faltan parámetros");
                         System.exit(0);}
                         else {
                             parser.param_cont = 0;
                             parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                            Nodo mename = (Nodo) mn;
+                            Nodo_irt metodo = new Nodo_irt("Method_call");
+                            metodo.Crear_method((mename.getIdentifier()), "()");
+                            parser.Lista_IRT.add(metodo);
                         }
-
+                        
                     
 
             :}
@@ -879,9 +899,26 @@ method_call ::= method_name:mn {:
                     :}method_call_corche_dos:mccd RIGHT_PAR {:
                   
                     if (parser.TABLA.Tabla_fun.get("PARAM") != null && parser.param_cont == parser.TABLA.Tabla_fun.get("PARAM").size()){
-                parser.param_cont = 0;
-                parser.TABLA.Tabla_fun.replace("PARAM", null);}
-                    else {
+                            parser.param_cont = 0;
+                            parser.TABLA.Tabla_fun.replace("PARAM", null);
+                            Nodo fun = new Nodo("");
+                            fun.setIdentifier("" + Sl);
+                            String valor = fun.getIdentifier();
+                            valor = valor.substring(1,valor.length()-1);
+                            fun.setIdentifier(valor);
+                            Nodo mename = (Nodo) fun;
+                            Nodo_irt metodo = new Nodo_irt("Method_call");
+                            if (parser.mdc.parametros_nodo != null){
+                                    metodo.Crear_method((mename.getIdentifier()), parser.mdc.parametros_nodo.getParame());
+                                    parser.Lista_IRT.add(metodo);
+                                    parser.mdc.parametros_nodo.Clear_parame();
+                            }
+                            else {
+                                    metodo.Crear_method((mename.getIdentifier()), "()");
+                                    parser.Lista_IRT.add(metodo);
+                                    }
+                              
+                    }else {
                         if (parser.param_cont != 0){
                         System.out.println("Faltan parámetros");
                         System.exit(0);
@@ -889,6 +926,15 @@ method_call ::= method_name:mn {:
                         else {
                             parser.param_cont = 0;
                             parser.TABLA.Tabla_fun.replace("PARAM", null);}
+                            Nodo fun = new Nodo("");
+                            fun.setIdentifier("" + Sl);
+                            String valor = fun.getIdentifier();
+                            valor = valor.substring(1,valor.length()-1);
+                            fun.setIdentifier(valor);
+                            Nodo mename = (Nodo) fun;
+                            Nodo_irt metodo = new Nodo_irt("Method_call");
+                            metodo.Crear_method((mename.getIdentifier()), "()");
+                            parser.Lista_IRT.add(metodo);
                         }
 
                 :};
@@ -900,6 +946,10 @@ method_call_corche ::= expr:ex {:
                 if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(expr_x.gettype())) {
                     System.out.println("Primer parámetro bueno");
                     parser.param_cont = parser.param_cont + 1;
+                    parser.mdc.Crear_parametros();
+                    parser.mdc.parametros_nodo.addParame(expr_x.getValor());
+                    
+                    
                 } else {
                     System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type") + ", no puede ser: " + expr_x.gettype());
                     System.exit(0);
@@ -924,6 +974,7 @@ method_call_corche_expr ::=
                 if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(expr_x.gettype())) {
                     System.out.println("Parámetro bueno");
                     parser.param_cont = parser.param_cont + 1;
+                    parser.mdc.parametros_nodo.addParame(expr_x.getValor());
                 } else {
                     System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(0).data.get("type") + ", no puede ser: " + expr_x.gettype());
                     System.exit(0);
@@ -942,6 +993,8 @@ method_call_corche_dos ::=
                 if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(callout_arg_x.gettype())) {
                     System.out.println("Primer parámetro bueno");
                     parser.param_cont = parser.param_cont + 1;
+                    parser.mdc.Crear_parametros();
+                    parser.mdc.parametros_nodo.addParame(callout_arg_x.getValor());
                 } else {
                     System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type") + ", no puede ser: " + callout_arg_x.gettype());
                     System.exit(0);
@@ -965,6 +1018,7 @@ method_call_coma_callout ::=
                 if (parser.TABLA.Tabla_fun.get("PARAM").get(parser.param_cont).data.get("type").equals(callout_arg_x.gettype())) {
                     System.out.println("Parámetro bueno");
                     parser.param_cont = parser.param_cont + 1;
+                    parser.mdc.parametros_nodo.addParame(callout_arg_x.getValor());
                 } else {
                     System.out.println("El parametro es de tipo: " + parser.TABLA.Tabla_fun.get("PARAM").get(0).data.get("type") + ", no puede ser: " + callout_arg_x.gettype());
                     System.exit(0);
@@ -1327,7 +1381,7 @@ callout_arg ::= expr:ex {:
         Nodo tmp = new Nodo("callout_arg");
         Nodo expr_x = (Nodo) ex;
         tmp.settype(expr_x.gettype());
-        
+        tmp.setValor(expr_x.getValor());
         RESULT = tmp;
         :}
         | STRING_LITERAL:Sl {:
@@ -1340,11 +1394,13 @@ callout_arg ::= expr:ex {:
         try{
             int entero = Integer.valueOf(strl.getValor());
             tmp.settype("Int");
+            tmp.setValor("" + Sl);
             
         }catch (Exception es){
             strl.setIdentifier(valor);
             if (strl.getIdentifier().equals("true") || strl.getIdentifier().equals("false")){
                 tmp.settype("Boolean");
+                tmp.setValor("" + Sl);
             }else {
                 int esta = valor.indexOf("[");
                 if(esta != -1){
@@ -1354,11 +1410,13 @@ callout_arg ::= expr:ex {:
                     int [] bandera = parser.TABLA.lookup(strl, parser.global_scope);
                     if (bandera[0] == 1) {
                        tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                       tmp.setValor(strl.getIdentifier());
                     }
                     else {
                         bandera = parser.TABLA.lookup_param(strl);
                         if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                             tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                            tmp.setValor(strl.getIdentifier());
 
                         }else {
                         System.out.println("La variable " + strl.getIdentifier() + ",no existe");
@@ -1372,11 +1430,13 @@ callout_arg ::= expr:ex {:
                     int [] bandera = parser.TABLA.lookup(strl, parser.global_scope);
                     if (bandera[0] == 1) {
                        tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                       tmp.setValor(strl.getIdentifier());
                     }
                     else {
                         bandera = parser.TABLA.lookup_param(strl);
                         if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                             tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                            tmp.setValor(strl.getIdentifier());
 
                         }else {
                         System.out.println("La variable " + strl.getIdentifier() + ",no existe");

@@ -17,6 +17,7 @@ public class Nodo_irt {
     public IF_nodo if_nodo;
     public FOR_nodo for_nodo;
     public method_call method_call_nodo;
+    public method_decl method_nodo;
     public parametros parametros_nodo;
     public Negacion negacion_nodo;
     private String Nombre;
@@ -58,7 +59,13 @@ public class Nodo_irt {
            String resultado = this.method_call_nodo.getMethod();
            return resultado;
        }
-       
+       public void Crear_metodo(String f, String param){
+           this.method_nodo = new method_decl(f, param); 
+       }
+       public String Metodo_(){
+           String resultado = this.method_nodo.getMethod();
+           return resultado;
+       }
        public void Crear_parametros(){
            this.parametros_nodo = new parametros();
         }
@@ -179,8 +186,6 @@ class Asignacion{
         }
 }
 class IF_nodo{
-    private ArrayList<Nodo_irt> parte_true = new ArrayList<>();
-    private ArrayList<Nodo_irt> parte_false = new ArrayList<>();
     private Nodo_irt condicione;
     public IF_nodo(){
         
@@ -189,14 +194,6 @@ class IF_nodo{
     // funcion que recibe condicion.
     public void getCondicion(Nodo_irt con){
         this.condicione = con;
-        }
-    // agregar a parte true
-    public void addTrue(Nodo_irt nuevo){
-        this.parte_true.add(nuevo);
-        }
-    // agregar a parte false
-    public void addFalse(Nodo_irt nuevo){
-        this.parte_false.add(nuevo);
         }
     
 }
@@ -231,13 +228,36 @@ class method_call{
           result = result + "tag: "  + this.funcion + "\n ";
           //System.out.println("Desde getMethod: "+ this.parametros);
           if (this.parametros != null){
-            result = result + " parametros: " + this.parametros + "\n";
+            result = result + " push parametros: " + this.parametros + "\n";
           }
           return result;
       }
 }
 // para los method decla, hacemos lo mismo, PERO ! YA VEMOS LA MEMORIA ! 
-
+class method_decl{
+      private String funcion;
+      private String parametros;
+      private int memoria;
+      public method_decl(String f, String param){
+          this.funcion = f;
+          this.parametros = param;
+      
+        }
+      public void getMemoria(int m){
+          this.memoria = m;
+        }
+      
+      // print method_call
+      public String getMethod(){
+          String result = "";
+          result = result + "tag: "  + this.funcion + "\n ";
+          //System.out.println("Desde getMethod: "+ this.parametros);
+          if (this.parametros != null){
+            result = result + "parametros: " + this.parametros + "\n";
+          }
+          return result;
+      }
+}
 class parametros{
     private ArrayList<String> parame = new ArrayList<>();
     public parametros(){

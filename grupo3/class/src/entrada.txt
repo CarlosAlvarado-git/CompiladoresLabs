@@ -9,9 +9,10 @@ class Program {
         f = p == true;
     }   
     void do(boolean i){
-    
+        
     }
     void o(int a){
-
+        boolean x;
+          main();
         }
 }
