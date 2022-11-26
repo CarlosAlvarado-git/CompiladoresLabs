@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import compiler.semantic.Sintax;
+//import compiler.semantic.Sintax;
 
 /**
  *
@@ -23,14 +23,14 @@ import compiler.semantic.Sintax;
 public class Semantic {
     
     
-    public static void main(String[] args, String ruta) throws Exception{
-        /*String jflex = System.getProperty("user.dir");
+    public static void main(String[] args/*, String ruta*/) throws Exception{
+        String jflex = System.getProperty("user.dir");
         jflex = jflex + "/src/compiler/semantic/LexerCup.flex";
         String cupruta = System.getProperty("user.dir");
         cupruta = cupruta + "/src/compiler/semantic/Sintax.cup";
         String[] rutaS = {"-parser", "Sintax", cupruta};
-        generar(jflex, rutaS);*/
-        try{
+        generar(jflex, rutaS);
+        /*try{
             //Path to file
             String archivo = ruta;
             Reader lector = new BufferedReader(new FileReader(archivo));
@@ -55,7 +55,7 @@ public class Semantic {
             
         }catch (FileNotFoundException ex) {
             System.out.println(ex);
-        }
+        }*/
             
     }
     public static void generar(String rutalexer, String[] rutaSintax) throws IOException, Exception{
