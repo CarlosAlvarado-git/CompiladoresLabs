@@ -21,6 +21,8 @@ public class Nodo_irt {
     public parametros parametros_nodo;
     public Negacion negacion_nodo;
     private String Nombre;
+    private ELSE_nodo else_nodo;
+    private END_IF_nodo end_if;
     public Nodo_irt(String Nombre){
         this.Nombre = Nombre;
     
@@ -49,7 +51,27 @@ public class Nodo_irt {
            String resultado =  this.Asig.getAsignacion();
            return resultado; 
         }
-       public void Crear_IF(){ this.if_nodo = new IF_nodo();}
+       public void Crear_IF(String ifs){ 
+            this.if_nodo = new IF_nodo(ifs);
+       }
+       public String IF_C(){
+           String resultado = this.if_nodo.getIf();
+           return resultado;
+        }
+       public void Crear_ELSE(String els){ 
+            this.else_nodo = new ELSE_nodo(els);
+       }
+       public String ELSE_C(){
+           String resultado = this.else_nodo.getELSE();
+           return resultado;
+        }
+       public void Crear_END_IF(String end){ 
+            this.end_if = new END_IF_nodo(end);
+       }
+       public String END_IF_C(){
+           String resultado = this.end_if.getEND_IF();
+           return resultado;
+        }
        public void Crear_FOR(){ this.for_nodo = new FOR_nodo();}
        
        public void Crear_method(String f, String param){
@@ -186,14 +208,55 @@ class Asignacion{
         }
 }
 class IF_nodo{
-    private Nodo_irt condicione;
-    public IF_nodo(){
-        
+    private String tag_if;
+    private String condicione;
+    public IF_nodo(String tag){
+        this.tag_if = tag;
     
         }
     // funcion que recibe condicion.
-    public void getCondicion(Nodo_irt con){
+    public void getCondicion(String con){
         this.condicione = con;
+        }
+        
+    public String getIf(){
+        String result = "";
+            result = result + "tag: "  + this.tag_if + "\n ";
+          //System.out.println("Desde getMethod: "+ this.parametros);
+          if (this.condicione != null){
+            result = result + "Registro condicion resultado: " + this.condicione + "\n";
+          }
+          return result;
+        }
+    
+}
+class ELSE_nodo{
+    private String tag_else;
+    public ELSE_nodo(String tag){
+        this.tag_else = tag;
+    
+        }
+        
+    public String getELSE(){
+        String result = "";
+            result = result + "tag: "  + this.tag_else + "\n ";
+          
+          return result;
+        }
+    
+}
+class END_IF_nodo{
+    private String tag_end;
+    public END_IF_nodo(String tag){
+        this.tag_end = tag;
+    
+        }
+        
+    public String getEND_IF(){
+        String result = "";
+            result = result + "tag: "  + this.tag_end + "\n ";
+          
+          return result;
         }
     
 }

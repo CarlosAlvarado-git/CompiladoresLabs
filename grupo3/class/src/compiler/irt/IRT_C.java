@@ -6,7 +6,6 @@ package compiler.irt;
 
 import compiler.irt.LexerCup;
 import compiler.irt.Sintax;
-import compiler.irt.IRT;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,6 +59,18 @@ public class IRT_C {
                     }
                     else if(analisis.Lista_IRT.get(i).getNombre().equals("Metodo")){
                         System.out.println(analisis.Lista_IRT.get(i).Metodo_());
+                    
+                    }
+                    else if(analisis.Lista_IRT.get(i).getNombre().equals("IF")){
+                        System.out.println(analisis.Lista_IRT.get(i).IF_C());
+                    
+                    }
+                    else if(analisis.Lista_IRT.get(i).getNombre().equals("ELSE")){
+                        System.out.println(analisis.Lista_IRT.get(i).ELSE_C());
+                    
+                    }
+                    else if(analisis.Lista_IRT.get(i).getNombre().equals("END_IF")){
+                        System.out.println(analisis.Lista_IRT.get(i).END_IF_C());
                     
                     }
                     else if(analisis.Lista_IRT.get(i).getNombre().equals("Condicion")){

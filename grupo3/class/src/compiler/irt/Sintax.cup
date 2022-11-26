@@ -26,6 +26,7 @@ parser code
     public int global_scope = 0;
     public int param_cont = 0;
     public Nodo_irt mdc = new Nodo_irt("parametros");
+    public int count_if = 0;
     public ArrayList<Nodo_irt> Lista_IRT = new ArrayList<>();
     public ArrayList<String> STACK = new ArrayList<>();
     class ValoresTabla_fun{
@@ -581,9 +582,18 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 }
                 parser.global_scope = parser.global_scope + 1;
                 parser.TABLA.pushScope(parser.global_scope);
-                RESULT = tmp;
+
+                Nodo_irt if_condicion = new Nodo_irt("IF");
+                parser.count_if =  parser.count_if + 1;
+                if_condicion.Crear_IF(parser.TABLA.BANDERAS.get("Funcion") + "_IF_" + parser.count_if);
+                if_condicion.if_nodo.getCondicion(expr_r.getValor());
+                parser.Lista_IRT.add(if_condicion);
                 
 
+                
+                RESULT = tmp;
+                
+                
              :} block:b statement_else_block:seb statement:stm 
         | For Id:id ASSIGN expr:ex Coma expr:ex2   {:
                 Nodo tmp = new Nodo("statement");
@@ -725,17 +735,39 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
         |;
 
 statement_else_block ::=
-    Else  {:
+     {:
         parser.global_scope = parser.global_scope + 1;
         parser.TABLA.pushScope(parser.global_scope);
+        
+        Nodo_irt else_c = new Nodo_irt("ELSE");
+        else_c.Crear_ELSE(parser.TABLA.BANDERAS.get("Funcion") + "_ELSE_" + parser.count_if);
+        parser.Lista_IRT.add(else_c);
+
     
-        :} block:b|
+        :} Else block:b {:
+                Nodo_irt else_c = new Nodo_irt("ELSE");
+                else_c.Crear_ELSE(parser.TABLA.BANDERAS.get("Funcion") + "_END_ELSE_" + parser.count_if);
+                parser.Lista_IRT.add(else_c);
+                parser.count_if =  parser.count_if - 1;
+
+    
+    
+        :}|{:
+            Nodo_irt end_if = new Nodo_irt("END_IF");
+            end_if.Crear_END_IF(parser.TABLA.BANDERAS.get("Funcion") +  "_END_IF_" + parser.count_if);  
+            parser.count_if =  parser.count_if - 1;
+            parser.Lista_IRT.add(end_if);
+            
+            
+
+                :}
 ;
 
 statement_expr ::= expr:ex {:
         Nodo tmp = new Nodo("statement_expr");
         Nodo e = (Nodo) ex;
-        tmp.settype(e.gettype());        
+        tmp.settype(e.gettype());
+        tmp.setValor(e.getValor());        
         RESULT = tmp;
         
         :}|

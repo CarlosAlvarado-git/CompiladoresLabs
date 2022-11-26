@@ -9,10 +9,30 @@ class Program {
         f = p == true;
     }   
     void do(boolean i){
-        
+        if (i == true) {
+            main();
+        }
     }
     void o(int a){
-        boolean x;
+        boolean x, y;
           main();
+          if (x != true) {
+                int dentroif;
+                dentroif = 1;
+                if (y == false){
+                    int dentroif2;
+                    dentroif2 = 1;
+                }
+                else {
+                    do(x);
+                }
+            }
+           else {
+                int dentroelse;
+                dentroelse = 1;
+                if (x == true) {
+                    main();
+                }
+            }
         }
 }
