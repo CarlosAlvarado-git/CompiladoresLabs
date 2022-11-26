@@ -1,7 +1,13 @@
 class Program {
     int x;
-    int main(int a, int b){
+    int main(){
         int x,y, m2;
-        m2 = x * x + y * y;
-    }    
+        m2 = x;
+    }   
+    void do(boolean i){
+    
+    }
+    void o(int a){
+
+        }
 }

@@ -48,6 +48,24 @@ public class IRT_C {
                 System.out.println("La tabla: \n" + analisis.TABLA.tabla_print());
                 System.out.println("------------- TABLA PARAMETROS");
                 System.out.println("La tabla: \n" + analisis.TABLA.tabla_print_m());
+                System.out.println("\n\n\n\n------------- GENERACION DE IRT");
+                System.out.println("El size es: " + analisis.Lista_IRT.size());
+                for (int i = 0; i < analisis.Lista_IRT.size(); i++) {
+                    System.out.println(analisis.Lista_IRT.get(i).getNombre());
+                    if(analisis.Lista_IRT.get(i).getNombre().equals("Operador")){
+                        System.out.println(analisis.Lista_IRT.get(i).Operador());
+                        }
+                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Asignacion")){
+                        System.out.println(analisis.Lista_IRT.get(i).Asignacion());
+                        }
+                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Metodo")){
+                        System.out.println(analisis.Lista_IRT.get(i).Metodo());
+                    
+                    }
+                    else {
+                        System.out.println("No es nada");
+                        }
+                }
                 lector.close();
                 
                 
@@ -63,7 +81,7 @@ public class IRT_C {
             try{
                 
                 analisis_irt.parse();
-                System.out.println("\n\n\n\n------------- GENERACION DE IRT");
+                System.out.println("\n\n\n\n------------- GENERACION DE IRT ------- con IRT.JAVA");
                 System.out.println("El size es: " + analisis_irt.Lista_IRT.size());
                 for (int i = 0; i < analisis_irt.Lista_IRT.size(); i++) {
                     System.out.println(analisis_irt.Lista_IRT.get(i).getNombre());

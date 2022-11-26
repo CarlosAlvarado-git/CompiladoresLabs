@@ -62,11 +62,32 @@ field_decl_coma_field ::=
 
 method_decl ::= type Id:id LEFT_PAR method_decl_corche RIGHT_PAR {: 
                         Nodo_irt metodo = new Nodo_irt("Metodo");
-                        metodo.Crear_method(("" + id), parser.mdc);
-                        parser.Lista_IRT.add(metodo);
+                        if (parser.mdc.parametros_nodo != null)
+                            {
+                                metodo.Crear_method(("" + id), parser.mdc.parametros_nodo.getParame());
+                                parser.Lista_IRT.add(metodo);
+                                parser.mdc.parametros_nodo.Clear_parame();
+                        }
+                        else {
+                                metodo.Crear_method(("" + id), "parametros: ()");
+                                parser.Lista_IRT.add(metodo);
+                                }
+                        
                         
                 :}block method_decl |
-                Void Id LEFT_PAR method_decl_corche RIGHT_PAR block method_decl | ;
+                Void Id:id LEFT_PAR method_decl_corche RIGHT_PAR {: 
+                        Nodo_irt metodo = new Nodo_irt("Metodo");
+                        if (parser.mdc.parametros_nodo != null)
+                            {
+                                metodo.Crear_method(("" + id), parser.mdc.parametros_nodo.getParame());
+                                parser.Lista_IRT.add(metodo);
+                                parser.mdc.parametros_nodo.Clear_parame();
+                        }
+                        else {
+                                metodo.Crear_method(("" + id), "parametros: ()");
+                                parser.Lista_IRT.add(metodo);
+                                }
+                :}block method_decl | ;
 
 method_decl_corche ::=
         type Id:id {: 
@@ -94,7 +115,11 @@ type ::= Int | Boolean;
 
 statement ::= location:loc assign_op:asi expr:ex {: 
                 Nodo_irt asignacion = new Nodo_irt("Asignacion");
-                asignacion.Crear_Asignacion("ASSIGN", "$t0", "a");
+                 String a = (String) asi;
+                 String exx = (String) ex;
+                 String locc = (String) loc;
+                asignacion.Crear_Asignacion(a, exx, locc);
+                parser.Lista_IRT.add(asignacion);
                 :} Punto_coma statement 
         | method_call Punto_coma statement 
         | If LEFT_PAR expr RIGHT_PAR block statement_else_block statement 
@@ -113,7 +138,10 @@ statement_expr ::=
     expr |
 ;
 
-assign_op ::= ASSIGN
+assign_op ::= ASSIGN:as {:
+            String as_ = ("" + as);
+            RESULT = as_;
+             :}
           | PLUS_EQUAL
           | MINUS_EQUAL;
 
@@ -147,20 +175,32 @@ location ::= Id:id {:
             
         :};
 
-expr ::= location
+expr ::= location:lo {: 
+            String loc_ = ("" + lo);
+            RESULT = loc_;
+        :}
      | method_call
-     | literal
-     | expr bin_op expr
-     | Menos expr
+     | literal:li {: 
+            String li_ = (String) li;
+            RESULT = li_;
+        :}
+     | expr:ex1 bin_op:bo expr:ex2 {:
+        
+        
+        :}
+     | Menos expr 
      | Exclamacion expr
-     | LEFT_PAR expr RIGHT_PAR;
+     | LEFT_PAR expr RIGHT_PAR ;
 
 
 
 callout_arg ::= expr
         | STRING_LITERAL;
 
-bin_op ::= arith_op
+bin_op ::= arith_op {: 
+            String li_ = (String) li;
+            RESULT = li_;
+        :}
       | rel_op
       | eq_op
       | cond_op;
@@ -173,18 +213,50 @@ eq_op ::= EQUAL | NOT_EQUAL ;
 
 cond_op ::= AND | OR ;
 
-literal ::= int_literal | CHAR_LITERAL | bool_literal ;
+literal ::= int_literal:il {:
+            String il_ = (String) il;
+            RESULT = il_;
+
+        :} | CHAR_LITERAL:cl {:
+            String cl_ = (String) cl;
+            RESULT = cl_;
+            
+        :} | bool_literal:bl {:
+            String bl_ = (String) bl;
+            RESULT = bl_;
+            
+        :};
 
 
 int_literal ::=
-        Decimal_literal |
-        Hex_literal | 
-        Digit
+        Decimal_literal:dl {:
+            String dl_ = ("" + cl);
+            RESULT = dl_;
+            
+        :}|
+        Hex_literal:hl {:
+            String hl_ = ("" + hl);
+            RESULT = hl_;
+            
+        :}| 
+        Digit:dg {:
+            String dg_ = ("" + dg);
+            RESULT = dg_;
+            
+        :}
 ;
 
 bool_literal ::=
-        True |
-        False
+        True:tr{:
+            String t_ = ("" + tr);
+            RESULT = t_;
+            
+        :} |
+        False:fl {:
+            String fl_ = ("" + fl);
+            RESULT = fl_;
+            
+        :}
 ;
 
 

@@ -42,7 +42,7 @@ public class Nodo_irt {
        public void Crear_IF(){ this.if_nodo = new IF_nodo();}
        public void Crear_FOR(){ this.for_nodo = new FOR_nodo();}
        
-       public void Crear_method(String f, Nodo_irt param){
+       public void Crear_method(String f, String param){
            this.method_call_nodo = new method_call(f, param); 
        }
        public String Metodo(){
@@ -57,7 +57,7 @@ public class Nodo_irt {
            String resultado = "";
            //System.out.println("Desde getParametros: "+ this.parametros_nodo);
             if (this.parametros_nodo != null){
-                   System.out.println("ENTRE GETPARAMETROS");
+                   //System.out.println("ENTRE GETPARAMETROS");
                  resultado = this.parametros_nodo.getParame();}
             else 
                  resultado = "";
@@ -170,8 +170,8 @@ class FOR_nodo{
 }
 class method_call{
       private String funcion;
-      private Nodo_irt parametros;
-      public method_call(String f, Nodo_irt param){
+      private String parametros;
+      public method_call(String f, String param){
           this.funcion = f;
           this.parametros = param;
       
@@ -182,7 +182,7 @@ class method_call{
           result = result + "tag: "  + this.funcion + "\n ";
           //System.out.println("Desde getMethod: "+ this.parametros);
           if (this.parametros != null){
-            result = result + " parametros: \n" + this.parametros.getParametros() + "\n";
+            result = result + " parametros: " + this.parametros + "\n";
           }
           return result;
       }
@@ -201,15 +201,22 @@ class parametros{
     }
     
     public String getParame(){
-        String result = "";
+        String result = "(";
         if(this.parame != null){
             for (int i = 0; i < this.parame.size(); i++) {
-                result = result + "parametro: "+ i+ ", " + this.parame.get(i) + "\n" ;
-
+                if (this.parame.size() > 1 && i != (this.parame.size() - 1))
+                    result = result + this.parame.get(i) + ",";
+                else
+                   result = result + this.parame.get(i); 
               }
+            result = result + ")";
+            
         }
         return result;
     
     }
+    public void Clear_parame(){
+            this.parame.clear();
+        }
 }
     

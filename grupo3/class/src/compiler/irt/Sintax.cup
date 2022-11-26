@@ -25,6 +25,8 @@ parser code
     public Semantic_fun TABLA = new Semantic_fun();
     public int global_scope = 0;
     public int param_cont = 0;
+    public Nodo_irt mdc = new Nodo_irt("parametros");
+    public ArrayList<Nodo_irt> Lista_IRT = new ArrayList<>();
     class ValoresTabla_fun{
     public HashMap<String, String> data;
 
@@ -230,7 +232,22 @@ method_decl ::= type:t Id:id {:
 
 
 
-                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md 
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR{: 
+                        Nodo_irt metodo = new Nodo_irt("Metodo");
+                        if (parser.mdc.parametros_nodo != null)
+                            {
+                                metodo.Crear_method(("" + id), parser.mdc.parametros_nodo.getParame());
+                                parser.Lista_IRT.add(metodo);
+                                parser.mdc.parametros_nodo.Clear_parame();
+                        }
+                        else {
+                                metodo.Crear_method(("" + id), "parametros: ()");
+                                parser.Lista_IRT.add(metodo);
+                                }
+                        
+                        
+                        
+                :} block:b method_decl:md 
                 | Void Id:id {:
 
                 Nodo tmp = new Nodo("method_decl");
@@ -257,7 +274,22 @@ method_decl ::= type:t Id:id {:
                 parser.TABLA.pushScope(parser.global_scope);
                 RESULT = tmp;
 
-                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md 
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR {: 
+                        Nodo_irt metodo = new Nodo_irt("Metodo");
+                        if (parser.mdc.parametros_nodo != null)
+                            {
+                                metodo.Crear_method(("" + id), parser.mdc.parametros_nodo.getParame());
+                                parser.Lista_IRT.add(metodo);
+                                parser.mdc.parametros_nodo.Clear_parame();
+                        }
+                        else {
+                                metodo.Crear_method(("" + id), "()");
+                                parser.Lista_IRT.add(metodo);
+                                }
+                        
+                        
+                        
+                :}block:b method_decl:md 
 | 
 
 ;
@@ -283,13 +315,18 @@ method_decl_corche ::=
         System.out.println("DESDE variables del metodo: La variable " + tmp.getIdentifier() + ", se guardará");
         parser.TABLA.insertSymbol_m(tmp);
         
+
+        parser.mdc.Crear_parametros();
+        parser.mdc.parametros_nodo.addParame("" + id);
         RESULT = tmp;
         :} method_decl_corche_coma_type:mdcct 
         |
 ;
 
 method_decl_corche_coma_type ::=
-    Coma type:t Id:id method_decl_corche_coma_type:mdcct {:
+    Coma type:t Id:id {:
+        parser.mdc.parametros_nodo.addParame("" + id);
+        :} method_decl_corche_coma_type:mdcct {:
         Nodo tmp = new Nodo("method_decl_corche_coma_type");
 
         tmp.setllamada("variable");
@@ -411,6 +448,9 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                         loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
                         if (loc.gettype().equals(e.gettype())){
                             System.out.println("Asignacion correcta");
+                            Nodo_irt asignacion = new Nodo_irt("Asignacion");
+                           asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
+                           parser.Lista_IRT.add(asignacion);
                        }
                        else {
                             System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
@@ -964,6 +1004,7 @@ expr ::= location:l{:
             bandera = parser.TABLA.lookup_param(loc);
             if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                 tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                tmp.setValor(loc.getIdentifier());
                 
             }else {
             System.out.println("La variable " + loc.getIdentifier() + ",no existe");
