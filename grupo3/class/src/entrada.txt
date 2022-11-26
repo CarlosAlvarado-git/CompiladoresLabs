@@ -1,40 +1,7 @@
 class Program {
-    int w[5], y; 
-    boolean r;
-    int s(int param, int dos)
-    {
-        param = 10;
-        }
-    boolean ew(){}
-    int main(int y, int parame){
-        int a;
-        boolean p;
-        a = 10 + s(1,2) + parame;
-        p = a > 5 + 10;
-        if ( parame == 10 ) {: crear nodo if, meterlo a la linkelist que vamos, todo lo que viene
-				va en MI LINKEDLIST. :} {
-            int nueva, nueva2; {: SE DEBEN GUARDAR en la linked list de parte_true del ÚLTIMO if:}
-            for parame = 1, 10 {
-                    int dentro;
-                    dentro = 10;
-                    dentro = parame;
-                    break;
-                }
-        }
-        else {: TODO LO QUE VENGA, VA EN LA PARTE_FALSE DE ÚLTIMO IF!!!:}
-        {
-           int nuevablockeelse, nueva2blocke; 
-           for hg = 1, 10 {}
-        }
-        {
-           int BLOCKE;
-           BLOCKE = callout("ew");
-        }
-        
-        return a;
-        
-    }
-
-    
-        
+    int x;
+    int main(int a, int b){
+        int x,y, m2;
+        m2 = x * x + y * y;
+    }    
 }

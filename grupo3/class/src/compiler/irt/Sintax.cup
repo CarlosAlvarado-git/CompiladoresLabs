@@ -31,6 +31,8 @@ parser code
     public void Adddata(HashMap<String, String> valor){
         this.data = valor;
     }
+        
+    
 }
    
 :};

@@ -10,6 +10,7 @@
 import compiler.scanner.Scanner_;
 import compiler.parser.Parser;
 import compiler.semantic.Semantic;
+import compiler.irt.IRT_C;
 //import compiler.semantic.Semantic;
 import java.util.Scanner;
 
@@ -97,6 +98,12 @@ public class Compiler {
                                                 semantic.main(null,ruta);
                                                 break;
                                             case "irt":
+                                                ruta = System.getProperty("user.dir");
+                                                ruta = ruta + "/src/" + archivo;
+                                                //Semantic
+                                                IRT_C irt = new IRT_C();
+                                                irt.main(null,ruta);   
+                                                
                                                 break;
                                             case "codegen":
                                                 break;

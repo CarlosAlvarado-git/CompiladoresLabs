@@ -54,13 +54,20 @@ public class Nodo_irt {
            this.parametros_nodo = new parametros();
         }
        public String getParametros(){
-            String resultado = this.parametros_nodo.getParame();
+           String resultado = "";
+           //System.out.println("Desde getParametros: "+ this.parametros_nodo);
+            if (this.parametros_nodo != null){
+                   System.out.println("ENTRE GETPARAMETROS");
+                 resultado = this.parametros_nodo.getParame();}
+            else 
+                 resultado = "";
             return resultado;
         }
        
        
     
 }
+
 class Operacion{
       private String Oper;
       private String Var1;
@@ -173,25 +180,34 @@ class method_call{
       public String getMethod(){
           String result = "";
           result = result + "tag: "  + this.funcion + "\n ";
-          result = result + " parametros: \n" + this.parametros.getParametros() + "\n";
+          //System.out.println("Desde getMethod: "+ this.parametros);
+          if (this.parametros != null){
+            result = result + " parametros: \n" + this.parametros.getParametros() + "\n";
+          }
           return result;
       }
 }
 
 class parametros{
-    private ArrayList<String> parame;
-    public parametros(){}
+    private ArrayList<String> parame = new ArrayList<>();
+    public parametros(){
+        
+        }
     
     public void addParame(String dato){
-        this.parame.add(dato);
+        if(this.parame != null){
+            this.parame.add(dato);
+        }
     }
     
     public String getParame(){
         String result = "";
-        for (int i = 0; i < parame.size(); i++) {
-            result = result + "parametro: "+ i+ ", " + parame.get(i) + "\n" ;
-            
-          }
+        if(this.parame != null){
+            for (int i = 0; i < this.parame.size(); i++) {
+                result = result + "parametro: "+ i+ ", " + this.parame.get(i) + "\n" ;
+
+              }
+        }
         return result;
     
     }

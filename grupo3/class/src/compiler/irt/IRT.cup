@@ -1,0 +1,192 @@
+package compiler.irt;
+
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+parser code
+{:
+    private Symbol s;
+    public String resultado="";
+    public Nodo padre;
+    public int contador = 1;
+    public void syntax_error(Symbol s){
+        //this.s = s;
+        System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna: " +(s.left)+ ". Identificador " +s.value + " no reconocido." + "el type: " + s.sym);
+    }
+    public void unrecovered_syntax_error(Symbol s){
+        System.out.println(s);
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+    public Nodo_irt mdc = new Nodo_irt("parametros");
+    public ArrayList<Nodo_irt> Lista_IRT = new ArrayList<>();
+:};
+
+terminal Int, Boolean, Callout, If, For, Else, Return, Break, Continue, True, 
+        False, Void, Class, Program, Id, Digit, Alpha, Hex_digit,
+        Decimal_literal,Hex_literal,GREATER, LESS,LESS_EQUAL,GREATER_EQUAL,
+        PLUS_EQUAL, ASSIGN, MINUS_EQUAL,EQUAL,NOT_EQUAL,AND,OR, LEFT_PAR,
+        RIGHT_PAR,Punto_coma,Mas, Menos,Multiplicacion, Division, Mod, Llave_A,
+        Llave_C,Corche_A, Corche_C, Coma, Exclamacion, ERROR,CHAR_LITERAL, STRING_LITERAL;
+
+
+non terminal INICIO, program, field_decl, method_decl, 
+                block, var_decl, type, statement,
+                assign_op, method_call, method_name, location, expr, callout_arg, bin_op,
+                arith_op, rel_op, eq_op, cond_op, literal, int_literal,bool_literal,alpha_num_asterisco,
+                field_name,method_decl_corche,method_decl_corche_coma_type,
+                var_decl_coma_id,statement_else_block,statement_expr,field_decl_coma_field,
+                method_call_corche,method_call_corche_expr,method_call_corche_dos,method_call_coma_callout;
+
+precedence left Multiplicacion, Division, Mod ;
+precedence left Mas, Menos;
+precedence left GREATER, LESS, LESS_EQUAL, GREATER_EQUAL,EQUAL, NOT_EQUAL;
+precedence left AND, OR;
+precedence left ASSIGN, MINUS_EQUAL, PLUS_EQUAL;
+start with INICIO;
+
+INICIO::= program:s {:
+            System.out.println("Correcto");
+        :};
+
+program ::= Class Program Llave_A field_decl method_decl Llave_C ;
+
+field_name ::= Id | Id Corche_A int_literal Corche_C;
+
+field_decl ::= field_decl type field_name field_decl_coma_field Punto_coma | ;
+
+field_decl_coma_field ::=
+            Coma field_name field_decl_coma_field |
+;
+
+method_decl ::= type Id:id LEFT_PAR method_decl_corche RIGHT_PAR {: 
+                        Nodo_irt metodo = new Nodo_irt("Metodo");
+                        metodo.Crear_method(("" + id), parser.mdc);
+                        parser.Lista_IRT.add(metodo);
+                        
+                :}block method_decl |
+                Void Id LEFT_PAR method_decl_corche RIGHT_PAR block method_decl | ;
+
+method_decl_corche ::=
+        type Id:id {: 
+            parser.mdc.Crear_parametros();
+            parser.mdc.parametros_nodo.addParame("" + id);
+
+         :} method_decl_corche_coma_type|
+;
+
+method_decl_corche_coma_type ::=
+    Coma type Id:id {: 
+            parser.mdc.parametros_nodo.addParame("" + id);
+        :}method_decl_corche_coma_type  |
+;
+
+block ::= Llave_A var_decl statement Llave_C;
+
+var_decl ::= type Id var_decl_coma_id Punto_coma var_decl | ;
+
+var_decl_coma_id ::=
+            Coma Id var_decl_coma_id |
+;
+
+type ::= Int | Boolean;
+
+statement ::= location:loc assign_op:asi expr:ex {: 
+                Nodo_irt asignacion = new Nodo_irt("Asignacion");
+                asignacion.Crear_Asignacion("ASSIGN", "$t0", "a");
+                :} Punto_coma statement 
+        | method_call Punto_coma statement 
+        | If LEFT_PAR expr RIGHT_PAR block statement_else_block statement 
+        | For Id ASSIGN expr Coma expr block statement 
+        | Return statement_expr Punto_coma statement 
+        | Break Punto_coma statement 
+        | Continue Punto_coma statement 
+        | block statement 
+        |;
+
+statement_else_block ::=
+    Else block |
+;
+
+statement_expr ::=
+    expr |
+;
+
+assign_op ::= ASSIGN
+          | PLUS_EQUAL
+          | MINUS_EQUAL;
+
+method_call ::= method_name LEFT_PAR method_call_corche RIGHT_PAR {::}
+            | Callout LEFT_PAR STRING_LITERAL method_call_corche_dos RIGHT_PAR;
+
+method_call_corche ::=
+        expr method_call_corche_expr |
+;
+
+method_call_corche_expr ::=
+        Coma expr method_call_corche_expr |
+;
+
+method_call_corche_dos ::=
+        Coma callout_arg method_call_coma_callout |
+;
+
+method_call_coma_callout ::=
+        Coma callout_arg method_call_coma_callout |
+;
+
+method_name ::= Id;
+
+location ::= Id:id {: 
+            String id_ = ("" + id);
+            RESULT = id_;
+        :} | Id:id Corche_A expr Corche_C {:
+            String id_ = ("" + id);
+            RESULT = id_;
+            
+        :};
+
+expr ::= location
+     | method_call
+     | literal
+     | expr bin_op expr
+     | Menos expr
+     | Exclamacion expr
+     | LEFT_PAR expr RIGHT_PAR;
+
+
+
+callout_arg ::= expr
+        | STRING_LITERAL;
+
+bin_op ::= arith_op
+      | rel_op
+      | eq_op
+      | cond_op;
+
+arith_op ::= Mas | Menos | Multiplicacion | Division | Mod ;
+
+rel_op ::= GREATER | LESS | LESS_EQUAL | GREATER_EQUAL ;
+
+eq_op ::= EQUAL | NOT_EQUAL ;
+
+cond_op ::= AND | OR ;
+
+literal ::= int_literal | CHAR_LITERAL | bool_literal ;
+
+
+int_literal ::=
+        Decimal_literal |
+        Hex_literal | 
+        Digit
+;
+
+bool_literal ::=
+        True |
+        False
+;
+
+
+
+
