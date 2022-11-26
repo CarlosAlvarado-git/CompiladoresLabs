@@ -47,38 +47,53 @@ public class IRT_C {
                 System.out.println("El size es: " + analisis.Lista_IRT.size());
                 for (int i = 0; i < analisis.Lista_IRT.size(); i++) {
                     System.out.println(analisis.Lista_IRT.get(i).getNombre());
-                    if(analisis.Lista_IRT.get(i).getNombre().equals("Operador")){
-                        System.out.println(analisis.Lista_IRT.get(i).Operador());
-                        }
-                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Asignacion")){
-                        System.out.println(analisis.Lista_IRT.get(i).Asignacion());
-                        }
-                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Method_call")){
-                        System.out.println(analisis.Lista_IRT.get(i).Metodo());
-                    
+                    switch (analisis.Lista_IRT.get(i).getNombre()) {
+                        case "Operador":
+                            System.out.println(analisis.Lista_IRT.get(i).Operador());
+                            break;
+                        case "Asignacion":
+                            System.out.println(analisis.Lista_IRT.get(i).Asignacion());
+                            break;
+                        case "Method_call":
+                            System.out.println(analisis.Lista_IRT.get(i).Metodo());
+                            break;
+                        case "Metodo":
+                            System.out.println(analisis.Lista_IRT.get(i).Metodo_());
+                            break;
+                        case "IF":
+                            System.out.println(analisis.Lista_IRT.get(i).IF_C());
+                            break;
+                        case "ELSE":
+                            System.out.println(analisis.Lista_IRT.get(i).ELSE_C());
+                            break;
+                        case "END_IF":
+                            System.out.println(analisis.Lista_IRT.get(i).END_IF_C());
+                            break;
+                        case "Condicion":
+                            System.out.println(analisis.Lista_IRT.get(i).Condicion());
+                            break;
+                        case "FOR":
+                            System.out.println(analisis.Lista_IRT.get(i).FOR_C());
+                            break;
+                        case "Operacion_FOR":
+                            System.out.println(analisis.Lista_IRT.get(i).Operador());
+                            break;
+                        case "Jump_FOR":
+                            System.out.println(analisis.Lista_IRT.get(i).FOR_C());
+                            break;
+                        case "Break_FOR":
+                            System.out.println(analisis.Lista_IRT.get(i).FOR_C());
+                            break;
+                        case "End_FOR":
+                            System.out.println(analisis.Lista_IRT.get(i).FOR_C());
+                            break;
+                        case "Continue_For":
+                            System.out.println(analisis.Lista_IRT.get(i).Continue_c());
+                        break;
+                        default:
+                            System.out.println("No es nada");
+                            break;
                     }
-                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Metodo")){
-                        System.out.println(analisis.Lista_IRT.get(i).Metodo_());
-                    
-                    }
-                    else if(analisis.Lista_IRT.get(i).getNombre().equals("IF")){
-                        System.out.println(analisis.Lista_IRT.get(i).IF_C());
-                    
-                    }
-                    else if(analisis.Lista_IRT.get(i).getNombre().equals("ELSE")){
-                        System.out.println(analisis.Lista_IRT.get(i).ELSE_C());
-                    
-                    }
-                    else if(analisis.Lista_IRT.get(i).getNombre().equals("END_IF")){
-                        System.out.println(analisis.Lista_IRT.get(i).END_IF_C());
-                    
-                    }
-                    else if(analisis.Lista_IRT.get(i).getNombre().equals("Condicion")){
-                        System.out.println(analisis.Lista_IRT.get(i).Condicion());
-                        }
-                    else {
-                        System.out.println("No es nada");
-                        }
                 }
                 lector.close();
                 

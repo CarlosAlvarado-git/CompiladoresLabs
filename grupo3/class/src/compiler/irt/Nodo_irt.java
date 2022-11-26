@@ -23,6 +23,7 @@ public class Nodo_irt {
     private String Nombre;
     private ELSE_nodo else_nodo;
     private END_IF_nodo end_if;
+    private Continue_nodo conti_node;
     public Nodo_irt(String Nombre){
         this.Nombre = Nombre;
     
@@ -58,6 +59,20 @@ public class Nodo_irt {
            String resultado = this.if_nodo.getIf();
            return resultado;
         }
+       public void Crear_FOR(String ifs){ 
+            this.for_nodo = new FOR_nodo(ifs);
+       }
+       public String FOR_C(){
+           String resultado = this.for_nodo.getFor();
+           return resultado;
+        }
+       public void Crear_Continue(Nodo_irt ope, Nodo_irt jumpe){ 
+            this.conti_node = new Continue_nodo(ope, jumpe);
+       }
+       public String Continue_c(){
+           String resultado = this.conti_node.getContinue_nodo();
+           return resultado;
+        }
        public void Crear_ELSE(String els){ 
             this.else_nodo = new ELSE_nodo(els);
        }
@@ -72,7 +87,6 @@ public class Nodo_irt {
            String resultado = this.end_if.getEND_IF();
            return resultado;
         }
-       public void Crear_FOR(){ this.for_nodo = new FOR_nodo();}
        
        public void Crear_method(String f, String param){
            this.method_call_nodo = new method_call(f, param); 
@@ -143,7 +157,10 @@ class Operacion{
            resultado = resultado+ " Operador: " + this.getOper() + ". \n";
            resultado = resultado+ " Var 1: " + this.getVar1() + ". \n";
            resultado = resultado+ " Var 2: " + this.getVar2() + ". \n";
-           resultado = resultado+ " Registro: " + this.getRegistro() + ". \n";
+           if (this.getRegistro().indexOf('$') != -1)
+            resultado = resultado+ " Registro: " + this.getRegistro() + ". \n";
+           else
+            resultado = resultado+ " Variable: " + this.getRegistro() + ". \n";
            return resultado; 
         }
 }
@@ -261,19 +278,15 @@ class END_IF_nodo{
     
 }
 class FOR_nodo{
-    private ArrayList<Nodo_irt> parte_true = new ArrayList<>();
-    private Nodo_irt condicione;
-    public FOR_nodo(){
-        
+    private String tag_for;
+    public FOR_nodo(String tf){
+        this.tag_for = tf;
     
         }
-    // funcion que recibe condicion.
-    public void getCondicion(Nodo_irt con){
-        this.condicione = con;
-        }
-    // agregar a parte true
-    public void addTrue(Nodo_irt nuevo){
-        this.parte_true.add(nuevo);
+    public String getFor(){
+        String result = "";
+            result = result + "tag: "  + this.tag_for + "\n ";
+          return result;
         }
 }
 // ESTE lo usamos con los method deccl, pero lo pasaremos a los method call
@@ -371,3 +384,26 @@ class Negacion{
     }
 
 }
+class Continue_nodo{
+        private Nodo_irt ope;
+        private Nodo_irt jumpe;
+    public Continue_nodo(Nodo_irt o, Nodo_irt j){
+            this.ope = o;
+            this.jumpe = j;
+    
+        }
+    public String getContinue_nodo(){
+        String result = "";
+        result = result + this.ope.op.getOperacion();
+        result = result + this.jumpe.for_nodo.getFor();
+        return result;
+            
+    }
+}
+// assignacion
+// ir a tag de inicio
+// tag: antes
+// operacion: n++
+// (inicio) pregunta de la condicion
+
+// 

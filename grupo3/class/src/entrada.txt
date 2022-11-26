@@ -16,24 +16,24 @@ class Program {
     }
     void o(int a){
         boolean x, y;
+        int hu;
           main();
           if (x != true) {
                 int dentroif;
                 dentroif = 1;
-                if (y == false){
-                    int dentroif2;
-                    dentroif2 = 1;
-                }
-                else {
-                    do(x);
-                }
+                
             }
            else {
                 int dentroelse;
-                dentroelse = 1;
-                if (x == true) {
-                    main();
-                }
+                dentroelse = 1; 
+                    
+            }
+            for hu = 1, 10 {
+                int dentrofro;
+                dentrofro = 10;
+                if (x == true){ break; }
+                dentrofro = 50;
+                continue;
             }
         }
 }

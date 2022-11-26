@@ -27,15 +27,17 @@ parser code
     public int param_cont = 0;
     public Nodo_irt mdc = new Nodo_irt("parametros");
     public int count_if = 0;
+    public int count_for = 0;
     public ArrayList<Nodo_irt> Lista_IRT = new ArrayList<>();
     public ArrayList<String> STACK = new ArrayList<>();
+    ArrayList<String> for_ids = new ArrayList<>();
     class ValoresTabla_fun{
     public HashMap<String, String> data;
 
     public void Adddata(HashMap<String, String> valor){
         this.data = valor;
     }
-        
+    
     
 }
    
@@ -608,10 +610,34 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                     if (tmp.gettype().equals(e.gettype())){
                         parser.global_scope = parser.global_scope + 1;
                         parser.TABLA.pushScope(parser.global_scope);
-                        
+                        // antes de la coma
+                        Nodo_irt asi_for = new Nodo_irt("Asignacion");
+                        asi_for.Crear_Asignacion("ASSIGN", e.getValor(), tmp.getIdentifier());
+                        parser.Lista_IRT.add(asi_for);
+                        parser.for_ids.add(tmp.getIdentifier());
+                        // despues de la coma
                         if(e2.gettype().equals("Int")){
                             System.out.println("Asignacion correcta");
                             parser.TABLA.BANDERAS.replace("For", "Si");
+                            // tag de for
+                            Nodo_irt tag_for = new Nodo_irt("FOR");
+                            parser.count_for = parser.count_for + 1;
+                            tag_for.Crear_FOR(parser.TABLA.BANDERAS.get("Funcion") + "_FOR_" + parser.count_for);
+                            parser.Lista_IRT.add(tag_for);
+                            // condicion del for
+                            Nodo_irt condicion_for = new Nodo_irt("Condicion");
+                            condicion_for.Crear_condicion("LESS_EQUAL", tmp.getIdentifier(), e2.getValor());
+                            if (parser.STACK.size() == 0){
+                                condicion_for.co.setRegistro("$t0");
+                                parser.STACK.add("$t0");
+                            }
+                            else {
+                                int ultimo = parser.STACK.size();
+                                condicion_for.co.setRegistro("$t" + ultimo);
+                                parser.STACK.add("$t" + ultimo);
+                            }
+                            parser.Lista_IRT.add(condicion_for);
+                            
                         }
                         else
                         {
@@ -632,11 +658,31 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                         if (tmp.gettype().equals(e.gettype())){
                             parser.global_scope = parser.global_scope + 1;
                             parser.TABLA.pushScope(parser.global_scope);
-                            
-                            
+                            Nodo_irt asi_for = new Nodo_irt("Asignacion");
+                            asi_for.Crear_Asignacion("ASSIGN", e.getValor(), tmp.getIdentifier());
+                            parser.Lista_IRT.add(asi_for);
+                            parser.for_ids.add(tmp.getIdentifier());
                             if(e2.gettype().equals("Int")){
                                 System.out.println("Asignacion correcta");
                                 parser.TABLA.BANDERAS.replace("For", "Si");
+                                // tag de for
+                            Nodo_irt tag_for = new Nodo_irt("FOR");
+                            parser.count_for = parser.count_for + 1;
+                            tag_for.Crear_FOR(parser.TABLA.BANDERAS.get("Funcion") + "_FOR_" + parser.count_for);
+                            parser.Lista_IRT.add(tag_for);
+                            // condicion del for
+                            Nodo_irt condicion_for = new Nodo_irt("Condicion");
+                            condicion_for.Crear_condicion("LESS_EQUAL", tmp.getIdentifier(), e2.getValor());
+                            if (parser.STACK.size() == 0){
+                                condicion_for.co.setRegistro("$t0");
+                                parser.STACK.add("$t0");
+                            }
+                            else {
+                                int ultimo = parser.STACK.size();
+                                condicion_for.co.setRegistro("$t" + ultimo);
+                                parser.STACK.add("$t" + ultimo);
+                            }
+                            parser.Lista_IRT.add(condicion_for);
                             }
                             else
                             {
@@ -664,9 +710,31 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
 
                             parser.TABLA.insertSymbol(nueva, parser.global_scope);
                             if (nueva.gettype().equals(e.gettype())){
+                                Nodo_irt asi_for = new Nodo_irt("Asignacion");
+                                asi_for.Crear_Asignacion("ASSIGN", e.getValor(), nueva.getIdentifier());
+                                parser.Lista_IRT.add(asi_for);
+                                parser.for_ids.add(nueva.getIdentifier());
                                 if(e2.gettype().equals("Int")){
                                     System.out.println("Asignacion correcta");
                                     parser.TABLA.BANDERAS.replace("For", "Si");
+                                    // tag de for
+                                    Nodo_irt tag_for = new Nodo_irt("FOR");
+                                    parser.count_for = parser.count_for + 1;
+                                    tag_for.Crear_FOR(parser.TABLA.BANDERAS.get("Funcion") + "_FOR_" + parser.count_for);
+                                    parser.Lista_IRT.add(tag_for);
+                                    // condicion del for
+                                    Nodo_irt condicion_for = new Nodo_irt("Condicion");
+                                    condicion_for.Crear_condicion("LESS_EQUAL", nueva.getIdentifier(), e2.getValor());
+                                    if (parser.STACK.size() == 0){
+                                        condicion_for.co.setRegistro("$t0");
+                                        parser.STACK.add("$t0");
+                                    }
+                                    else {
+                                        int ultimo = parser.STACK.size();
+                                        condicion_for.co.setRegistro("$t" + ultimo);
+                                        parser.STACK.add("$t" + ultimo);
+                                    }
+                                    parser.Lista_IRT.add(condicion_for);
                                 }
                                 else
                                 {
@@ -683,7 +751,24 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 RESULT = tmp;
 
-                :} block:b statement:stm
+                :} block:b {:
+                        // condicion del for
+                        Nodo tmp = new Nodo("statement");
+                        tmp.setIdentifier("" + id);
+                            Nodo_irt operacion_for = new Nodo_irt("Operacion_FOR");
+                            operacion_for.Crear_operacion("Mas", tmp.getIdentifier(), "1");
+                            operacion_for.op.setRegistro(tmp.getIdentifier());
+                            parser.Lista_IRT.add(operacion_for);
+                            Nodo_irt jump_for = new Nodo_irt("Jump_FOR");
+                            jump_for.Crear_FOR("jump: " + parser.TABLA.BANDERAS.get("Funcion") + "_FOR_" + parser.count_for);
+                            parser.Lista_IRT.add(jump_for);
+                            Nodo_irt end_for = new Nodo_irt("End_FOR");
+                            end_for.Crear_FOR("end: " + parser.TABLA.BANDERAS.get("Funcion") + "_FOR_" + parser.count_for);
+                            parser.Lista_IRT.add(end_for);
+                            parser.count_for = parser.count_for - 1;
+                            parser.TABLA.BANDERAS.replace("For", "");
+                
+                :}statement:stm
         | Return statement_expr:stmex Punto_coma  {:
                 Nodo tmp = new Nodo("statement");
                 
@@ -703,7 +788,10 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 if (parser.TABLA.BANDERAS.get("For").equals("Si")){
                     System.out.println("Break correcto");
-                    parser.TABLA.BANDERAS.replace("For", "");
+                    
+                    Nodo_irt break_for = new Nodo_irt("Break_FOR");
+                    break_for.Crear_FOR("break: " + "end: "+ parser.TABLA.BANDERAS.get("Funcion") + "_FOR_" + parser.count_for);
+                    parser.Lista_IRT.add(break_for);
                 }
                 else {
                     System.out.println("No puede usar break si no se está dentro de un For");
@@ -717,7 +805,17 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 if (parser.TABLA.BANDERAS.get("For").equals("Si")){
                     System.out.println("Continue correcto");
-                    parser.TABLA.BANDERAS.replace("For", "");
+                    
+                        tmp.setIdentifier(parser.for_ids.get(parser.for_ids.size() - 1));
+                            Nodo_irt operacion_for = new Nodo_irt("Operacion_FOR");
+                            operacion_for.Crear_operacion("Mas", tmp.getIdentifier(), "1");
+                            operacion_for.op.setRegistro(tmp.getIdentifier());
+                            Nodo_irt jump_for = new Nodo_irt("Jump_FOR");
+                            jump_for.Crear_FOR("jump: " + parser.TABLA.BANDERAS.get("Funcion") + "_FOR_" + parser.count_for);
+                            parser.for_ids.remove(parser.for_ids.size() - 1);
+                            Nodo_irt continue_c = new Nodo_irt("Continue_For");
+                            continue_c.Crear_Continue(operacion_for, jump_for);
+                            parser.Lista_IRT.add(continue_c);
                 }
                 else {
                     System.out.println("No puede usar Continue si no se está dentro de un For");
