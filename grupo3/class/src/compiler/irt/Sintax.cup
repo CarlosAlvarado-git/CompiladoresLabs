@@ -1268,6 +1268,20 @@ expr ::= location:l{:
         Nodo expr1 = (Nodo) ex;
         if (expr1.gettype().equals("Int")){
             tmp.settype("Int");
+            Nodo_irt operador = new Nodo_irt("Operador");
+                operador.Crear_operacion("Menos","0", expr1.getValor());
+                if (parser.STACK.size() == 0){
+                    operador.co.setRegistro("$t0");
+                    parser.STACK.add("$t0");
+                    tmp.setValor("$t0");}
+                else {
+                    int ultimo = parser.STACK.size();
+                    operador.co.setRegistro("$t" + ultimo);
+                    parser.STACK.add("$t" + ultimo);
+                    tmp.setValor("$t" + ultimo);
+                }
+                parser.Lista_IRT.add(operador);
+            
         }
         else {
             System.out.println("No se puede usar el - menos con booleanos");
@@ -1280,6 +1294,20 @@ expr ::= location:l{:
         Nodo expr1 = (Nodo) ex;
         if (expr1.gettype().equals("Boolean")){
             tmp.settype("Boolean");
+            Nodo_irt negacion = new Nodo_irt("Negacion");
+                negacion.Crear_negacion(expr1.getValor());
+                if (parser.STACK.size() == 0){
+                    negacion.negacion_nodo.setRegistro("$t0");
+                    parser.STACK.add("$t0");
+                    tmp.setValor("$t0");}
+                else {
+                    int ultimo = parser.STACK.size();
+                    negacion.negacion_nodo.setRegistro("$t" + ultimo);
+                    parser.STACK.add("$t" + ultimo);
+                    tmp.setValor("$t" + ultimo);
+                }
+                parser.Lista_IRT.add(negacion);
+            
         }
         else {
             System.out.println("No se puede usar el signo ! con integers");

@@ -18,6 +18,7 @@ public class Nodo_irt {
     public FOR_nodo for_nodo;
     public method_call method_call_nodo;
     public parametros parametros_nodo;
+    public Negacion negacion_nodo;
     private String Nombre;
     public Nodo_irt(String Nombre){
         this.Nombre = Nombre;
@@ -71,6 +72,13 @@ public class Nodo_irt {
                  resultado = "";
             return resultado;
         }
+       public void Crear_negacion(String v){
+           this.negacion_nodo = new Negacion(v);
+        }
+       public String getNegacion(){
+           String resultado = this.negacion_nodo.getNegacion();
+           return resultado;
+       }
        
        
     
@@ -208,6 +216,7 @@ class FOR_nodo{
         this.parte_true.add(nuevo);
         }
 }
+// ESTE lo usamos con los method deccl, pero lo pasaremos a los method call
 class method_call{
       private String funcion;
       private String parametros;
@@ -227,6 +236,7 @@ class method_call{
           return result;
       }
 }
+// para los method decla, hacemos lo mismo, PERO ! YA VEMOS LA MEMORIA ! 
 
 class parametros{
     private ArrayList<String> parame = new ArrayList<>();
@@ -259,4 +269,22 @@ class parametros{
             this.parame.clear();
         }
 }
+   
+class Negacion{
+    private String valor;
+    private String VRegistro;
     
+    public Negacion(String v){
+            this.valor = v;
+        }
+    public void setRegistro(String R){
+          this.VRegistro = R;
+        }
+    public String getNegacion(){
+           String r = "\n";
+           r = r + "Valor: " + this.valor + "\n";
+           r = r + "VRegistro: " + this.VRegistro;
+           return r;
+    }
+
+}
