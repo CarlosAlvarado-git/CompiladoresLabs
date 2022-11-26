@@ -75,36 +75,7 @@ public class IRT_C {
                 System.out.println(e);
             }
             lector.close();
-            lector = new BufferedReader(new FileReader(archivo));
-            IRT analisis_irt = new IRT(new LexerCup(lector));
-                
-            try{
-                
-                analisis_irt.parse();
-                System.out.println("\n\n\n\n------------- GENERACION DE IRT ------- con IRT.JAVA");
-                System.out.println("El size es: " + analisis_irt.Lista_IRT.size());
-                for (int i = 0; i < analisis_irt.Lista_IRT.size(); i++) {
-                    System.out.println(analisis_irt.Lista_IRT.get(i).getNombre());
-                    if(analisis_irt.Lista_IRT.get(i).getNombre().equals("Operador")){
-                        System.out.println(analisis_irt.Lista_IRT.get(i).Operador());
-                        }
-                    else if(analisis_irt.Lista_IRT.get(i).getNombre().equals("Asignacion")){
-                        System.out.println(analisis_irt.Lista_IRT.get(i).Asignacion());
-                        }
-                    else if(analisis_irt.Lista_IRT.get(i).getNombre().equals("Metodo")){
-                        System.out.println(analisis_irt.Lista_IRT.get(i).Metodo());
-                    
-                    }
-                    else {
-                        System.out.println("No es nada");
-                        }
-                  }
-                
-            }
-            catch (Exception e){
-                System.out.println("error desde el catch");
-                System.out.println(e);
-            }
+            
             
         }catch (FileNotFoundException ex) {
             System.out.println(ex);

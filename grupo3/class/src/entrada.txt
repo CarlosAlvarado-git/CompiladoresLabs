@@ -2,7 +2,7 @@ class Program {
     int x;
     int main(){
         int x,y, m2;
-        m2 = x;
+        m2 = 1;
     }   
     void do(boolean i){
     

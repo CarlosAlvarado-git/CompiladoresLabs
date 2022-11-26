@@ -241,7 +241,7 @@ method_decl ::= type:t Id:id {:
                                 parser.mdc.parametros_nodo.Clear_parame();
                         }
                         else {
-                                metodo.Crear_method(("" + id), "parametros: ()");
+                                metodo.Crear_method(("" + id), "()");
                                 parser.Lista_IRT.add(metodo);
                                 }
                         
@@ -442,7 +442,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 {
                     // buscar el id en la tabla
                     //System.out.println("El type de loc es: " + loc.gettype());
-                    //System.out.println("El type de e es: " + e.gettype());
+                    System.out.println("EL VALOR DE e ES: " + e.getValor());
                     int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
                     if (bandera[0] == 1) {
                         loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
@@ -999,11 +999,14 @@ expr ::= location:l{:
         int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
         if (bandera[0] == 1) {
            tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+           System.out.println("EL LOC IDENTI: " + loc.getIdentifier());
+           tmp.setValor(loc.getIdentifier());
         }
         else {
             bandera = parser.TABLA.lookup_param(loc);
             if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                 tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
+                System.out.println("EL LOC IDENTI: " + loc.getIdentifier());
                 tmp.setValor(loc.getIdentifier());
                 
             }else {
@@ -1031,6 +1034,7 @@ expr ::= location:l{:
         tmp.addHijo((Nodo) lit);
         Nodo liter = (Nodo) lit;
         tmp.settype(liter.gettype());
+        tmp.setValor(liter.getValor());
         
         RESULT = tmp;
         :}
