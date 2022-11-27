@@ -44,54 +44,16 @@ public class IRT_C {
                 System.out.println("------------- TABLA PARAMETROS");
                 System.out.println("La tabla: \n" + analisis.TABLA.tabla_print_m());
                 System.out.println("\n\n\n\n------------- GENERACION DE IRT");
-                System.out.println("El size es: " + analisis.Lista_IRT.size());
-                for (int i = 0; i < analisis.Lista_IRT.size(); i++) {
-                    System.out.println(analisis.Lista_IRT.get(i).getNombre());
-                    switch (analisis.Lista_IRT.get(i).getNombre()) {
-                        case "Operador":
-                            System.out.println(analisis.Lista_IRT.get(i).Operador());
-                            break;
-                        case "Asignacion":
-                            System.out.println(analisis.Lista_IRT.get(i).Asignacion());
-                            break;
-                        case "Method_call":
-                            System.out.println(analisis.Lista_IRT.get(i).Metodo());
-                            break;
+                System.out.println("El size es: " + analisis.Lista_IRT_P.size());
+                for (int i = 0; i < analisis.Lista_IRT_P.size(); i++){
+                    System.out.println(analisis.Lista_IRT_P.get(i).getNombre());
+                    switch (analisis.Lista_IRT_P.get(i).getNombre()) {
+                        
                         case "Metodo":
-                            System.out.println(analisis.Lista_IRT.get(i).Metodo_());
+                            analisis.Lista_IRT_P.get(i).Metodo_();
                             break;
-                        case "IF":
-                            System.out.println(analisis.Lista_IRT.get(i).IF_C());
-                            break;
-                        case "ELSE":
-                            System.out.println(analisis.Lista_IRT.get(i).ELSE_C());
-                            break;
-                        case "END_IF":
-                            System.out.println(analisis.Lista_IRT.get(i).END_IF_C());
-                            break;
-                        case "Condicion":
-                            System.out.println(analisis.Lista_IRT.get(i).Condicion());
-                            break;
-                        case "FOR":
-                            System.out.println(analisis.Lista_IRT.get(i).FOR_C());
-                            break;
-                        case "Operacion_FOR":
-                            System.out.println(analisis.Lista_IRT.get(i).Operador());
-                            break;
-                        case "Jump_FOR":
-                            System.out.println(analisis.Lista_IRT.get(i).FOR_C());
-                            break;
-                        case "Break_FOR":
-                            System.out.println(analisis.Lista_IRT.get(i).FOR_C());
-                            break;
-                        case "End_FOR":
-                            System.out.println(analisis.Lista_IRT.get(i).FOR_C());
-                            break;
-                        case "Continue_For":
-                            System.out.println(analisis.Lista_IRT.get(i).Continue_c());
-                        break;
                         case "Crear_Variable":
-                            System.out.println(analisis.Lista_IRT.get(i).Variable());
+                            analisis.Lista_IRT_P.get(i).Variable();
                         break;
                         default:
                             System.out.println("No es nada");

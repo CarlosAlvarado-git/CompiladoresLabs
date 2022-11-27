@@ -8,7 +8,7 @@ class Program {
         p = (p != f);
         f = p == true;
         return x;
-    }   
+    }
     void do(boolean i){
         if (i == true) {
             main();

@@ -28,7 +28,9 @@ parser code
     public Nodo_irt mdc = new Nodo_irt("parametros");
     public int count_if = 0;
     public int count_for = 0;
-    public ArrayList<Nodo_irt> Lista_IRT = new ArrayList<>();
+    public int memoria_metodo = 0;
+    public ArrayList<Nodo_irt> Lista_IRT = new ArrayList<>(); // guardar todo lo que esta en block del method_dcl y se va como variable al metodo
+    public ArrayList<Nodo_irt> Lista_IRT_P = new ArrayList<>(); // maneja nodos de metodos y dec de variables en el field_dec
     public ArrayList<String> STACK = new ArrayList<>();
     ArrayList<String> for_ids = new ArrayList<>();
     class ValoresTabla_fun{
@@ -165,7 +167,7 @@ field_decl ::= field_decl:fd type:t field_name:fn  {:
                     parser.TABLA.insertSymbol(field, parser.global_scope);
                     Nodo_irt crear_variable = new Nodo_irt("Crear_Variable");
                     crear_variable.Crear_variable(field.getIdentifier(), "" + field.getmemoria());
-                    parser.Lista_IRT.add(crear_variable);
+                    parser.Lista_IRT_P.add(crear_variable);
                 }
                 else {
                     System.out.println("La variable " + field.getIdentifier() + " ya existe");
@@ -193,7 +195,7 @@ field_decl_coma_field ::=
                     parser.TABLA.insertSymbol(field, parser.global_scope);
                     Nodo_irt crear_variable = new Nodo_irt("Crear_Variable");
                     crear_variable.Crear_variable(field.getIdentifier(), "" + field.getmemoria());
-                    parser.Lista_IRT.add(crear_variable);
+                    parser.Lista_IRT_P.add(crear_variable);
                 }
                 else {
                     System.out.println("La variable " + field.getIdentifier() + ", esta repetida");
@@ -229,6 +231,7 @@ method_decl ::= type:t Id:id {:
                 if (bandera == 2){
                     System.out.println("DESDE METHOD: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                    parser.memoria_metodo = parser.memoria_metodo + tmp.getmemoria();
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
                     parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
                     parser.TABLA.BANDERAS.replace("Funcion_return", "Si");
@@ -243,26 +246,29 @@ method_decl ::= type:t Id:id {:
 
 
 
-                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR{: 
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b {:
+                    Nodo tmp = new Nodo("");
+                    tmp.setIdentifier(id + "");
+                    if(parser.TABLA.BANDERAS.get("Funcion_return").equals("")){
                         Nodo_irt metodo = new Nodo_irt("Metodo");
                         if (parser.mdc.parametros_nodo != null)
                             {
-                                metodo.Crear_metodo(("" + id), parser.mdc.parametros_nodo.getParame());
-                                parser.Lista_IRT.add(metodo);
+                                metodo.Crear_metodo(("" + id), parser.mdc.parametros_nodo.getParame(), parser.memoria_metodo, parser.Lista_IRT);
+                                parser.Lista_IRT_P.add(metodo);
                                 parser.mdc.parametros_nodo.Clear_parame();
+                                parser.memoria_metodo = 0;
+                                parser.Lista_IRT.clear();
                         }
                         else {
-                                metodo.Crear_metodo(("" + id), "()");
-                                parser.Lista_IRT.add(metodo);
+                                metodo.Crear_metodo(("" + id), "()", parser.memoria_metodo, parser.Lista_IRT);
+                                parser.Lista_IRT_P.add(metodo);
+                                parser.memoria_metodo = 0;
+                                parser.Lista_IRT.clear();
                                 }
                         
                         
-                        
-                :} block:b {:
-                    Nodo tmp = new Nodo("");
-                    tmp.setIdentifier(id + "");
-                    if(parser.TABLA.BANDERAS.get("Funcion_return").equals(""))
-                       { System.out.println("Funcion cerrada");}
+                        System.out.println("Funcion cerrada");
+                    }
                     else{
                          System.out.println("El metodo" + tmp.getIdentifier() + ", espera un return ...");
                         System.exit(0);
@@ -284,6 +290,7 @@ method_decl ::= type:t Id:id {:
                 if (bandera == 2){
                     System.out.println("DESDE METHOD VOID: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                    parser.memoria_metodo = parser.memoria_metodo + tmp.getmemoria();
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
                     parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
                     
@@ -296,22 +303,29 @@ method_decl ::= type:t Id:id {:
                 parser.TABLA.pushScope(parser.global_scope);
                 RESULT = tmp;
 
-                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR {: 
-                        Nodo_irt metodo = new Nodo_irt("Metodo");
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b {:   
+                    Nodo_irt metodo = new Nodo_irt("Metodo");
                         if (parser.mdc.parametros_nodo != null)
                             {
-                                metodo.Crear_metodo(("" + id), parser.mdc.parametros_nodo.getParame());
-                                parser.Lista_IRT.add(metodo);
+                                metodo.Crear_metodo(("" + id), parser.mdc.parametros_nodo.getParame(), parser.memoria_metodo, parser.Lista_IRT);
+                                parser.Lista_IRT_P.add(metodo);
                                 parser.mdc.parametros_nodo.Clear_parame();
+                                parser.memoria_metodo = 0;
+                                parser.Lista_IRT.clear();
                         }
                         else {
-                                metodo.Crear_metodo(("" + id), "()");
-                                parser.Lista_IRT.add(metodo);
+                                metodo.Crear_metodo(("" + id), "()", parser.memoria_metodo, parser.Lista_IRT);
+                                parser.Lista_IRT_P.add(metodo);
+                                parser.memoria_metodo = 0;
+                                parser.Lista_IRT.clear();
                                 }
                         
                         
-                        
-                :}block:b method_decl:md 
+                        System.out.println("Funcion cerrada");
+    
+    
+                
+                :}method_decl:md 
 | 
 
 ;
@@ -336,7 +350,7 @@ method_decl_corche ::=
 
         System.out.println("DESDE variables del metodo: La variable " + tmp.getIdentifier() + ", se guardará");
         parser.TABLA.insertSymbol_m(tmp);
-        
+        parser.memoria_metodo = parser.memoria_metodo + tmp.getmemoria();
 
         parser.mdc.Crear_parametros();
         parser.mdc.parametros_nodo.addParame("" + id);
@@ -372,6 +386,7 @@ method_decl_corche_coma_type ::=
 
         System.out.println("DESDE variables del metodo el resto: La variable" + tmp.getIdentifier() + ", se guardará");
         parser.TABLA.insertSymbol_m(tmp);
+        parser.memoria_metodo = parser.memoria_metodo + tmp.getmemoria();
         RESULT = tmp;
     :}|
 ;
@@ -406,6 +421,7 @@ var_decl ::= type:t Id:id {:
             if (bandera == 2){
                 System.out.println("La variable " + tmp.getIdentifier() + ", se guardará");
                 parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                parser.memoria_metodo = parser.memoria_metodo + tmp.getmemoria();
                 Nodo_irt crear_variable = new Nodo_irt("Crear_Variable");
                     crear_variable.Crear_variable(tmp.getIdentifier(), "" + tmp.getmemoria());
                     parser.Lista_IRT.add(crear_variable);
@@ -436,6 +452,7 @@ var_decl_coma_id ::=
                 if (bandera == 2){
                     System.out.println("DESDE LAS COMAS var_decl: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                    parser.memoria_metodo = parser.memoria_metodo + tmp.getmemoria();
                      Nodo_irt crear_variable = new Nodo_irt("Crear_Variable");
                     crear_variable.Crear_variable(tmp.getIdentifier(), "" + tmp.getmemoria());
                     parser.Lista_IRT.add(crear_variable);
@@ -735,6 +752,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             parser.TABLA.insertSymbol(nueva, parser.global_scope);
                             if (nueva.gettype().equals(e.gettype())){
                                 Nodo_irt asi_for = new Nodo_irt("Asignacion");
+                                parser.memoria_metodo = parser.memoria_metodo + nueva.getmemoria();
                                 asi_for.Crear_Asignacion("ASSIGN", e.getValor(), nueva.getIdentifier());
                                 parser.Lista_IRT.add(asi_for);
                                 parser.for_ids.add(nueva.getIdentifier());

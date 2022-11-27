@@ -104,12 +104,11 @@ public class Nodo_irt {
            String resultado = this.method_call_nodo.getMethod();
            return resultado;
        }
-       public void Crear_metodo(String f, String param){
-           this.method_nodo = new method_decl(f, param); 
+       public void Crear_metodo(String f, String param, int mem, ArrayList<Nodo_irt> dat){
+           this.method_nodo = new method_decl( f,  param,  mem,  dat); 
        }
-       public String Metodo_(){
-           String resultado = this.method_nodo.getMethod();
-           return resultado;
+       public void Metodo_(){
+           this.method_nodo.getMethod();
        }
        public void Crear_parametros(){
            this.parametros_nodo = new parametros();
@@ -343,24 +342,88 @@ class method_decl{
       private String funcion;
       private String parametros;
       private int memoria;
-      public method_decl(String f, String param){
+      private ArrayList<Nodo_irt> data;
+      public method_decl(String f, String param, int mem, ArrayList<Nodo_irt> dat){
           this.funcion = f;
           this.parametros = param;
-      
-        }
-      public void getMemoria(int m){
-          this.memoria = m;
+          this.memoria = mem;
+          this.data = new ArrayList<Nodo_irt>(dat);
         }
       
       // print method_call
-      public String getMethod(){
-          String result = "";
-          result = result + "tag: "  + this.funcion + "\n ";
+      public void getMethod(){
+          System.out.println("TAG: "  + this.funcion + "\n");
+          
           //System.out.println("Desde getMethod: "+ this.parametros);
           if (this.parametros != null){
-            result = result + "parametros: " + this.parametros + "\n";
+            System.out.println("PARAMETROS: " + this.parametros + "\n");
           }
-          return result;
+          System.out.println(" MEMORIA: " + this.memoria + "\n");
+          String r = "";
+          for (int i = 0; i < this.data.size(); i++) {
+                    System.out.println(this.data.get(i).getNombre());
+                    switch (this.data.get(i).getNombre()) {
+                        case "Operador":
+                                r = "        : " + this.data.get(i).Operador();
+                            System.out.println(r);
+                            break;
+                        case "Asignacion":
+                            r = "        : " + this.data.get(i).Asignacion();
+                            System.out.println(r);
+                            break;
+                        case "Method_call":
+                            r = "        : " + this.data.get(i).Metodo();
+                            System.out.println(r);
+                            break;
+                        case "IF":
+                            r = "        : " + this.data.get(i).IF_C();
+                            System.out.println(r);
+                            break;
+                        case "ELSE":
+                            r = "        : " + this.data.get(i).ELSE_C();
+                            System.out.println(r);
+                            break;
+                        case "END_IF":
+                            r = "        : " + this.data.get(i).END_IF_C();
+                            System.out.println(r);
+                            break;
+                        case "Condicion":
+                            r = "        : " + this.data.get(i).Condicion();
+                            System.out.println(r);
+                            break;
+                        case "FOR":
+                            r = "        : " + this.data.get(i).FOR_C();
+                            System.out.println(r);
+                            break;
+                        case "Operacion_FOR":
+                            r = "        : " + this.data.get(i).Operador();
+                            System.out.println(r);
+                            break;
+                        case "Jump_FOR":
+                            r = "        : " + this.data.get(i).FOR_C();
+                            System.out.println(r);
+                            break;
+                        case "Break_FOR":
+                            r = "        : " + this.data.get(i).FOR_C();
+                            System.out.println(r);
+                            break;
+                        case "End_FOR":
+                            r = "        : " + this.data.get(i).FOR_C();
+                            System.out.println(r);
+                            break;
+                        case "Continue_For":
+                            r = "        : " + this.data.get(i).Continue_c();
+                            System.out.println(r);
+                        break;
+                        case "Crear_Variable":
+                            r = "        : " + this.data.get(i).Variable();
+                            System.out.println(r);
+                        break;
+                        default:
+                            System.out.println("No es nada");
+                            break;
+                    }
+                }
       }
 }
 class parametros{
