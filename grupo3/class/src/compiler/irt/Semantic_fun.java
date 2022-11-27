@@ -28,6 +28,7 @@ public class Semantic_fun {
             BANDERAS.put("Llamada_fun", "");
             BANDERAS.put("Llamada_fun_type", "");
             BANDERAS.put("Llamada_callout", "");
+            BANDERAS.put("Funcion_return", "");
             Tabla_m.put("DATA", null);
             Tabla_fun.put("PARAM", null);
             //for (int x = 0; x < Tabla.get("Scope: " + parser.global_scope).size(); x++)

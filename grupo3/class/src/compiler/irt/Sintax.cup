@@ -231,6 +231,7 @@ method_decl ::= type:t Id:id {:
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
                     parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
+                    parser.TABLA.BANDERAS.replace("Funcion_return", "Si");
                 }
                 else {
                     System.out.println("El nombre del metodo esta repetido " + tmp.getIdentifier());
@@ -257,7 +258,17 @@ method_decl ::= type:t Id:id {:
                         
                         
                         
-                :} block:b method_decl:md 
+                :} block:b {:
+                    Nodo tmp = new Nodo("");
+                    tmp.setIdentifier(id + "");
+                    if(parser.TABLA.BANDERAS.get("Funcion_return").equals(""))
+                       { System.out.println("Funcion cerrada");}
+                    else{
+                         System.out.println("El metodo" + tmp.getIdentifier() + ", espera un return ...");
+                        System.exit(0);
+                        }
+                    
+                    :} method_decl:md 
                 | Void Id:id {:
 
                 Nodo tmp = new Nodo("method_decl");
@@ -275,6 +286,7 @@ method_decl ::= type:t Id:id {:
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
                     parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
+                    
                 }
                 else {
                     System.out.println("El nombre del método esta repetido:  " + tmp.getIdentifier());
@@ -783,16 +795,29 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 :}statement:stm
         | Return statement_expr:stmex Punto_coma  {:
                 Nodo tmp = new Nodo("statement");
-                
-                Nodo stmex_x = (Nodo) stmex;
-                if (parser.TABLA.BANDERAS.get("Funcion_type").equals(stmex_x.gettype())){
-                    System.out.println("Return correcto");
+                if(parser.TABLA.BANDERAS.get("Funcion_return").equals("Si")){
+                        Nodo stmex_x = (Nodo) stmex;
+                        if (stmex_x != null){
+                            if (parser.TABLA.BANDERAS.get("Funcion_type").equals(stmex_x.gettype())){
+                                System.out.println("Return correcto");
+                                parser.TABLA.BANDERAS.replace("Funcion_return", "");
+                            }
+                            else {
+                                System.out.println("El valor de retorno no es del mismo type de la funcion: " + parser.TABLA.BANDERAS.get("Funcion_type") + " != " + stmex_x.gettype());
+                                System.exit(0);
+                            }
+                        }
+                        else{
+                            System.out.println("No puede haber un return vacio");
+                                System.exit(0);
+                        }
                 }
                 else {
-                    System.out.println("El valor de retorno no es del mismo type de la funcion: " + parser.TABLA.BANDERAS.get("Funcion_type") + " != " + stmex_x.gettype());
+
+                    System.out.println("El metodo: " + parser.TABLA.BANDERAS.get("Funcion") + ", es de tipo: " + 
+                                    parser.TABLA.BANDERAS.get("Funcion_type") + ", no puede tener un resturn");
                     System.exit(0);
                 }
-
                 RESULT = tmp;
                 :} statement:stm
         | Break Punto_coma  {:

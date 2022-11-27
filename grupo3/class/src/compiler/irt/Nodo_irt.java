@@ -219,7 +219,7 @@ class Creacion_var{
     public String getCreacion(){
         String result = "";
         result = result + "id: " + this.id + "\n";
-        result = result + "memora: " + this.memoria;
+        result = result + "memora: " + this.memoria + "\n";
         return result;
         }
 
