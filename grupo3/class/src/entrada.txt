@@ -5,7 +5,6 @@ class Program {
         boolean p,f,t;
         m2 = (x + 1) + (5 + m2);
         x += y;
-        p = true;
         p = (p != f);
         f = p == true;
         

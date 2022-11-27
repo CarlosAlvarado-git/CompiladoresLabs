@@ -24,12 +24,21 @@ public class Nodo_irt {
     private ELSE_nodo else_nodo;
     private END_IF_nodo end_if;
     private Continue_nodo conti_node;
+    private Creacion_var crear_var;
     public Nodo_irt(String Nombre){
         this.Nombre = Nombre;
     
     }
     public String getNombre(){
         return this.Nombre;
+        }
+       public void Crear_variable(String id, String memoria){
+           this.crear_var = new Creacion_var(id, memoria);
+       }
+       public String Variable(){
+           String result = "";
+           result = this.crear_var.getCreacion();
+           return result;
         }
        public void Crear_operacion(String Oper, String Var1, String Var2){
            this.op = new Operacion(Oper, Var1, Var2);
@@ -198,6 +207,26 @@ class Condicion{
            return resultado; 
         }
 }
+
+class Creacion_var{
+    private String id;
+    private String memoria;
+    public Creacion_var(String id, String memoria){
+            this.id = id;
+            this.memoria = memoria;
+        }
+
+    public String getCreacion(){
+        String result = "";
+        result = result + "id: " + this.id + "\n";
+        result = result + "memora: " + this.memoria;
+        return result;
+        }
+
+
+}
+
+
 class Asignacion{
     private String Oper;
     private String Valor;

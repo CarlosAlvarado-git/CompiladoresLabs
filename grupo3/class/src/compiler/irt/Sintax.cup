@@ -163,6 +163,9 @@ field_decl ::= field_decl:fd type:t field_name:fn  {:
                 if (bandera == 2){
                     System.out.println("La variable " + field.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(field, parser.global_scope);
+                    Nodo_irt crear_variable = new Nodo_irt("Crear_Variable");
+                    crear_variable.Crear_variable(field.getIdentifier(), "" + field.getmemoria());
+                    parser.Lista_IRT.add(crear_variable);
                 }
                 else {
                     System.out.println("La variable " + field.getIdentifier() + " ya existe");
@@ -188,6 +191,9 @@ field_decl_coma_field ::=
                 if (bandera == 2){
                     System.out.println("DESDE LAS COMAS: La variable " + field.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(field, parser.global_scope);
+                    Nodo_irt crear_variable = new Nodo_irt("Crear_Variable");
+                    crear_variable.Crear_variable(field.getIdentifier(), "" + field.getmemoria());
+                    parser.Lista_IRT.add(crear_variable);
                 }
                 else {
                     System.out.println("La variable " + field.getIdentifier() + ", esta repetida");
@@ -388,6 +394,9 @@ var_decl ::= type:t Id:id {:
             if (bandera == 2){
                 System.out.println("La variable " + tmp.getIdentifier() + ", se guardará");
                 parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                Nodo_irt crear_variable = new Nodo_irt("Crear_Variable");
+                    crear_variable.Crear_variable(tmp.getIdentifier(), "" + tmp.getmemoria());
+                    parser.Lista_IRT.add(crear_variable);
             }
             else {
                 System.out.println("La variable " + tmp.getIdentifier() + ",está repetida");
@@ -415,6 +424,9 @@ var_decl_coma_id ::=
                 if (bandera == 2){
                     System.out.println("DESDE LAS COMAS var_decl: La variable " + tmp.getIdentifier() + ", se guardará");
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
+                     Nodo_irt crear_variable = new Nodo_irt("Crear_Variable");
+                    crear_variable.Crear_variable(tmp.getIdentifier(), "" + tmp.getmemoria());
+                    parser.Lista_IRT.add(crear_variable);
                 }
                 else {
                     System.out.println("La variable " + tmp.getIdentifier() + ", esta repetida");

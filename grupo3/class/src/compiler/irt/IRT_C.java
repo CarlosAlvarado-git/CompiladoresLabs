@@ -90,6 +90,9 @@ public class IRT_C {
                         case "Continue_For":
                             System.out.println(analisis.Lista_IRT.get(i).Continue_c());
                         break;
+                        case "Crear_Variable":
+                            System.out.println(analisis.Lista_IRT.get(i).Variable());
+                        break;
                         default:
                             System.out.println("No es nada");
                             break;
