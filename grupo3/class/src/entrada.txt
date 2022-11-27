@@ -8,6 +8,7 @@ class Program {
         p = true;
         p = (p != f);
         f = p == true;
+        
     }   
     void do(boolean i){
         if (i == true) {
