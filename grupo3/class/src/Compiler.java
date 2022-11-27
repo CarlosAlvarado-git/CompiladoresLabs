@@ -11,6 +11,7 @@ import compiler.scanner.Scanner_;
 import compiler.parser.Parser;
 import compiler.semantic.Semantic;
 import compiler.irt.IRT_C;
+import compiler.ast.Ast;
 //import compiler.semantic.Semantic;
 import java.util.Scanner;
 
@@ -89,6 +90,11 @@ public class Compiler {
                                                 parse.main(null,ruta);
                                                 break;
                                             case "ast":
+                                                ruta = System.getProperty("user.dir");
+                                                ruta = ruta + "/src/" + archivo;
+                                                //Scanner
+                                                Ast ast = new Ast();
+                                                ast.main(null,ruta);
                                                 break;
                                             case "semantic":
                                                 ruta = System.getProperty("user.dir");
