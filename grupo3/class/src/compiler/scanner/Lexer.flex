@@ -6,15 +6,14 @@ import static compiler.scanner.Tokens.*;
 %line
 %column
 
-id = ([A-Za-z][_0-9A-Za-z]*)
-alpha = [a-zA-Z_]
+string_literal = ([\"][^\".]+[\"])
+char_literal = ([\'][^\'.][\'])
 digit = [0-9]
-hex_digit = ([0-9a-fA-F])
-decimal_literal = ([0-9][0-9]*)
-hex_literal = (0[Xx]{hex_digit}+)
-rel_op = ([<|>])
-arith_op = [+|-|*|/|%]
-assign_op = [=]
+alpha = [a-zA-Z]
+hex_digit = [0-9a-fA-F]
+id = {alpha}({alpha}|{digit})*
+hex_literal = [0][xX]{hex_digit}({hex_digit})*
+decimal_literal = {digit}({digit})*
 
 
 espacio=[ ,\t,\r,\n]+
@@ -43,24 +42,42 @@ while {lexeme=yytext(); linea=yyline; columna=yycolumn; return Reservadas;}
 
 {espacio} {/*Ignore*/}
 "//".* {/*Ignore*/}
+{string_literal} {lexeme=yytext(); linea=yyline; columna=yycolumn;  return string_literal;}
+{char_literal} {lexeme=yytext(); linea=yyline; columna=yycolumn;  return char_literal;}
 {id} {lexeme=yytext(); linea=yyline; columna=yycolumn; return id;}
-{arith_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return operador_arith;}
 {digit} {lexeme=yytext(); linea=yyline; columna=yycolumn; return digit;}
 {alpha} {lexeme=yytext(); linea=yyline; columna=yycolumn; return alpha;}
 {hex_digit} {lexeme=yytext(); linea=yyline; columna=yycolumn; return hex_digit;}
 {decimal_literal} {lexeme=yytext(); linea=yyline; columna=yycolumn; return decimal_literal;}
 {hex_literal} {lexeme=yytext(); linea=yyline; columna=yycolumn;  return hex_literal;}
-{rel_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return rel_op;}
-{assign_op} {lexeme=yytext(); linea=yyline; columna=yycolumn; return assign_op;}
 
-"<="                {lexeme=yytext(); linea=yyline; columna=yycolumn; return LESS_EQUAL;    }
-">="                { lexeme=yytext();linea=yyline; columna=yycolumn;  return GREATER_EQUAL; }
-"=="                { lexeme=yytext();linea=yyline; columna=yycolumn; return EQUAL;         }
-"!="                { lexeme=yytext();linea=yyline; columna=yycolumn; return NOT_EQUAL;     }
-"&&"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return AND;           }
-"||"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return OR;            }
-"("                {lexeme=yytext(); linea=yyline; columna=yycolumn; return LEFT_PAR;           }
-")"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return RIGHT_PAR;            }
+
+
+"<"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return GREATER;    }
+">"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return LESS;    }
+"<="               {lexeme=yytext(); linea=yyline; columna=yycolumn; return LESS_EQUAL;    }
+">="               {lexeme=yytext(); linea=yyline; columna=yycolumn; return GREATER_EQUAL;    }
+"+="               {lexeme=yytext(); linea=yyline; columna=yycolumn; return PLUS_EQUAL;    }
+"="                {lexeme=yytext(); linea=yyline; columna=yycolumn; return ASSIGN;    }
+"-="               {lexeme=yytext(); linea=yyline; columna=yycolumn; return MINUS_EQUAL;    }
+"=="               {lexeme=yytext(); linea=yyline; columna=yycolumn; return EQUAL;    }
+"!="               {lexeme=yytext(); linea=yyline; columna=yycolumn; return NOT_EQUAL;    }
+"&&"               {lexeme=yytext(); linea=yyline; columna=yycolumn; return AND;    }
+"||"               {lexeme=yytext(); linea=yyline; columna=yycolumn; return OR;    }
+"("                {lexeme=yytext(); linea=yyline; columna=yycolumn; return LEFT_PAR;    }
+")"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return RIGHT_PAR;    }
+";"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Punto_coma;    }
+"+"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Mas;    }
+"-"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Menos;    }
+"*"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Multiplicacion;    }
+"/"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Division;    }
+"%"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Mod;    }
+"{"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Llave_A;    }
+"}"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Llave_C;    }
+"["                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Corche_A;    }
+"]"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Corche_C;    }
+","                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Coma;    }
+"!"                {lexeme=yytext(); linea=yyline; columna=yycolumn; return Exclamacion;    }
 
 
  . {lexeme=yytext(); linea=yyline; columna=yycolumn; return ERROR;}

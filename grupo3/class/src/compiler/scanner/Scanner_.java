@@ -39,22 +39,41 @@ public static void main(String[] args, String ruta){
                         case ERROR:
                             resultado += "El simbolo no definido" + " linea: " + lexer.linea +  " columna: " + lexer.columna + "\n";
                             break;
-                        case Reservadas: case operador_arith: case alpha:
+                        case Reservadas:              
+                        case string_literal:
+                        case char_literal:
                         case id:
+                        case operador_arith:
+                        case alpha:
+                        case digit:
                         case hex_digit:
                         case decimal_literal:
                         case hex_literal:
-                        case rel_op:
-                        case assign_op:
-                        case digit:
+                        case GREATER:
+                        case LESS:
                         case LESS_EQUAL:
                         case GREATER_EQUAL:
+                        case PLUS_EQUAL:
+                        case ASSIGN:
+                        case MINUS_EQUAL:
                         case EQUAL:
                         case NOT_EQUAL:
                         case AND:
                         case OR:
                         case LEFT_PAR:
                         case RIGHT_PAR:
+                        case Punto_coma:
+                        case Mas:
+                        case Menos:
+                        case Multiplicacion:
+                        case Division:
+                        case Mod:
+                        case Llave_A:
+                        case Llave_C:
+                        case Corche_A:
+                        case Corche_C:
+                        case Coma:
+                        case Exclamacion:
                                 resultado += lexer.lexeme + " Es un " + tokens + " linea: " + lexer.linea +  " columna: " + lexer.columna + "\n";
                                 break;
                         default:
