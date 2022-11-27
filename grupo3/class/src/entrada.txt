@@ -4,36 +4,7 @@ class Program {
         int x,y,m2;
         boolean p,f,t;
         m2 = (x + 1) + (5 + m2);
-        x += y;
-        p = (p != f);
-        f = p == true;
-        return x;
+        
+        return m2;
     }
-    void do(boolean i){
-        if (i == true) {
-            main();
-        }
-    }
-    void o(int a){
-        boolean x, y;
-        int hu;
-          main();
-          if (x != true) {
-                int dentroif;
-                dentroif = 1;
-                
-            }
-           else {
-                int dentroelse;
-                dentroelse = 1; 
-                    
-            }
-            for hu = 1, 10 {
-                int dentrofro;
-                dentrofro = 10;
-                if (x == true){ break; }
-                dentrofro = 50;
-                continue;
-            }
-        }
 }

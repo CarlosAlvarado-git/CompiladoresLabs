@@ -25,6 +25,9 @@ public class Nodo_irt {
     private END_IF_nodo end_if;
     private Continue_nodo conti_node;
     private Creacion_var crear_var;
+    private Load_word load_word_nodo;
+    private Load_inmediate load_inmediate_nodo;
+    private return_nodo return_nodo_;
     public Nodo_irt(String Nombre){
         this.Nombre = Nombre;
     
@@ -131,7 +134,28 @@ public class Nodo_irt {
            return resultado;
        }
        
+       public void Crear_load_word(String r, String v){
+           this.load_word_nodo = new Load_word(r,v);
+       }
+       public String getLoad_word(){
+           String result = this.load_word_nodo.getLoad_word();
+           return result;
+       }
+       public void Crear_load_inmediate(String r, String v){
+           this.load_inmediate_nodo = new Load_inmediate(r,v);
+       }
+       public String getLoad_inmediate(){
+           String result = this.load_inmediate_nodo.getLoad_inmediate();
+           return result;
+       }
        
+       public void Crear_return(String r){ 
+           this.return_nodo_ = new return_nodo(r);
+       }
+       public String getReturn(){
+           String result = this.return_nodo_.getReturn();
+           return result; 
+       }
     
 }
 
@@ -364,59 +388,71 @@ class method_decl{
                     System.out.println(this.data.get(i).getNombre());
                     switch (this.data.get(i).getNombre()) {
                         case "Operador":
-                                r = "        : " + this.data.get(i).Operador();
+                                r = "" + this.data.get(i).Operador();
                             System.out.println(r);
                             break;
                         case "Asignacion":
-                            r = "        : " + this.data.get(i).Asignacion();
+                            r = "" + this.data.get(i).Asignacion();
                             System.out.println(r);
                             break;
                         case "Method_call":
-                            r = "        : " + this.data.get(i).Metodo();
+                            r = "" + this.data.get(i).Metodo();
                             System.out.println(r);
                             break;
                         case "IF":
-                            r = "        : " + this.data.get(i).IF_C();
+                            r = "" + this.data.get(i).IF_C();
                             System.out.println(r);
                             break;
                         case "ELSE":
-                            r = "        : " + this.data.get(i).ELSE_C();
+                            r = "" + this.data.get(i).ELSE_C();
                             System.out.println(r);
                             break;
                         case "END_IF":
-                            r = "        : " + this.data.get(i).END_IF_C();
+                            r = "" + this.data.get(i).END_IF_C();
                             System.out.println(r);
                             break;
                         case "Condicion":
-                            r = "        : " + this.data.get(i).Condicion();
+                            r = "" + this.data.get(i).Condicion();
                             System.out.println(r);
                             break;
                         case "FOR":
-                            r = "        : " + this.data.get(i).FOR_C();
+                            r = "" + this.data.get(i).FOR_C();
                             System.out.println(r);
                             break;
                         case "Operacion_FOR":
-                            r = "        : " + this.data.get(i).Operador();
+                            r = "" + this.data.get(i).Operador();
                             System.out.println(r);
                             break;
                         case "Jump_FOR":
-                            r = "        : " + this.data.get(i).FOR_C();
+                            r = "" + this.data.get(i).FOR_C();
                             System.out.println(r);
                             break;
                         case "Break_FOR":
-                            r = "        : " + this.data.get(i).FOR_C();
+                            r = "" + this.data.get(i).FOR_C();
                             System.out.println(r);
                             break;
                         case "End_FOR":
-                            r = "        : " + this.data.get(i).FOR_C();
+                            r = "" + this.data.get(i).FOR_C();
                             System.out.println(r);
                             break;
                         case "Continue_For":
-                            r = "        : " + this.data.get(i).Continue_c();
+                            r = "" + this.data.get(i).Continue_c();
                             System.out.println(r);
                         break;
                         case "Crear_Variable":
-                            r = "        : " + this.data.get(i).Variable();
+                            r = "" + this.data.get(i).Variable();
+                            System.out.println(r);
+                        break;
+                        case "Load_word":
+                            r = "" + this.data.get(i).getLoad_word();
+                            System.out.println(r);
+                        break;
+                        case "Load_inmediate":
+                            r = "" + this.data.get(i).getLoad_inmediate();
+                            System.out.println(r);
+                        break;
+                        case "Return":
+                            r = "" + this.data.get(i).getReturn();
                             System.out.println(r);
                         break;
                         default:
@@ -492,10 +528,50 @@ class Continue_nodo{
             
     }
 }
-// assignacion
-// ir a tag de inicio
-// tag: antes
-// operacion: n++
-// (inicio) pregunta de la condicion
+ 
+class Load_word{
+        
+        private String registro;
+        private String variable;
+        public Load_word(String registro, String variable){
+            this.registro = registro;
+            this.variable = variable;
+        }
+        
+        public String getLoad_word(){
+                String result = "";
+                result = result + "Registro: " + this.registro + "\n";
+                result = result + "Variable: " + this.variable + "\n";
+                return result;
+            }
+        
+    }
 
-// 
+class Load_inmediate{
+        
+        private String registro;
+        private String variable;
+        public Load_inmediate(String registro, String variable){
+            this.registro = registro;
+            this.variable = variable;
+        }
+        
+        public String getLoad_inmediate(){
+                String result = "";
+                result = result + "Registro: " + this.registro + "\n";
+                result = result + "Variable: " + this.variable + "\n";
+                return result;
+            }
+        
+    }
+class return_nodo{
+    private String registro;
+    public return_nodo(String registro){
+                this.registro  = registro;
+        }
+    public String getReturn(){
+            String result = "Registro a cargar a memoria: " + this.registro + "\n";
+            return result;
+        }
+
+}

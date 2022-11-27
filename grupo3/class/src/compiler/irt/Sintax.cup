@@ -496,6 +496,8 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             Nodo_irt asignacion = new Nodo_irt("Asignacion");
                            asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
                            parser.Lista_IRT.add(asignacion);
+                           parser.TABLA.BANDERAS.replace("guarda", "");
+                           parser.STACK.clear();
                        }
                        else {
                             System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
@@ -509,8 +511,10 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             if (loc.gettype().equals(e.gettype())){
                                 System.out.println("Asignacion correcta");
                                 Nodo_irt asignacion = new Nodo_irt("Asignacion");
-                           asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
-                           parser.Lista_IRT.add(asignacion);
+                                asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
+                                parser.Lista_IRT.add(asignacion);
+                                parser.TABLA.BANDERAS.replace("guarda", "");
+                                parser.STACK.clear();
                            }
                            else {
                                 System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
@@ -531,8 +535,10 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             if (loc.gettype().equals(e.gettype())){
                                 System.out.println("Asignacion correcta");
                                 Nodo_irt asignacion = new Nodo_irt("Asignacion");
-                           asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
-                           parser.Lista_IRT.add(asignacion);
+                                asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
+                                parser.Lista_IRT.add(asignacion);
+                                parser.TABLA.BANDERAS.replace("guarda", "");
+                                parser.STACK.clear();
                            }
                            else {
                                 System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
@@ -554,6 +560,8 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                     Nodo_irt asignacion = new Nodo_irt("Asignacion");
                            asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
                            parser.Lista_IRT.add(asignacion);
+                           parser.TABLA.BANDERAS.replace("guarda", "");
+                           parser.STACK.clear();
                                }
                                else {
                                     System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
@@ -575,6 +583,8 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                 Nodo_irt asignacion = new Nodo_irt("Asignacion");
                            asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
                            parser.Lista_IRT.add(asignacion);
+                           parser.TABLA.BANDERAS.replace("guarda", "");
+                           parser.STACK.clear();
                            }
                            else {
                                 System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
@@ -596,6 +606,8 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                     Nodo_irt asignacion = new Nodo_irt("Asignacion");
                            asignacion.Crear_Asignacion(asig.getValor(), e.getValor(), loc.getIdentifier());
                            parser.Lista_IRT.add(asignacion);
+                           parser.TABLA.BANDERAS.replace("guarda", "");
+                           parser.STACK.clear();
                                }
                                else {
                                     System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
@@ -819,6 +831,11 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             if (parser.TABLA.BANDERAS.get("Funcion_type").equals(stmex_x.gettype())){
                                 System.out.println("Return correcto");
                                 parser.TABLA.BANDERAS.replace("Funcion_return", "");
+                                Nodo_irt return_nodo = new Nodo_irt("Return");
+                                return_nodo.Crear_return(stmex_x.getValor());
+                                parser.Lista_IRT.add(return_nodo);
+                                parser.TABLA.BANDERAS.replace("guarda", "");
+                                parser.STACK.clear();
                             }
                             else {
                                 System.out.println("El valor de retorno no es del mismo type de la funcion: " + parser.TABLA.BANDERAS.get("Funcion_type") + " != " + stmex_x.gettype());
@@ -1255,15 +1272,64 @@ expr ::= location:l{:
         if (bandera[0] == 1) {
            tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
            System.out.println("EL LOC IDENTI: " + loc.getIdentifier());
-           tmp.setValor(loc.getIdentifier());
+           // Crear nodo LW
+           Nodo_irt load_nodo = new Nodo_irt("Load_word");
+           // validar registro a usar
+           if (parser.STACK.size() == 0){
+                parser.TABLA.BANDERAS.replace("guarda","SI");
+                parser.STACK.add("$t0");
+                tmp.setValor("$t0");
+                load_nodo.Crear_load_word("$t0",loc.getIdentifier());
+            }
+            else {
+                if(parser.TABLA.BANDERAS.get("guarda").equals("")){
+                    int ultimo = parser.STACK.size();
+                    parser.STACK.add("$t" + ultimo);
+                    load_nodo.Crear_load_word(("$t" + ultimo),loc.getIdentifier());
+                    parser.TABLA.BANDERAS.replace("guarda","SI");
+                    tmp.setValor("$t" + ultimo);
+                }
+                else{
+                    int ultimo = parser.STACK.size();
+                    load_nodo.Crear_load_word(("$t" + ultimo),loc.getIdentifier());
+                    parser.TABLA.BANDERAS.replace("guarda","");
+                    tmp.setValor("$t" + ultimo);
+                }
+            }
+            parser.Lista_IRT.add(load_nodo);
+           //
         }
         else {
             bandera = parser.TABLA.lookup_param(loc);
             if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                 tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
                 System.out.println("EL LOC IDENTI: " + loc.getIdentifier());
-                tmp.setValor(loc.getIdentifier());
-                
+                // Crear nodo LW
+                Nodo_irt load_nodo = new Nodo_irt("Load_word");
+                // validar registro a usar
+                if (parser.STACK.size() == 0){
+                     parser.TABLA.BANDERAS.replace("guarda","SI");
+                     parser.STACK.add("$t0");
+                     tmp.setValor("$t0");
+                     load_nodo.Crear_load_word("$t0",loc.getIdentifier());
+                 }
+                 else {
+                     if(parser.TABLA.BANDERAS.get("guarda").equals("")){
+                         int ultimo = parser.STACK.size();
+                         parser.STACK.add("$t" + ultimo);
+                         load_nodo.Crear_load_word(("$t" + ultimo),loc.getIdentifier());
+                         parser.TABLA.BANDERAS.replace("guarda","SI");
+                         tmp.setValor("$t" + ultimo);
+                     }
+                     else{
+                         int ultimo = parser.STACK.size();
+                         load_nodo.Crear_load_word(("$t" + ultimo),loc.getIdentifier());
+                         parser.TABLA.BANDERAS.replace("guarda","");
+                         tmp.setValor("$t" + ultimo);
+                     }
+                 }
+                 parser.Lista_IRT.add(load_nodo);
+                //
             }else {
             System.out.println("La variable " + loc.getIdentifier() + ",no existe");
             System.exit(0);
@@ -1289,8 +1355,32 @@ expr ::= location:l{:
         tmp.addHijo((Nodo) lit);
         Nodo liter = (Nodo) lit;
         tmp.settype(liter.gettype());
-        tmp.setValor(liter.getValor());
-        
+        // Crear nodo Li
+            Nodo_irt load_inmmediate_nodo = new Nodo_irt("Load_inmediate");
+           // validar registro a usar
+           if (parser.STACK.size() == 0){
+                parser.TABLA.BANDERAS.replace("guarda","SI");
+                parser.STACK.add("$t0");
+                tmp.setValor("$t0");
+                load_inmmediate_nodo.Crear_load_inmediate("$t0",liter.getValor());
+            }
+            else {
+                if(parser.TABLA.BANDERAS.get("guarda").equals("")){
+                    int ultimo = parser.STACK.size();
+                    parser.STACK.add("$t" + ultimo);
+                    load_inmmediate_nodo.Crear_load_inmediate(("$t" + ultimo),liter.getValor());
+                    parser.TABLA.BANDERAS.replace("guarda","SI");
+                    tmp.setValor("$t" + ultimo);
+                }
+                else{
+                    int ultimo = parser.STACK.size();
+                    load_inmmediate_nodo.Crear_load_inmediate(("$t" + ultimo),liter.getValor());
+                    parser.TABLA.BANDERAS.replace("guarda","");
+                    tmp.setValor("$t" + ultimo);
+                }
+            }
+            parser.Lista_IRT.add(load_inmmediate_nodo);
+        //
         RESULT = tmp;
         :}
         | expr:ex bin_op:bo expr:ex2{:
@@ -1306,158 +1396,182 @@ expr ::= location:l{:
             if(expr1.gettype().equals("Int")){
                 if (expr1.gettype().equals(expr2.gettype())){
                 Nodo_irt operacion = new Nodo_irt("Operador");
+                int sacar = 0;
                 switch(bin_op_.getValor()) {
                     case "Mas":
                             tmp.settype(expr1.gettype());
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
                             
                         break;
                     case "Menos":
                             tmp.settype(expr1.gettype());
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
+                            
                             
                         break;
                     case "Multi":
                             tmp.settype(expr1.gettype());
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
+                            
                             
                         break;
                     case "Div":
                             tmp.settype(expr1.gettype());
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
+                            
                             
                         break;
                     case "Mod":
                             tmp.settype(expr1.gettype());
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
+                            
                             
                         break;
                     case "GREATER":
                             tmp.settype("Boolean");
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
+                            
                              
                         break;
                     case "LESS":
                             tmp.settype("Boolean");
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
                              
                         break;
                     case "LESS_EQUAL":
                             tmp.settype("Boolean");
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
                              
                         break;
                     case "GREATER_EQUAL":
                             tmp.settype("Boolean");
                             
-                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                            if (parser.STACK.size() == 0){
-                                operacion.op.setRegistro("$t0");
-                                parser.STACK.add("$t0");
-                                tmp.setValor("$t0");}
-                            else {
-                                int ultimo = parser.STACK.size();
-                                operacion.op.setRegistro("$t" + ultimo);
-                                parser.STACK.add("$t" + ultimo);
-                                tmp.setValor("$t" + ultimo);
-                            }
+                            operacion.Crear_operacion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                            operacion.op.setRegistro(expr1.getValor());
                             parser.Lista_IRT.add(operacion);
+                            tmp.setValor(expr1.getValor());
+                            
+                            for (int i = 0; i < parser.STACK.size(); i++) {
+                                if(parser.STACK.get(i) == expr2.getValor()){
+                                    sacar = i;
+                                    break;
+                                }
+                              }
+                             if(sacar != 0){
+                                parser.STACK.remove(sacar);
+                                }
                              
                         break;
                     default:
@@ -1478,21 +1592,24 @@ expr ::= location:l{:
     
         }else{
             if(expr1.gettype().equals(expr2.gettype())){
-                tmp.settype("Boolean");
-                Nodo_irt condicion = new Nodo_irt("Condicion");
-                condicion.Crear_condicion(bin_op_.getValor(),expr1.getValor() , expr2.getValor());
-                if (parser.STACK.size() == 0){
-                    condicion.co.setRegistro("$t0");
-                    parser.STACK.add("$t0");
-                    tmp.setValor("$t0");}
-                else {
-                    int ultimo = parser.STACK.size();
-                    condicion.co.setRegistro("$t" + ultimo);
-                    parser.STACK.add("$t" + ultimo);
-                    tmp.setValor("$t" + ultimo);
-                }
-                parser.Lista_IRT.add(condicion);
-                             
+                
+                    tmp.settype("Boolean");
+                    Nodo_irt condicion = new Nodo_irt("Condicion");
+                    int sacar = 0;
+                    condicion.Crear_condicion(bin_op_.getValor(),expr1.getValor(), expr2.getValor());
+                    condicion.co.setRegistro(expr1.getValor());
+                    parser.Lista_IRT.add(condicion);
+                    tmp.setValor(expr1.getValor());
+
+                    for (int i = 0; i < parser.STACK.size(); i++) {
+                        if(parser.STACK.get(i) == expr2.getValor()){
+                            sacar = i;
+                            break;
+                        }
+                      }
+                     if(sacar != 0){
+                        parser.STACK.remove(sacar);
+                        }
                 }
             else{
                 System.out.println("Operación de variables de distintos tipos");
@@ -1509,17 +1626,9 @@ expr ::= location:l{:
             tmp.settype("Int");
             Nodo_irt operador = new Nodo_irt("Operador");
                 operador.Crear_operacion("Menos","0", expr1.getValor());
-                if (parser.STACK.size() == 0){
-                    operador.co.setRegistro("$t0");
-                    parser.STACK.add("$t0");
-                    tmp.setValor("$t0");}
-                else {
-                    int ultimo = parser.STACK.size();
-                    operador.co.setRegistro("$t" + ultimo);
-                    parser.STACK.add("$t" + ultimo);
-                    tmp.setValor("$t" + ultimo);
-                }
+                operador.op.setRegistro(expr1.getValor());
                 parser.Lista_IRT.add(operador);
+                tmp.setValor(expr1.getValor());
             
         }
         else {
@@ -1535,16 +1644,8 @@ expr ::= location:l{:
             tmp.settype("Boolean");
             Nodo_irt negacion = new Nodo_irt("Negacion");
                 negacion.Crear_negacion(expr1.getValor());
-                if (parser.STACK.size() == 0){
-                    negacion.negacion_nodo.setRegistro("$t0");
-                    parser.STACK.add("$t0");
-                    tmp.setValor("$t0");}
-                else {
-                    int ultimo = parser.STACK.size();
-                    negacion.negacion_nodo.setRegistro("$t" + ultimo);
-                    parser.STACK.add("$t" + ultimo);
-                    tmp.setValor("$t" + ultimo);
-                }
+                negacion.negacion_nodo.setRegistro(expr1.getValor());
+                tmp.setValor(expr1.getValor());
                 parser.Lista_IRT.add(negacion);
             
         }
