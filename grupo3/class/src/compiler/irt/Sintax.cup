@@ -21,11 +21,11 @@ parser code
         return this.s;
     }
  
-    public String bandera_for = "";
-    public String bandera_for_entre = "";
+
     public Semantic_fun TABLA = new Semantic_fun();
     public int global_scope = 0;
     public int param_cont = 0;
+    public String bandera_for = "";
     public Nodo_irt mdc = new Nodo_irt("parametros");
     public int count_if = 0;
     public int count_for = 0;
@@ -652,7 +652,9 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 
              :} block:b statement_else_block:seb statement:stm 
-        | For {: parser.bandera_for_entre = "entre"; :} Id:id ASSIGN expr:ex Coma expr:ex2   {:
+        | For{: 
+                parser.bandera_for = "entre";
+                :} Id:id ASSIGN expr:ex Coma expr:ex2   {:
                 Nodo tmp = new Nodo("statement");
                 Nodo e = (Nodo) ex;
                 Nodo e2 = (Nodo) ex2;
@@ -681,20 +683,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             parser.Lista_IRT.add(tag_for);
                             // condicion del for
                             Nodo_irt condicion_for = new Nodo_irt("Condicion");
-                            condicion_for.Crear_condicion("LESS_EQUAL", tmp.getIdentifier(), e2.getValor());
-                            if (parser.STACK_S.size() == 0){
-                                condicion_for.co.setRegistro("$s0");
-                                parser.STACK_S.add("$s0");
-                                parser.bandera_for = "$s0";
-                            }
-                            else {
-                                int ultimo = parser.STACK_S.size();
-                                condicion_for.co.setRegistro("$s" + ultimo);
-                                parser.STACK_S.add("$s" + ultimo);
-                                parser.bandera_for = "$s" + ultimo;
-                            }
+                            condicion_for.Crear_condicion("LESS_EQUAL", e.getValor(), e2.getValor());
+                            int ultimo = parser.STACK_S.size();
+                            condicion_for.co.setRegistro("$s" + ultimo);
+                            parser.STACK_S.add("$s" + ultimo);
                             parser.Lista_IRT.add(condicion_for);
-                            
+                            parser.bandera_for = "";
                         }
                         else
                         {
@@ -729,19 +723,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             parser.Lista_IRT.add(tag_for);
                             // condicion del for
                             Nodo_irt condicion_for = new Nodo_irt("Condicion");
-                            condicion_for.Crear_condicion("LESS_EQUAL", tmp.getIdentifier(), e2.getValor());
-                            if (parser.STACK_S.size() == 0){
-                                condicion_for.co.setRegistro("$s0");
-                                parser.STACK_S.add("$s0");
-                                parser.bandera_for = "$s0";
-                            }
-                            else {
+                            condicion_for.Crear_condicion("LESS_EQUAL", e.getValor(), e2.getValor());
                                 int ultimo = parser.STACK_S.size();
                                 condicion_for.co.setRegistro("$s" + ultimo);
-                                parser.STACK.add("$s" + ultimo);
-                                parser.bandera_for = "$s" + ultimo;
-                            }
-                            parser.Lista_IRT.add(condicion_for);
+                                parser.STACK_S.add("$s" + ultimo);
+                                parser.Lista_IRT.add(condicion_for);
+                                parser.bandera_for = "";
                             }
                             else
                             {
@@ -784,19 +771,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                     parser.Lista_IRT.add(tag_for);
                                     // condicion del for
                                     Nodo_irt condicion_for = new Nodo_irt("Condicion");
-                                    condicion_for.Crear_condicion("LESS_EQUAL", nueva.getIdentifier(), e2.getValor());
-                                    if (parser.STACK_S.size() == 0){
-                                        condicion_for.co.setRegistro("$s0");
-                                        parser.STACK.add("$s0");
-                                        parser.bandera_for = "$s0";
-                                    }
-                                    else {
-                                        int ultimo = parser.STACK_S.size();
-                                        condicion_for.co.setRegistro("$s" + ultimo);
-                                        parser.STACK.add("$s" + ultimo);
-                                        parser.bandera_for = "s$" + ultimo;
-                                    }
+                                    condicion_for.Crear_condicion("LESS_EQUAL", e.getValor(), e2.getValor());
+                                    int ultimo = parser.STACK_S.size();
+                                    condicion_for.co.setRegistro("$s" + ultimo);
+                                    parser.STACK_S.add("$s" + ultimo);
                                     parser.Lista_IRT.add(condicion_for);
+                                    parser.bandera_for = "";
                                 }
                                 else
                                 {
@@ -815,11 +795,10 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
 
                 :} block:b {:
                         // condicion del for
-                        Nodo tmp = new Nodo("statement");
-                        tmp.setIdentifier("" + id);
+                        Nodo e =  (Nodo) ex;
                             Nodo_irt operacion_for = new Nodo_irt("Operacion_FOR");
-                            operacion_for.Crear_operacion("Mas", tmp.getIdentifier(), "1");
-                            operacion_for.op.setRegistro(tmp.getIdentifier());
+                            operacion_for.Crear_operacion("Mas", e.getValor(), "1");
+                            operacion_for.op.setRegistro(e.getValor());
                             parser.Lista_IRT.add(operacion_for);
                             Nodo_irt jump_for = new Nodo_irt("Jump_FOR");
                             jump_for.Crear_FOR("jump: " + parser.TABLA.BANDERAS.get("Funcion") + "_FOR_" + parser.count_for);
@@ -829,9 +808,9 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             parser.Lista_IRT.add(end_for);
                             parser.count_for = parser.count_for - 1;
                             parser.TABLA.BANDERAS.replace("For", "");
-                            parser.STACK_S.remove(bandera_for);
-                            parser.bandera_for = "";
-                
+                            parser.STACK_S.remove(parser.STACK_S.size() - 1);
+                            parser.STACK_S.remove(parser.STACK_S.size() - 1);
+                            parser.STACK_S.remove(parser.STACK_S.size() - 1);
                 :}statement:stm
         | Return statement_expr:stmex Punto_coma  {:
                 Nodo tmp = new Nodo("statement");
@@ -1284,14 +1263,14 @@ expr ::= location:l{:
            System.out.println("EL LOC IDENTI: " + loc.getIdentifier());
            // Crear nodo LW
            Nodo_irt load_nodo = new Nodo_irt("Load_word");
-           if (parser.bandera_for_entre.equals(""){
-                // validar registro a usar
+           // validar registro a usar
+            if(parser.bandera_for.equals("")){
                 if (parser.STACK.size() == 0){
                      parser.TABLA.BANDERAS.replace("guarda","SI");
                      parser.STACK.add("$t0");
                      tmp.setValor("$t0");
                      load_nodo.Crear_load_word("$t0",loc.getIdentifier());
-                 } 
+                 }
                  else {
                      if(parser.TABLA.BANDERAS.get("guarda").equals("")){
                          int ultimo = parser.STACK.size();
@@ -1307,12 +1286,21 @@ expr ::= location:l{:
                          tmp.setValor("$t" + ultimo);
                      }
                  }
-                 parser.Lista_IRT.add(load_nodo);
-                //
-            }
-            else{
-                parser.bandera_for_entre = "";
-            }
+           }
+           else{
+                if (parser.STACK_S.size() == 0){
+                    parser.STACK_S.add("$s0");
+                    tmp.setValor("$s0");
+                    load_nodo.Crear_load_word("$s0",loc.getIdentifier());
+                }
+                else {
+                    int ultimo = parser.STACK_S.size();
+                    parser.STACK_S.add("$s" + ultimo);
+                    load_nodo.Crear_load_word(("$s" + ultimo),loc.getIdentifier());
+                    tmp.setValor("$s" + ultimo);
+                }
+           }
+           parser.Lista_IRT.add(load_nodo);
         }
         else {
             bandera = parser.TABLA.lookup_param(loc);
@@ -1322,28 +1310,43 @@ expr ::= location:l{:
                 // Crear nodo LW
                 Nodo_irt load_nodo = new Nodo_irt("Load_word");
                 // validar registro a usar
-                if (parser.STACK.size() == 0){
-                     parser.TABLA.BANDERAS.replace("guarda","SI");
-                     parser.STACK.add("$t0");
-                     tmp.setValor("$t0");
-                     load_nodo.Crear_load_word("$t0",loc.getIdentifier());
-                 }
-                 else {
-                     if(parser.TABLA.BANDERAS.get("guarda").equals("")){
-                         int ultimo = parser.STACK.size();
-                         parser.STACK.add("$t" + ultimo);
-                         load_nodo.Crear_load_word(("$t" + ultimo),loc.getIdentifier());
-                         parser.TABLA.BANDERAS.replace("guarda","SI");
-                         tmp.setValor("$t" + ultimo);
+                if(parser.bandera_for.equals("")){
+                        if (parser.STACK.size() == 0){
+                             parser.TABLA.BANDERAS.replace("guarda","SI");
+                             parser.STACK.add("$t0");
+                             tmp.setValor("$t0");
+                             load_nodo.Crear_load_word("$t0",loc.getIdentifier());
+                         }
+                         else {
+                             if(parser.TABLA.BANDERAS.get("guarda").equals("")){
+                                 int ultimo = parser.STACK.size();
+                                 parser.STACK.add("$t" + ultimo);
+                                 load_nodo.Crear_load_word(("$t" + ultimo),loc.getIdentifier());
+                                 parser.TABLA.BANDERAS.replace("guarda","SI");
+                                 tmp.setValor("$t" + ultimo);
+                             }
+                             else{
+                                 int ultimo = parser.STACK.size();
+                                 load_nodo.Crear_load_word(("$t" + ultimo),loc.getIdentifier());
+                                 parser.TABLA.BANDERAS.replace("guarda","");
+                                 tmp.setValor("$t" + ultimo);
+                             }
+                         }
+                }
+                else{
+                     if (parser.STACK_S.size() == 0){
+                         parser.STACK_S.add("$s0");
+                         tmp.setValor("$s0");
+                         load_nodo.Crear_load_word("$s0",loc.getIdentifier());
                      }
-                     else{
-                         int ultimo = parser.STACK.size();
-                         load_nodo.Crear_load_word(("$t" + ultimo),loc.getIdentifier());
-                         parser.TABLA.BANDERAS.replace("guarda","");
-                         tmp.setValor("$t" + ultimo);
+                     else {
+                         int ultimo = parser.STACK_S.size();
+                         parser.STACK_S.add("$s" + ultimo);
+                         load_nodo.Crear_load_word(("$s" + ultimo),loc.getIdentifier());
+                         tmp.setValor("$s" + ultimo);
                      }
-                 }
-                 parser.Lista_IRT.add(load_nodo);
+                }
+                parser.Lista_IRT.add(load_nodo);
                 //
             }else {
             System.out.println("La variable " + loc.getIdentifier() + ",no existe");
@@ -1372,28 +1375,44 @@ expr ::= location:l{:
         tmp.settype(liter.gettype());
         // Crear nodo Li
             Nodo_irt load_inmmediate_nodo = new Nodo_irt("Load_inmediate");
-           // validar registro a usar
-           if (parser.STACK.size() == 0){
-                parser.TABLA.BANDERAS.replace("guarda","SI");
-                parser.STACK.add("$t0");
-                tmp.setValor("$t0");
-                load_inmmediate_nodo.Crear_load_inmediate("$t0",liter.getValor());
+            if(parser.bandera_for.equals("")){
+                // validar registro a usar
+                if (parser.STACK.size() == 0){
+                     parser.TABLA.BANDERAS.replace("guarda","SI");
+                     parser.STACK.add("$t0");
+                     tmp.setValor("$t0");
+                     load_inmmediate_nodo.Crear_load_inmediate("$t0",liter.getValor());
+                 }
+                 else {
+                     if(parser.TABLA.BANDERAS.get("guarda").equals("")){
+                         int ultimo = parser.STACK.size();
+                         parser.STACK.add("$t" + ultimo);
+                         load_inmmediate_nodo.Crear_load_inmediate(("$t" + ultimo),liter.getValor());
+                         parser.TABLA.BANDERAS.replace("guarda","SI");
+                         tmp.setValor("$t" + ultimo);
+                     }
+                     else{
+                         int ultimo = parser.STACK.size();
+                         load_inmmediate_nodo.Crear_load_inmediate(("$t" + ultimo),liter.getValor());
+                         parser.TABLA.BANDERAS.replace("guarda","");
+                         tmp.setValor("$t" + ultimo);
+                     }
+                 }
+            }else{
+                    if (parser.STACK_S.size() == 0){
+                         parser.STACK_S.add("$s0");
+                         tmp.setValor("$s0");
+                         load_inmmediate_nodo.Crear_load_inmediate("$s0",liter.getValor());
+                     }
+                     else {
+                         int ultimo = parser.STACK_S.size();
+                         parser.STACK_S.add("$s" + ultimo);
+                         load_inmmediate_nodo.Crear_load_inmediate(("$s" + ultimo),liter.getValor());
+                         tmp.setValor("$s" + ultimo);
+                     }
+
             }
-            else {
-                if(parser.TABLA.BANDERAS.get("guarda").equals("")){
-                    int ultimo = parser.STACK.size();
-                    parser.STACK.add("$t" + ultimo);
-                    load_inmmediate_nodo.Crear_load_inmediate(("$t" + ultimo),liter.getValor());
-                    parser.TABLA.BANDERAS.replace("guarda","SI");
-                    tmp.setValor("$t" + ultimo);
-                }
-                else{
-                    int ultimo = parser.STACK.size();
-                    load_inmmediate_nodo.Crear_load_inmediate(("$t" + ultimo),liter.getValor());
-                    parser.TABLA.BANDERAS.replace("guarda","");
-                    tmp.setValor("$t" + ultimo);
-                }
-            }
+
             parser.Lista_IRT.add(load_inmmediate_nodo);
         //
         RESULT = tmp;
