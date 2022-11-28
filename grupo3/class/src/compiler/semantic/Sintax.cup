@@ -837,11 +837,12 @@ method_call ::= method_name:mn {:
                     if (parser.TABLA.Tabla.get("Scope: " + 1).get(bandera[1]).data.containsValue("Metodo")){
                         System.out.println("Funcion " + fun.getIdentifier() + " llamada por callout");
                         parser.TABLA.BANDERAS.replace("Llamada_fun", fun.getIdentifier());
+                        parser.TABLA.BANDERAS.replace("Llamada_fun_type", parser.TABLA.Tabla.get("Scope: " + 1).get(bandera[1]).data.get("type"));
                         for (int x = 0; x < parser.TABLA.Tabla_m.get("DATA").size(); x++) {
                             for (String y : parser.TABLA.Tabla_m.get("DATA").get(x).data.keySet()) {
                                 if (y.equals("Funcion") && parser.TABLA.Tabla_m.get("DATA").get(x).data.get(y).equals(fun.getIdentifier())){  
                                     if (parser.TABLA.Tabla_fun.get("PARAM") == null){
-                                        parser.TABLA.BANDERAS.replace("Llamada_fun_type", parser.TABLA.Tabla_m.get("DATA").get(x).data.get("type"));
+                                        
                                         System.out.println("LA DE PARAM ESTA VACIA");
                                         ValoresTabla_fun data = parser.TABLA.Tabla_m.get("DATA").get(x);
                                         ArrayList<ValoresTabla_fun> lista = new ArrayList<>();
