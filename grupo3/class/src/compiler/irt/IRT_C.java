@@ -37,12 +37,12 @@ public class IRT_C {
             
             try {
                 analisis.parse();
-                System.out.println("------------- TABLA GENERAL");
+                /*System.out.println("------------- TABLA GENERAL");
                 analisis.TABLA.popScope(1);
                 analisis.TABLA.pop_m();
                 System.out.println("La tabla: \n" + analisis.TABLA.tabla_print());
                 System.out.println("------------- TABLA PARAMETROS");
-                System.out.println("La tabla: \n" + analisis.TABLA.tabla_print_m());
+                System.out.println("La tabla: \n" + analisis.TABLA.tabla_print_m());*/
                 System.out.println("\n\n\n\n------------- GENERACION DE IRT");
                 System.out.println("El size es: " + analisis.Lista_IRT_P.size());
                 for (int i = 0; i < analisis.Lista_IRT_P.size(); i++){
