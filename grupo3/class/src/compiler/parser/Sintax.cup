@@ -763,7 +763,7 @@ callout_arg ::= expr:ex {:
         tmp.setNumNodo(parser.contador++);
         RESULT = tmp;
         :}
-        | string_literal:sl {:
+        | STRING_LITERAL:sl {:
         Nodo tmp = new Nodo("callout_arg");
 
         tmp.addHijo((Nodo) sl); 

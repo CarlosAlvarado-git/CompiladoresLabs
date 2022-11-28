@@ -59,14 +59,11 @@ Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
 {string_literal} {return new Symbol(sym.STRING_LITERAL, yychar, yyline, yytext());}
 {char_literal} {return new Symbol(sym.CHAR_LITERAL, yychar, yyline, yytext());}
 {id} {return new Symbol(sym.Id, yychar, yyline, yytext());}
-//{arith_op} {return new Symbol(sym.Arith_op, yychar, yyline, yytext());}
 {digit} {return new Symbol(sym.Digit, yychar, yyline, yytext());}
 {alpha} {return new Symbol(sym.Alpha, yychar, yyline, yytext());}
 {decimal_literal} {return new Symbol(sym.Decimal_literal, yychar, yyline, yytext());}
 {hex_digit} {return new Symbol(sym.Hex_digit, yychar, yyline, yytext());}
 {hex_literal} {return new Symbol(sym.Hex_literal, yychar, yyline, yytext());}
-//{rel_op} {return new Symbol(sym.Rel_op, yychar, yyline, yytext());}
-//{assign_op} {return new Symbol(sym.Assign_op, yychar, yyline, yytext());}
 
 "<"                {return new Symbol(sym.GREATER, yychar, yyline, yytext());}
 ">"                {return new Symbol(sym.LESS, yychar, yyline, yytext());}
@@ -92,17 +89,8 @@ Program {return new Symbol(sym.Program, yychar, yyline, yytext());}
 "["                {return new Symbol(sym.Corche_A, yychar, yyline, yytext());}
 "]"                {return new Symbol(sym.Corche_C, yychar, yyline, yytext());}
 ","                {return new Symbol(sym.Coma, yychar, yyline, yytext());}
-"'"                {return new Symbol(sym.Comillas, yychar, yyline, yytext());}
 "!"                {return new Symbol(sym.Exclamacion, yychar, yyline, yytext());}
 
- <YYINITIAL> {
-\"                             { yybegin(STRING); }
-}
-
-<STRING> {
-      \"                             { yybegin(YYINITIAL); 
-                                       return new Symbol(sym.STRING_LITERAL,yychar, yyline, yytext()); }
-    }
 
 
  . {return new Symbol(sym.ERROR, yychar, yyline, yytext());}
