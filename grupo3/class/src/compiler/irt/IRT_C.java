@@ -37,6 +37,8 @@ public class IRT_C {
             
             try {
                 analisis.parse();
+                analisis.TABLA.popScope(1);
+                analisis.TABLA.pop_m();
                 /*System.out.println("------------- TABLA GENERAL");
                 analisis.TABLA.popScope(1);
                 analisis.TABLA.pop_m();

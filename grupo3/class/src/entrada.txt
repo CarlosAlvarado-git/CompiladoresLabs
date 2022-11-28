@@ -10,7 +10,7 @@ class Program {
 
     int resta(int valor1, int valor2){
         int res;
-        res = valor2 - valor2
+        res = valor2 - valor2;
         return res;
     }
     
