@@ -217,6 +217,7 @@ method_decl ::= type:t Id:id {:
                     parser.TABLA.insertSymbol(tmp, parser.global_scope);
                     parser.TABLA.BANDERAS.replace("Funcion", tmp.getIdentifier());
                     parser.TABLA.BANDERAS.replace("Funcion_type", tmp.gettype());
+                    parser.TABLA.BANDERAS.replace("Funcion_return", "Si");
                 }
                 else {
                     System.out.println("El nombre del metodo esta repetido " + tmp.getIdentifier());
@@ -228,7 +229,18 @@ method_decl ::= type:t Id:id {:
 
 
 
-                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b method_decl:md 
+                :} LEFT_PAR method_decl_corche:mdc RIGHT_PAR block:b {:
+                    Nodo tmp = new Nodo("");
+                    tmp.setIdentifier(id + "");
+                    if(parser.TABLA.BANDERAS.get("Funcion_return").equals("")){
+                        System.out.println("Funcion cerrada");
+                    }
+                    else{
+                         System.out.println("El metodo" + tmp.getIdentifier() + ", espera un return ...");
+                        System.exit(0);
+                        }
+                    
+                    :} method_decl:md 
                 | Void Id:id {:
 
                 Nodo tmp = new Nodo("method_decl");
@@ -309,7 +321,7 @@ method_decl_corche_coma_type ::=
         tmp.setfuncion(parser.TABLA.BANDERAS.get("Funcion"));
         
 
-        System.out.println("DESDE variables del metodo el resto: La variable" + tmp.getIdentifier() + ", se guardará");
+        System.out.println("DESDE variables del metodo el resto: La variable " + tmp.getIdentifier() + ", se guardará");
         parser.TABLA.insertSymbol_m(tmp);
         RESULT = tmp;
     :}|
@@ -411,7 +423,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             System.out.println("Asignacion correcta");
                        }
                        else {
-                            System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                            System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                             System.exit(0);
                         }
                     }
@@ -423,11 +435,11 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                 System.out.println("Asignacion correcta");
                            }
                            else {
-                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                 System.exit(0);
                             }
                         }else {
-                        System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                        System.out.println("La variable " + loc.getIdentifier() + ", no existe");
                         System.exit(0);
                         }
                     }
@@ -442,7 +454,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                 System.out.println("Asignacion correcta");
                            }
                            else {
-                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                 System.exit(0);
                             }
                         }
@@ -460,11 +472,11 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                     System.out.println("Asignacion correcta");
                                }
                                else {
-                                    System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                    System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                     System.exit(0);
                                 }
                             }else {
-                            System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                            System.out.println("La variable " + loc.getIdentifier() + ", no existe");
                             System.exit(0);
                         }
                     }
@@ -478,7 +490,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                 System.out.println("Asignacion correcta");
                            }
                            else {
-                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                 System.exit(0);
                             }
                         }
@@ -496,11 +508,11 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                     System.out.println("Asignacion correcta");
                                }
                                else {
-                                    System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                    System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                     System.exit(0);
                                 }
                             }else {
-                            System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                            System.out.println("La variable " + loc.getIdentifier() + ", no existe");
                             System.exit(0);
                     }
                     }
@@ -552,7 +564,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             }
                    }
                    else {
-                        System.out.println("La variable " + tmp.getIdentifier() + "no es del mismo type del valor asignado");
+                        System.out.println("La variable " + tmp.getIdentifier() + ", no es del mismo type del valor asignado");
                         System.exit(0);
                     }
                 }
@@ -577,7 +589,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             }
                        }
                        else {
-                            System.out.println("La variable " + tmp.getIdentifier() + "no es del mismo type del valor asignado");
+                            System.out.println("La variable " + tmp.getIdentifier() + ", no es del mismo type del valor asignado");
                             System.exit(0);
                         }
                     }else {
@@ -607,7 +619,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                     }
                            }
                            else {
-                                System.out.println("La variable " + nueva.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.out.println("La variable " + nueva.getIdentifier() + ", no es del mismo type del valor asignado");
                                 System.exit(0);
                             }
                     }
@@ -615,19 +627,32 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 RESULT = tmp;
 
-                :} block:b statement:stm
+                :} block:b {:parser.TABLA.BANDERAS.replace("For", "");:}statement:stm
         | Return statement_expr:stmex Punto_coma  {:
                 Nodo tmp = new Nodo("statement");
-                
+                if(parser.TABLA.BANDERAS.get("Funcion_return").equals("Si")){
                 Nodo stmex_x = (Nodo) stmex;
+                if (stmex_x != null){
                 if (parser.TABLA.BANDERAS.get("Funcion_type").equals(stmex_x.gettype())){
                     System.out.println("Return correcto");
+                    parser.TABLA.BANDERAS.replace("Funcion_return", "");
                 }
                 else {
                     System.out.println("El valor de retorno no es del mismo type de la funcion: " + parser.TABLA.BANDERAS.get("Funcion_type") + " != " + stmex_x.gettype());
                     System.exit(0);
                 }
+                }
+                        else{
+                            System.out.println("No puede haber un return vacio");
+                                System.exit(0);
+                        }
+                }
+                else {
 
+                    System.out.println("El metodo: " + parser.TABLA.BANDERAS.get("Funcion") + ", es de tipo: " + 
+                                    parser.TABLA.BANDERAS.get("Funcion_type") + ", no puede tener un resturn");
+                    System.exit(0);
+                }
                 RESULT = tmp;
                 :} statement:stm
         | Break Punto_coma  {:
@@ -635,7 +660,6 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 if (parser.TABLA.BANDERAS.get("For").equals("Si")){
                     System.out.println("Break correcto");
-                    parser.TABLA.BANDERAS.replace("For", "");
                 }
                 else {
                     System.out.println("No puede usar break si no se está dentro de un For");
@@ -649,7 +673,6 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 if (parser.TABLA.BANDERAS.get("For").equals("Si")){
                     System.out.println("Continue correcto");
-                    parser.TABLA.BANDERAS.replace("For", "");
                 }
                 else {
                     System.out.println("No puede usar Continue si no se está dentro de un For");
@@ -667,17 +690,18 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
         |;
 
 statement_else_block ::=
-    Else  {:
+    {:
         parser.global_scope = parser.global_scope + 1;
         parser.TABLA.pushScope(parser.global_scope);
     
-        :} block:b|
+        :} Else block:b|
 ;
 
 statement_expr ::= expr:ex {:
         Nodo tmp = new Nodo("statement_expr");
         Nodo e = (Nodo) ex;
-        tmp.settype(e.gettype());        
+        tmp.settype(e.gettype());  
+        tmp.setValor(e.getValor());
         RESULT = tmp;
         
         :}|

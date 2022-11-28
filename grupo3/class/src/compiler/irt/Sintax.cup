@@ -386,7 +386,7 @@ method_decl_corche_coma_type ::=
         tmp.setfuncion(parser.TABLA.BANDERAS.get("Funcion"));
         
 
-        System.out.println("DESDE variables del metodo el resto: La variable" + tmp.getIdentifier() + ", se guardará");
+        System.out.println("DESDE variables del metodo el resto: La variable " + tmp.getIdentifier() + ", se guardará");
         parser.TABLA.insertSymbol_m(tmp);
         parser.memoria_metodo = parser.memoria_metodo + tmp.getmemoria();
         RESULT = tmp;
@@ -489,7 +489,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 {
                     // buscar el id en la tabla
                     //System.out.println("El type de loc es: " + loc.gettype());
-                    System.out.println("EL VALOR DE e ES: " + e.getValor());
+                    //System.out.println("EL VALOR DE e ES: " + e.getValor());
                     int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
                     if (bandera[0] == 1) {
                         loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
@@ -502,7 +502,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                            parser.STACK.clear();
                        }
                        else {
-                            System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                            System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                             System.exit(0);
                         }
                     }
@@ -519,11 +519,11 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                 parser.STACK.clear();
                            }
                            else {
-                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                 System.exit(0);
                             }
                         }else {
-                        System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                        System.out.println("La variable " + loc.getIdentifier() + ", no existe");
                         System.exit(0);
                         }
                     }
@@ -543,7 +543,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                 parser.STACK.clear();
                            }
                            else {
-                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                 System.exit(0);
                             }
                         }
@@ -566,7 +566,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                            parser.STACK.clear();
                                }
                                else {
-                                    System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                    System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                     System.exit(0);
                                 }
                             }else {
@@ -589,7 +589,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                            parser.STACK.clear();
                            }
                            else {
-                                System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                 System.exit(0);
                             }
                         }
@@ -612,11 +612,11 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                            parser.STACK.clear();
                                }
                                else {
-                                    System.out.println("La variable " + loc.getIdentifier() + "no es del mismo type del valor asignado");
+                                    System.out.println("La variable " + loc.getIdentifier() + ", no es del mismo type del valor asignado");
                                     System.exit(0);
                                 }
                             }else {
-                            System.out.println("La variable " + loc.getIdentifier() + ",no existe");
+                            System.out.println("La variable " + loc.getIdentifier() + ", no existe");
                             System.exit(0);
                     }
                     }
@@ -697,7 +697,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             }
                    }
                    else {
-                        System.out.println("La variable " + tmp.getIdentifier() + "no es del mismo type del valor asignado");
+                        System.out.println("La variable " + tmp.getIdentifier() + ", no es del mismo type del valor asignado");
                         System.exit(0);
                     }
                 }
@@ -737,7 +737,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             }
                        }
                        else {
-                            System.out.println("La variable " + tmp.getIdentifier() + "no es del mismo type del valor asignado");
+                            System.out.println("La variable " + tmp.getIdentifier() + ", no es del mismo type del valor asignado");
                             System.exit(0);
                         }
                     }else {
@@ -785,7 +785,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                                     }
                            }
                            else {
-                                System.out.println("La variable " + nueva.getIdentifier() + "no es del mismo type del valor asignado");
+                                System.out.println("La variable " + nueva.getIdentifier() + ", no es del mismo type del valor asignado");
                                 System.exit(0);
                             }
                     }
