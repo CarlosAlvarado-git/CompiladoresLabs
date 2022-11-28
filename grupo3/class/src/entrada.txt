@@ -1,8 +1,44 @@
 class Program {
-    int x;
+    boolean entrada;
+    int numeros;
+
+    int suma(int valor1, int valor2){
+        int res;
+        res = valor1 + valor2;
+        return res;
+    }
+
+    int resta(int valor1, int valor2){
+        int res;
+        res = valor2 - valor2;
+        return res;
+    }
+    
+    boolean comprobacion(int valor1, int valor2){
+        boolean res;
+        res = valor1 == valor2;
+        return res;
+    }
+
+    void multiplicar(int valor1, int valor2){
+        numeros = valor1 * valor2;
+    }
+
     void main(){
-        for y = 1, 10{
-            x = x + 1;
+        int resultado1, resultado2;
+        boolean resultado3;
+        entrada = true;
+        numeros = 50;
+
+        if (entrada == true){
+            resultado1 = suma(3+2);
         }
+        entrada = false;
+        if (entrada == true){
+            resultado1 = resta(3+2);
+        }
+        
+        resultado3 = comprobacion(resultado1, resultado2);
+        multiplicar(numeros, 2);
     }
 }

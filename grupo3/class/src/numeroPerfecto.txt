@@ -1,0 +1,18 @@
+class Program {
+    int x,suma;
+    void main(){
+        suma = 0;
+        x = 100;
+        for i = 1, x{
+            for j = 1, i{
+                if (j % i == 0){
+                    suma += j;
+                }
+            }
+            if(suma == i){
+                break;
+            }
+            suma = 0;
+        }
+    }
+}
