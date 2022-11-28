@@ -191,7 +191,7 @@ public class Semantic_fun {
         }
         return resultado_r;
     } 
-    public int[] lookup_param(Nodo symbol){
+    public int[] lookup_param(Nodo symbol, String funcion){
         // 1 lo encontro.
         // 2 no lo ha encontrado.
         int [] resultado_r = new int[3];
@@ -205,7 +205,7 @@ public class Semantic_fun {
                  }
                 System.out.println("Soy: " + symbol.getIdentifier());
 
-                if (Tabla_m.get("DATA").get(x).data.containsValue(symbol.getIdentifier())){
+                if (Tabla_m.get("DATA").get(x).data.containsValue(symbol.getIdentifier()) && Tabla_m.get("DATA").get(x).data.get("Funcion").equals(funcion)){
                     System.out.println("Si existe, " + symbol.getIdentifier());
                     resultado_r[0] = 1;
                     resultado_r[1] = x; 

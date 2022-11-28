@@ -12,9 +12,11 @@ parser code
     public void syntax_error(Symbol s){
         //this.s = s;
         System.out.println("Error Sintactico en la Linea " + (s.right+1) +" Columna: " +(s.left)+ ". Identificador " +s.value + " no reconocido." + "el type: " + s.sym);
+        System.exit(0);
     }
     public void unrecovered_syntax_error(Symbol s){
         System.out.println(s);
+        System.exit(0);
     }
 
     public Symbol getS(){
@@ -25,6 +27,7 @@ parser code
     public Semantic_fun TABLA = new Semantic_fun();
     public int global_scope = 0;
     public int param_cont = 0;
+    public int fors = 0;
     class ValoresTabla_fun{
     public HashMap<String, String> data;
 
@@ -419,6 +422,8 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                     int [] bandera = parser.TABLA.lookup(loc, parser.global_scope);
                     if (bandera[0] == 1) {
                         loc.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
+                        System.out.println("El type de loc: " + loc.gettype());
+                        System.out.println("El type de e: " + e.gettype());
                         if (loc.gettype().equals(e.gettype())){
                             System.out.println("Asignacion correcta");
                        }
@@ -428,7 +433,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                         }
                     }
                     else {
-                        bandera = parser.TABLA.lookup_param(loc);
+                        bandera = parser.TABLA.lookup_param(loc, parser.TABLA.BANDERAS.get("Funcion"));
                         if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                             loc.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
                             if (loc.gettype().equals(e.gettype())){
@@ -465,7 +470,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
 
                     }
                     else {
-                            bandera = parser.TABLA.lookup_param(loc);
+                            bandera = parser.TABLA.lookup_param(loc, parser.TABLA.BANDERAS.get("Funcion"));
                             if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                                 loc.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
                                 if (loc.gettype().equals(e.gettype())){
@@ -501,7 +506,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
 
                     }
                     else {
-                        bandera = parser.TABLA.lookup_param(loc);
+                        bandera = parser.TABLA.lookup_param(loc, parser.TABLA.BANDERAS.get("Funcion"));
                             if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                                 loc.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
                                 if (loc.gettype().equals(e.gettype())){
@@ -555,7 +560,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                         
                         if(e2.gettype().equals("Int")){
                             System.out.println("Asignacion correcta");
-                            parser.TABLA.BANDERAS.replace("For", "Si");
+                            if(parser.fors == 0){
+                                parser.TABLA.BANDERAS.replace("For", "Si");
+                                parser.fors = parser.fors + 1;
+                            }else{
+                                parser.TABLA.BANDERAS.replace("For", "Si");
+                                parser.fors = parser.fors + 1;}
                         }
                         else
                         {
@@ -570,7 +580,7 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 }
                 else 
                 {   
-                    bandera = parser.TABLA.lookup_param(tmp);
+                    bandera = parser.TABLA.lookup_param(tmp, parser.TABLA.BANDERAS.get("Funcion"));
                     if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                         tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
                         if (tmp.gettype().equals(e.gettype())){
@@ -580,7 +590,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             
                             if(e2.gettype().equals("Int")){
                                 System.out.println("Asignacion correcta");
+                                if(parser.fors == 0){
                                 parser.TABLA.BANDERAS.replace("For", "Si");
+                                parser.fors = parser.fors + 1;
+                            }else{
+                                parser.TABLA.BANDERAS.replace("For", "Si");
+                                parser.fors = parser.fors + 1;}
                             }
                             else
                             {
@@ -610,7 +625,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                             if (nueva.gettype().equals(e.gettype())){
                                 if(e2.gettype().equals("Int")){
                                     System.out.println("Asignacion correcta");
-                                    parser.TABLA.BANDERAS.replace("For", "Si");
+                                    if(parser.fors == 0){
+                                parser.TABLA.BANDERAS.replace("For", "Si");
+                                parser.fors = parser.fors + 1;
+                            }else{
+                                parser.TABLA.BANDERAS.replace("For", "Si");
+                                parser.fors = parser.fors + 1;}
                                 }
                                 else
                                 {
@@ -627,7 +647,12 @@ statement ::= location:l assign_op:asop expr:ex Punto_coma {:
                 
                 RESULT = tmp;
 
-                :} block:b {:parser.TABLA.BANDERAS.replace("For", "");:}statement:stm
+                :} block:b {:
+                      if(parser.fors == 0)
+                         {parser.TABLA.BANDERAS.replace("For", "");}
+                        else {
+                            parser.fors = parser.fors - 1;
+                    }:}statement:stm
         | Return statement_expr:stmex Punto_coma  {:
                 Nodo tmp = new Nodo("statement");
                 if(parser.TABLA.BANDERAS.get("Funcion_return").equals("Si")){
@@ -750,11 +775,12 @@ method_call ::= method_name:mn {:
                     if (parser.TABLA.Tabla.get("Scope: " + 1).get(bandera[1]).data.containsValue("Metodo")){
                         System.out.println("Funcion " + mtodo.getIdentifier() + " llamada");
                         parser.TABLA.BANDERAS.replace("Llamada_fun", mtodo.getIdentifier());
+                        parser.TABLA.BANDERAS.replace("Llamada_fun_type", parser.TABLA.Tabla.get("Scope: " + 1).get(bandera[1]).data.get("type"));
                         for (int x = 0; x < parser.TABLA.Tabla_m.get("DATA").size(); x++) {
                             for (String y : parser.TABLA.Tabla_m.get("DATA").get(x).data.keySet()) {
                                 if (y.equals("Funcion") && parser.TABLA.Tabla_m.get("DATA").get(x).data.get(y).equals(mtodo.getIdentifier())){   
                                         if (parser.TABLA.Tabla_fun.get("PARAM") == null){
-                                                parser.TABLA.BANDERAS.replace("Llamada_fun_type", parser.TABLA.Tabla_m.get("DATA").get(x).data.get("type"));
+                                                
                                                 System.out.println("LA DE PARAM ESTA VACIA");
                                                 ValoresTabla_fun data = parser.TABLA.Tabla_m.get("DATA").get(x);
                                                 ArrayList<ValoresTabla_fun> lista = new ArrayList<>();
@@ -983,13 +1009,15 @@ expr ::= location:l{:
            tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
         }
         else {
-            bandera = parser.TABLA.lookup_param(loc);
+            bandera = parser.TABLA.lookup_param(loc, parser.TABLA.BANDERAS.get("Funcion"));
+            
+            
             if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                 tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
                 
             }else {
-            System.out.println("La variable " + loc.getIdentifier() + ",no existe");
-            System.exit(0);
+                System.out.println("La variable " + loc.getIdentifier() + " AQUI! ,no existe");
+                System.exit(0);
             }
         }
         RESULT = tmp;
@@ -1149,7 +1177,7 @@ callout_arg ::= expr:ex {:
                        tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
                     }
                     else {
-                        bandera = parser.TABLA.lookup_param(strl);
+                        bandera = parser.TABLA.lookup_param(strl, parser.TABLA.BANDERAS.get("Funcion"));
                         if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                             tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
 
@@ -1167,7 +1195,7 @@ callout_arg ::= expr:ex {:
                        tmp.settype(parser.TABLA.Tabla.get("Scope: " + bandera[2]).get(bandera[1]).data.get("type"));
                     }
                     else {
-                        bandera = parser.TABLA.lookup_param(strl);
+                        bandera = parser.TABLA.lookup_param(strl, parser.TABLA.BANDERAS.get("Funcion"));
                         if (bandera[0] == 1 && parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("Funcion").equals(parser.TABLA.BANDERAS.get("Funcion"))) {
                             tmp.settype(parser.TABLA.Tabla_m.get("DATA").get(bandera[1]).data.get("type"));
 
